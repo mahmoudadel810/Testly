@@ -33,7 +33,7 @@ export class HeaderComponent {
   @HostListener('document:click', ['$event'])
   clickOutside(event: Event) {
     if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.dropdownOpen = false;
+        this.dropdownOpen = false;
     }
   }
 
