@@ -6,7 +6,6 @@ import { LoggingService } from '../../../services/logging.service';
 import { Exam, ExamAttempt } from '../../../models/exam.model';
 import { switchMap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 import { take } from 'rxjs';
 
 @Component({
@@ -103,24 +102,13 @@ export class ExamAttemptsComponent implements OnInit {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
   }
 
-  async deleteAttempt(attemptId: string | undefined): Promise<void> {
+  deleteAttempt(attemptId: string | undefined): void {
     if (!attemptId) {
       this.toastr.warning('Attempt ID is missing');
       return;
     }
 
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You want to delete this attempt?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Delete',
-      cancelButtonText: 'Cancel',
-    });
-
-    if (result.isConfirmed) {
+    if (confirm('Are you sure you want to delete this attempt?')) {
       this.examService
         .getExamAttempts(attemptId)
         .pipe(take(1))

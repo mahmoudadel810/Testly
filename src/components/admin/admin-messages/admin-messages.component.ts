@@ -7,7 +7,6 @@ import {
   ContactMessage,
 } from '../../../services/contact.service';
 import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-messages',
@@ -75,47 +74,10 @@ export class AdminMessagesComponent implements OnInit {
   ): void {
     if (message.status === newStatus) return;
 
-    Swal.fire({
-      title: 'Confirm Status Change',
-      text: `Are you sure you want to change status to ${newStatus}?`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Update',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.contactService
-          .updateMessageStatus(message._id, newStatus)
-          .subscribe({
-            next: () => {
-              message.status = newStatus;
-              if (
-                this.selectedMessage &&
-                this.selectedMessage._id === message._id
-              ) {
-                this.selectedMessage.status = newStatus;
-              }
-              this.toastr.success('Status updated successfully');
-            },
-            error: (err) => {
-              this.toastr.error('Failed to update status');
-            },
-          });
-      }
-    });
   }
 
   deleteMessage(message: ContactMessage): void {
-    Swal.fire({
-      title: 'Delete Message',
-      text: 'Are you sure you want to delete this message?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Delete',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#e74c3c',
-    }).then((result) => {
-      if (result.isConfirmed) {
+    if (confirm('Are you sure you want to delete this message?')) {
         this.contactService.deleteMessage(message._id).subscribe({
           next: () => {
             this.messages = this.messages.filter((m) => m._id !== message._id);
@@ -132,7 +94,6 @@ export class AdminMessagesComponent implements OnInit {
           },
         });
       }
-    });
   }
 
   formatDate(date: Date): string {

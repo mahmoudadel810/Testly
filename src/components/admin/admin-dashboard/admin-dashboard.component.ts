@@ -7,7 +7,6 @@ import { ExamService } from '../../../services/exam.service';
 import { ContactService } from '../../../services/contact.service';
 import { AdminService } from '../../../services/admin.service';
 import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -143,25 +142,4 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private showPendingTeachersAlert(count: number): void {
-    Swal.fire({
-      title: 'Pending Teacher Approvals',
-      html: `You have <b>${count}</b> teacher applications waiting for review.`,
-      icon: 'warning',
-      confirmButtonText: 'Review Now',
-      showCancelButton: true,
-      cancelButtonText: 'Later',
-      customClass: {
-        confirmButton: 'btn btn-primaryCSS',
-        cancelButton: 'btn btn-accentCSS',
-      },
-      buttonsStyling: false,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.toastr.info(
-          'Redirecting to teachers approval page',
-          'Redirecting'
-        );
-      }
-    });
-  }
-}
+  }}

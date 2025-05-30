@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
 import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage-teachers',
@@ -42,87 +41,45 @@ export class ManageTeachersComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        Swal.fire({
-          title: 'Error',
-          text: 'Failed to load the pending teachers list. Please try again.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-          confirmButtonColor: '#dc3545',
-        });
+        this.toastr.error('Failed to load the pending teachers list. Please try again.', 'Error');
         console.error('Failed to load pending teachers:', error);
       },
     });
   }
 
   approveTeacher(teacherId: string, index: number): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to approve this teacher?',
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, approve',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#28a745',
-      cancelButtonColor: '#6c757d',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.adminService.approveTeacher(teacherId).subscribe({
-          next: (response) => {
-            this.pendingTeachers.splice(index, 1);
-            this.toastr.success('Teacher approved successfully', 'Success', {
-              positionClass: 'toast-top-right',
-              timeOut: 3000,
-            });
-          },
-          error: (error) => {
-            Swal.fire({
-              title: 'Error',
-              text: 'Failed to approve the teacher',
-              icon: 'error',
-              confirmButtonText: 'OK',
-              confirmButtonColor: '#dc3545',
-            });
-            console.error('Error approving teacher:', error);
-          },
-        });
-      }
-    });
+    if (confirm('Are you sure you want to approve this teacher?')) {
+      this.adminService.approveTeacher(teacherId).subscribe({
+        next: (response) => {
+          this.pendingTeachers.splice(index, 1);
+          this.toastr.success('Teacher approved successfully', 'Success', {
+            positionClass: 'toast-top-right',
+            timeOut: 3000,
+          });
+        },
+        error: (error) => {
+          this.toastr.error('Failed to approve the teacher', 'Error');
+          console.error('Error approving teacher:', error);
+        },
+      });
+    }
   }
 
   rejectTeacher(teacherId: string, index: number): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you really want to reject this teacher? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, reject',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#dc3545',
-      cancelButtonColor: '#6c757d',
-      reverseButtons: true,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.adminService.rejectTeacher(teacherId).subscribe({
-          next: (response) => {
-            this.pendingTeachers.splice(index, 1);
-            this.toastr.success('Teacher rejected successfully', 'Success', {
-              positionClass: 'toast-top-right',
-              timeOut: 3000,
-            });
-          },
-          error: (error) => {
-            Swal.fire({
-              title: 'Error',
-              text: 'Failed to reject the teacher',
-              icon: 'error',
-              confirmButtonText: 'OK',
-              confirmButtonColor: '#dc3545',
-            });
-            console.error('Error rejecting teacher:', error);
-          },
-        });
-      }
-    });
+    if (confirm('Are you sure you want to reject this teacher? This action cannot be undone.')) {
+      this.adminService.rejectTeacher(teacherId).subscribe({
+        next: (response) => {
+          this.pendingTeachers.splice(index, 1);
+          this.toastr.success('Teacher rejected successfully', 'Success', {
+            positionClass: 'toast-top-right',
+            timeOut: 3000,
+          });
+        },
+        error: (error) => {
+          this.toastr.error('Failed to reject the teacher', 'Error');
+          console.error('Error rejecting teacher:', error);
+        },
+      });
+    }
   }
 }

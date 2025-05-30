@@ -12,7 +12,6 @@ import {
 } from '@angular/forms';
 import { ExamService } from '../../../services/exam.service';
 import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 import { take } from 'rxjs';
 
 @Component({
@@ -73,24 +72,13 @@ export class CreateExamComponent implements OnInit {
     this.toastr.success('Question added successfully');
   }
 
-  async removeQuestion(index: number): Promise<void> {
+  removeQuestion(index: number): void {
     if (this.questions.length <= 1) {
       this.toastr.warning('You must have at least one question');
       return;
     }
 
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You want to delete this question?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Delete',
-      cancelButtonText: 'Cancel',
-    });
-
-    if (result.isConfirmed) {
+    if (confirm('Are you sure you want to delete this question?')) {
       this.questions.removeAt(index);
       this.toastr.success('Question deleted successfully');
     }
@@ -106,7 +94,7 @@ export class CreateExamComponent implements OnInit {
     this.toastr.success('Option added successfully');
   }
 
-  async removeOption(questionIndex: number, optionIndex: number): Promise<void> {
+  removeOption(questionIndex: number, optionIndex: number): void {
     const options = this.getOptions(questionIndex);
 
     if (options.length <= 2) {
@@ -114,18 +102,7 @@ export class CreateExamComponent implements OnInit {
       return;
     }
 
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You want to delete this option?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Delete',
-      cancelButtonText: 'Cancel',
-    });
-
-    if (result.isConfirmed) {
+    if (confirm('Are you sure you want to delete this option?')) {
       options.removeAt(optionIndex);
 
       // Update correct answer if needed
