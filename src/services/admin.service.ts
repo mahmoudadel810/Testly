@@ -1,12 +1,14 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
-import { API_ENDPOINTS } from '../models/constants';
-import { TokenService } from './token.service';
-import { LoggingService } from './logging.service';
+/** @format */
+
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, catchError, map, of, tap, throwError } from "rxjs";
+import { API_ENDPOINTS } from "../models/constants";
+import { TokenService } from "./token.service";
+import { LoggingService } from "./logging.service";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class AdminService {
   constructor(
@@ -17,20 +19,20 @@ export class AdminService {
 
   // Get pending teachers
   getPendingTeachers(): Observable<any[]> {
-    this.logger.info('Fetching pending teachers');
+    this.logger.info("Fetching pending teachers");
 
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http
       .get<any[]>(`${API_ENDPOINTS.ADMIN}/teachers/pending`, { headers })
       .pipe(
         tap((teachers) => {
-          this.logger.debug('Fetched pending teachers count:', teachers.length);
+          this.logger.debug("Fetched pending teachers count:", teachers.length);
         }),
         catchError((error) => {
-          this.logger.error('Error fetching pending teachers:', error);
+          this.logger.error("Error fetching pending teachers:", error);
           return of([]);
         })
       );
@@ -39,20 +41,20 @@ export class AdminService {
   // Get count of pending teachers
   getPendingTeachersCount(): Observable<number> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http
       .get<{ count: number }>(`${API_ENDPOINTS.ADMIN}/teachers/pending/count`, {
-        headers,
+        headers
       })
       .pipe(
         tap((response) => {
-          this.logger.debug('Pending teachers count:', response.count);
+          this.logger.debug("Pending teachers count:", response.count);
         }),
         map((response) => response.count),
         catchError((error) => {
-          this.logger.error('Error fetching pending teachers count:', error);
+          this.logger.error("Error fetching pending teachers count:", error);
           return of(0);
         })
       );
@@ -63,7 +65,7 @@ export class AdminService {
     this.logger.info(`Approving teacher: ${teacherId}`);
 
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http
@@ -74,10 +76,10 @@ export class AdminService {
       )
       .pipe(
         tap((response) => {
-          this.logger.debug('Teacher approval response:', response);
+          this.logger.debug("Teacher approval response:", response);
         }),
         catchError((error) => {
-          this.logger.error('Error approving teacher:', error);
+          this.logger.error("Error approving teacher:", error);
           return throwError(() => error);
         })
       );
@@ -88,19 +90,19 @@ export class AdminService {
     this.logger.info(`Rejecting teacher: ${teacherId}`);
 
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http
       .delete<any>(`${API_ENDPOINTS.ADMIN}/teachers/${teacherId}/reject`, {
-        headers,
+        headers
       })
       .pipe(
         tap((response) => {
-          this.logger.debug('Teacher rejection response:', response);
+          this.logger.debug("Teacher rejection response:", response);
         }),
         catchError((error) => {
-          this.logger.error('Error rejecting teacher:', error);
+          this.logger.error("Error rejecting teacher:", error);
           return throwError(() => error);
         })
       );

@@ -46,7 +46,7 @@ const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
     // Clone the request and add the Authorization header with the token
     req = req.clone({
       setHeaders: {
-        Authorization: `N0de__${token}`, //N0de = process.env.BAREAR (later )
+        Authorization: `${process.env["BAREAR"]!}${token}`
       },
     });
   }

@@ -94,7 +94,7 @@ export class ExamService {
   // Teacher endpoints
   getTeacherExams(): Observable<Exam[]> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     // Use the teacher-specific endpoint to get exams created by the current teacher
@@ -113,7 +113,7 @@ export class ExamService {
 
   getTeacherAttempts(): Observable<ExamAttempt[]> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http
@@ -131,7 +131,7 @@ export class ExamService {
 
   getExamAttempts(examId: string): Observable<ExamAttempt[]> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http
@@ -158,7 +158,7 @@ export class ExamService {
 
   createTeacherExam(exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: '' + this.tokenService.getToken(),
     };
 
     return this.http
@@ -176,7 +176,7 @@ export class ExamService {
 
   updateTeacherExam(id: string, exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken(),
     };
 
     return this.http
@@ -194,7 +194,7 @@ export class ExamService {
 
   deleteTeacherExam(id: string): Observable<any> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken(),
     };
 
     return this.http
@@ -221,7 +221,7 @@ export class ExamService {
   // Admin endpoints (unchanged)
   createExam(exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken(),
     };
 
     return this.http.post<Exam>(`${API_ENDPOINTS.ADMIN}/exams`, exam, {
@@ -231,7 +231,7 @@ export class ExamService {
 
   updateExam(id: string, exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http.put<Exam>(`${API_ENDPOINTS.ADMIN}/exams/${id}`, exam, {
@@ -241,7 +241,7 @@ export class ExamService {
 
   deleteExam(id: string): Observable<any> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http.delete(`${API_ENDPOINTS.ADMIN}/exams/${id}`, { headers });
@@ -249,7 +249,7 @@ export class ExamService {
 
   getAllAttempts(): Observable<ExamAttempt[]> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http.get<ExamAttempt[]>(`${API_ENDPOINTS.ADMIN}/attempts`, {
@@ -259,7 +259,7 @@ export class ExamService {
 
   getAdminExams(): Observable<Exam[]> {
     const headers = {
-      Authorization: 'N0de__' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http.get<Exam[]>(`${API_ENDPOINTS.ADMIN}/exams`, { headers });

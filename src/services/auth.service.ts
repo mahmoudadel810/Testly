@@ -24,6 +24,10 @@ import { API_ENDPOINTS } from '../models/constants';
   providedIn: 'root',
 })
 export class AuthService {
+  getToken()
+  {
+    throw new Error("Method not implemented.");
+  }
   private userSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
   private isBrowser: boolean;
@@ -139,17 +143,17 @@ export class AuthService {
         { selectedTeachers: teacherIds },
         {
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'N0de__' + this.tokenService.getToken(),
-          },
+            "Content-Type": "application/json",
+            Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+          }
         }
       )
       .pipe(
         tap(() => {
-          this.logger.debug('Updated selected teachers successfully');
+          this.logger.debug("Updated selected teachers successfully");
         }),
         catchError((error) => {
-          this.logger.error('Error updating selected teachers:', error);
+          this.logger.error("Error updating selected teachers:", error);
           return throwError(() => error);
         })
       );
@@ -224,15 +228,15 @@ export class AuthService {
     // Token exists and not expired locally, validate with server
     this.http
       .get<{ valid: boolean }>(`${API_ENDPOINTS.AUTH}/validateToken`, {
-        headers: { Authorization: 'N0de__' + token },
+        headers: { Authorization: process.env["BAREAR"]! + token }
       })
       .pipe(
         catchError((err) => {
-          this.logger.warn('Token validation API error:', err);
+          this.logger.warn("Token validation API error:", err);
 
           // Only clear storage if server explicitly invalidates token
           if (err.status === 401 || err.status === 403) {
-            this.logger.debug('Server rejected token, logging out');
+            this.logger.debug("Server rejected token, logging out");
             this.logout();
           }
 
@@ -241,7 +245,7 @@ export class AuthService {
       )
       .subscribe((response) => {
         if (response && !response.valid) {
-          this.logger.debug('Server reported token as invalid, logging out');
+          this.logger.debug("Server reported token as invalid, logging out");
           this.logout();
         }
       });
@@ -272,7 +276,7 @@ export class AuthService {
         `${API_ENDPOINTS.AUTH}/signOut`,
         {},
         {
-          headers: { Authorization: 'N0de__' + token },
+          headers: { Authorization: process.env["BAREAR"]! + token }
         }
       )
       .pipe(
