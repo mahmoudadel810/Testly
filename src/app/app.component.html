@@ -1,0 +1,12 @@
+<app-notification></app-notification>
+<app-header></app-header>
+<!-- Main content container -->
+<div>
+  <router-outlet></router-outlet>
+</div>
+<app-footer></app-footer>
+
+<!-- Back to top button -->
+<button class="back-to-top-btn" [ngClass]="{'show': showBackToTop}" (click)="scrollToTop()" aria-label="Back to top">
+  <i class="fas fa-chevron-up"></i>
+</button>

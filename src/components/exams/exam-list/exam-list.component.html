@@ -1,0 +1,280 @@
+<div class="exams-container">
+  <!-- Notification component will be handled by a shared component -->
+
+  <!-- Exam details modal -->
+  @if (selectedExam) {
+  <div class="modal-overlay" (click)="closeExamDetails()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div
+          class="difficulty-badge"
+          [class]="'difficulty-' + (selectedExam.difficulty || 'medium')"
+        >
+          {{ selectedExam.difficulty || "Medium" }}
+        </div>
+        <button
+          class="close-btn"
+          (click)="closeExamDetails()"
+          aria-label="Close details"
+        >
+          <i class="icon-close" aria-hidden="true"></i>
+        </button>
+      </div>
+      <h2>{{ selectedExam.title }}</h2>
+      <p class="modal-description">{{ selectedExam.description }}</p>
+
+      <div class="category-tags">
+        <span class="category-tag">{{
+          selectedExam.category || "General"
+        }}</span>
+      </div>
+
+      <div class="exam-details-grid">
+        <div class="detail-card">
+          <i class="icon-time" aria-hidden="true"></i>
+          <div class="detail-info">
+            <p class="detail-label">Duration</p>
+            <p class="detail-value">{{ selectedExam.duration }} minutes</p>
+          </div>
+        </div>
+        <div class="detail-card">
+          <i class="icon-target" aria-hidden="true"></i>
+          <div class="detail-info">
+            <p class="detail-label">Passing Score</p>
+            <p class="detail-value">{{ selectedExam.passingScore }}%</p>
+          </div>
+        </div>
+        <div class="detail-card">
+          <i class="icon-questions" aria-hidden="true"></i>
+          <div class="detail-info">
+            <p class="detail-label">Questions</p>
+            <p class="detail-value">
+              {{ selectedExam.questions.length || "?" }} questions
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <a [routerLink]="['/take-exam', selectedExam._id]" class="btn-primary">
+          Start Exam
+          <i class="icon-arrow-right" aria-hidden="true"></i>
+        </a>
+        <button
+          class="btn-secondary-text"
+          [class.active]="isBookmarked(selectedExam._id)"
+          (click)="toggleBookmark(selectedExam)"
+        >
+          <i class="icon-bookmark" aria-hidden="true"></i>
+          {{
+            isBookmarked(selectedExam._id) ? "Bookmarked" : "Add to bookmarks"
+          }}
+        </button>
+      </div>
+    </div>
+  </div>
+  }
+
+  <header class="exams-header" role="banner">
+    <div class="header-content">
+      <h1 class="h2">Teacher Exams</h1>
+      <div class="view-toggle" role="group" aria-label="View options">
+        <button
+          class="toggle-btn"
+          [class.active]="viewMode === 'grid'"
+          (click)="setViewMode('grid')"
+          aria-label="Grid view"
+          title="Grid View"
+        >
+          <i class="icon-grid" aria-hidden="true"></i>
+        </button>
+        <button
+          class="toggle-btn"
+          [class.active]="viewMode === 'list'"
+          (click)="setViewMode('list')"
+          aria-label="List view"
+          title="List View"
+        >
+          <i class="icon-list" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Teacher Selection Section -->
+    <div class="teacher-selection-section">
+      <h2 class="h4">Select a Teacher to View Their Exams</h2>
+
+      @if (loadingTeachers) {
+      <div class="loading-teachers">
+        <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading teachers...</span>
+        </div>
+        <span>Loading teachers...</span>
+      </div>
+      } @else if (teachers.length === 0) {
+      <div class="no-teachers-message">
+        <p>No teachers available.</p>
+      </div>
+      } @else {
+      <div class="teacher-cards">
+        @for (teacher of teachers; track teacher._id) {
+        <div
+          class="teacher-card"
+          [class.active]="selectedTeacherId === teacher._id"
+          (click)="filterByTeacher(teacher._id)"
+        >
+          <div class="teacher-avatar">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <div class="teacher-info">
+            <h3 class="teacher-name">{{ teacher.name }}</h3>
+            <p class="teacher-subject">{{ teacher.email || "Teacher" }}</p>
+          </div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+
+    <div class="filter-container" role="search">
+      <div class="search-container">
+        <div class="filter-tags" role="group" aria-label="Filter options">
+          <button
+            class="filter-tag"
+            [class.active]="activeFilter === FILTER_TYPES.ALL"
+            (click)="setFilter(FILTER_TYPES.ALL)"
+            aria-label="Show all exams"
+          >
+            All Exams
+          </button>
+          <button
+            class="filter-tag"
+            [class.active]="activeFilter === FILTER_TYPES.BOOKMARKED"
+            (click)="setFilter(FILTER_TYPES.BOOKMARKED)"
+            aria-label="Show bookmarked exams only"
+          >
+            Bookmarked
+          </button>
+          <button
+            class="filter-tag"
+            [class.active]="activeFilter === FILTER_TYPES.COMPLETED"
+            (click)="setFilter(FILTER_TYPES.COMPLETED)"
+            aria-label="Show completed exams only"
+          >
+            Completed
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  @if (loading) {
+  <div class="loading-container" aria-live="polite" aria-busy="true">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <p>Loading exams...</p>
+    </div>
+  </div>
+  } @else if (!selectedTeacherId) {
+  <div class="empty-state welcome-message" role="status">
+    <div class="empty-illustration">
+      <div class="empty-icon" aria-hidden="true">
+        <i class="fas fa-chalkboard-teacher"></i>
+      </div>
+    </div>
+    <h3>Ready to Take an Exam?</h3>
+    <p>Pick your teacher above to view their available exams.</p>
+  </div>
+  } @else if (error) {
+  <div class="alert alert-error" role="alert">
+    <i class="icon-error" aria-hidden="true"></i>
+    <span>{{ error }}</span>
+  </div>
+  } @else if (selectedTeacherId && filteredExams.length === 0) {
+  <div class="empty-state" role="status">
+    <div class="empty-illustration">
+      <div class="empty-icon" aria-hidden="true">
+        <i class="fas fa-book-open"></i>
+      </div>
+    </div>
+    <h3>No Exams Available</h3>
+    <p>
+      This teacher doesn't have any exams available yet. Please select another
+      teacher or check back later.
+    </p>
+  </div>
+  } @else {
+  <div class="exam-grid" [class.list-view]="viewMode === 'list'" role="list">
+    @for (exam of filteredExams; track exam._id) {
+    <div class="exam-card" role="listitem">
+      <div class="exam-card-header">
+        <div
+          class="difficulty-badge"
+          [class]="'difficulty-' + (exam.difficulty || 'medium')"
+        >
+          {{ exam.difficulty || "Medium" }}
+        </div>
+        <div class="action-menu">
+          <button
+            class="action-btn"
+            [class.active]="isBookmarked(exam._id)"
+            (click)="toggleBookmark(exam)"
+            [attr.title]="
+              isBookmarked(exam._id) ? 'Remove bookmark' : 'Save for later'
+            "
+            [attr.aria-label]="
+              isBookmarked(exam._id)
+                ? 'Remove bookmark for ' + exam.title
+                : 'Save ' + exam.title + ' for later'
+            "
+          >
+            <i class="icon-bookmark" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <h3>{{ exam.title }}</h3>
+      <p class="exam-description">{{ exam.description }}</p>
+
+      <div class="category-tags">
+        <span class="category-tag">{{ exam.category || "General" }}</span>
+      </div>
+
+      <div class="exam-details">
+        <div class="detail-item" title="Duration">
+          <i class="icon-time" aria-hidden="true"></i>
+          <span>{{ exam.duration }} minutes</span>
+        </div>
+        <div class="detail-item" title="Passing Score">
+          <i class="icon-target" aria-hidden="true"></i>
+          <span>Pass: {{ exam.passingScore }}%</span>
+        </div>
+        <div class="detail-item" title="Number of Questions">
+          <i class="icon-questions" aria-hidden="true"></i>
+          <span>{{ exam.questions.length || "?" }} questions</span>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <a
+          [routerLink]="['/take-exam', exam._id]"
+          class="btn-primary"
+          [attr.aria-label]="'Start Exam: ' + exam.title"
+        >
+          <span>Start Exam</span>
+          <i class="icon-arrow-right" aria-hidden="true"></i>
+        </a>
+        <button
+          class="btn-secondary"
+          title="View details"
+          [attr.aria-label]="'View details for ' + exam.title"
+          (click)="viewExamDetails(exam)"
+        >
+          <i class="icon-info" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+  }
+</div>

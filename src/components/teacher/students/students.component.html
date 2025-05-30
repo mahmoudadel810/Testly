@@ -1,0 +1,62 @@
+<div class="container py-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white">
+      <h2 class="h4 mb-0">Your Students</h2>
+    </div>
+    <div class="card-body">
+      <!-- Error Message -->
+      <div *ngIf="error" class="alert alert-danger">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+      </div>
+
+      <!-- Loading Spinner -->
+      <div *ngIf="loading" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <p class="mt-2 text-muted">Loading student data...</p>
+      </div>
+
+      <!-- No Students Message -->
+      <div
+        *ngIf="!loading && students.length === 0 && !error"
+        class="text-center py-5"
+      >
+        <i class="fas fa-user-graduate fa-3x text-muted mb-3"></i>
+        <h3 class="h5">No Students Found</h3>
+        <p class="text-muted">
+          You don't have any students who have selected you as their teacher
+          yet.
+        </p>
+      </div>
+
+      <!-- Students List -->
+      <div *ngIf="!loading && students.length > 0" class="table-responsive">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Exams Taken</th>
+              <th>Average Score</th>
+              <th class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let student of students">
+              <td>{{ student.username }}</td>
+              <td>{{ student.email }}</td>
+              <td>{{ student.examsTaken || 0 }}</td>
+              <td>{{ student.averageScore || "N/A" }}</td>
+              <td class="text-end">
+                <button class="btn btn-sm btn-outline-primary">
+                  <i class="fas fa-chart-line me-1"></i> Progress
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="result-details">
+  @if (loading) {
+  <div class="loading">Loading result details...</div>
+  } @if (error) {
+  <div class="alert alert-error">
+    {{ error }}
+  </div>
+  } @if (attempt && exam) {
+  <div class="result-content">
+    <h2>Exam Result: {{ exam.title }}</h2>
+
+    <div class="summary-card">
+      <div class="summary-item">
+        <span class="label">Score</span>
+        <span class="value" [class.passed]="attempt.passed">
+          {{ ((attempt.score / attempt.totalPoints) * 100).toFixed(1) }}%
+        </span>
+      </div>
+
+      <div class="summary-item">
+        <span class="label">Status</span>
+        <span class="value" [class.passed]="attempt.passed">
+          {{ attempt.passed ? "Passed" : "Failed" }}
+        </span>
+      </div>
+
+      <div class="summary-item">
+        <span class="label">Points</span>
+        <span class="value"
+          >{{ attempt.score }} / {{ attempt.totalPoints }}</span
+        >
+      </div>
+
+      <div class="summary-item">
+        <span class="label">Completion Time</span>
+        <span class="value">{{ attempt.endTime | date : "medium" }}</span>
+      </div>
+    </div>
+
+    <div class="answers-section">
+      <h3>Question Review</h3>
+
+      @for (answer of attempt.answers; track $index) {
+      <div class="answer-card">
+        <div class="question">
+          <span class="question-number">Q{{ $index + 1 }}</span>
+          <p>{{ exam.questions[$index].text || "Question not available" }}</p>
+        </div>
+
+        <div class="options">
+          @if (exam.questions[$index]) { @for (option of
+          exam.questions[$index].options; track optIndex; let optIndex = $index) {
+          <div
+            class="option"
+            [class.selected]="answer.selectedOption === optIndex"
+            [class.correct]="exam.questions[$index].correctAnswer !== undefined && exam.questions[$index].correctAnswer === optIndex"
+          >
+            {{ option }}
+            @if (answer.selectedOption === optIndex) {
+            <span class="selected-marker">Your Answer</span>
+            } @if (exam.questions[$index].correctAnswer !== undefined && exam.questions[$index].correctAnswer === optIndex) {
+            <span class="correct-marker">Correct Answer</span>
+            }
+          </div>
+          } } @else {
+          <div class="option">Options not available</div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="actions">
+      <a routerLink="/results" class="btn-accentCSS">Back to Results</a>
+      <a routerLink="/exams" class="btn-primaryCSS">Take Another Exam</a>
+    </div>
+  </div>
+  }
+</div>

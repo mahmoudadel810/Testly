@@ -1,0 +1,149 @@
+<div class="container-fluid bg-light g-0">
+  <div class="row min-vh-100">
+    <!-- Sidebar Column -->
+    <div class="col-lg-3 p-0 bg-white shadow-sm">
+      <app-resources-sidebar></app-resources-sidebar>
+    </div>
+
+    <!-- Main Content Column -->
+    <div class="col-lg-9 p-4 p-md-5">
+      <header class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-dark mb-3">Blog</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 700px">
+          Stay updated with the latest exam strategies, study tips, and Testly
+          news.
+        </p>
+      </header>
+
+      <!-- Category Filter -->
+      <div class="d-flex flex-wrap justify-content-center gap-2 mb-5">
+        @for (category of categories; track category) {
+        <button
+          (click)="filterByCategory(category)"
+          class="btn btn-outline-primary rounded-pill"
+          [class.active]="selectedCategory === category"
+        >
+          {{ category }}
+        </button>
+        }
+      </div>
+
+      <!-- Featured Post -->
+      <div class="card mb-5 border-0 shadow-sm overflow-hidden">
+        <div class="row g-0">
+          <div class="col-md-6 position-relative">
+            <img
+              [src]="featuredPost.image"
+              class="img-fluid h-100 w-100"
+              style="object-fit: cover"
+              [alt]="featuredPost.title"
+            />
+            <span class="badge bg-danger position-absolute top-3 start-3"
+              >Featured</span
+            >
+            <span
+              class="badge bg-dark bg-opacity-75 position-absolute bottom-3 start-3"
+              >{{ featuredPost.category }}</span
+            >
+          </div>
+          <div class="col-md-6">
+            <div class="card-body p-4">
+              <h2 class="card-title fw-bold">{{ featuredPost.title }}</h2>
+              <div class="d-flex flex-wrap gap-3 text-muted mb-3">
+                <span>By {{ featuredPost.author }}</span>
+                <span>{{ featuredPost.date }}</span>
+                <span>{{ featuredPost.readTime }}</span>
+              </div>
+              <p class="card-text mb-4">{{ featuredPost.excerpt }}</p>
+              <a
+                [routerLink]="'/resources/blog/' + featuredPost.id"
+                class="btn btn-primary rounded-pill px-4"
+              >
+                Read Article <i class="fas fa-arrow-right ms-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Posts -->
+      <section class="mb-5">
+        <h2 class="text-center fw-bold mb-4">Recent Articles</h2>
+
+        <div class="row g-4">
+          @for (post of recentPosts; track post.id) { @if (selectedCategory ===
+          'All Posts' || post.category === selectedCategory) {
+          <div class="col-md-6 col-lg-4">
+            <div
+              class="card h-100 border-0 shadow-sm transition-all hover-lift"
+            >
+              <div
+                class="position-relative overflow-hidden"
+                style="height: 200px"
+              >
+                <img
+                  [src]="post.image"
+                  class="img-fluid w-100 h-100"
+                  style="object-fit: cover"
+                  [alt]="post.title"
+                />
+                <span
+                  class="badge bg-dark bg-opacity-75 position-absolute bottom-3 start-3"
+                  >{{ post.category }}</span
+                >
+              </div>
+              <div class="card-body">
+                <h3 class="h5 fw-bold">{{ post.title }}</h3>
+                <div class="d-flex flex-wrap gap-2 text-muted small mb-2">
+                  <span>By {{ post.author }}</span>
+                  <span>{{ post.date }}</span>
+                </div>
+                <p class="card-text text-muted mb-3">{{ post.excerpt }}</p>
+                <div
+                  class="d-flex justify-content-between align-items-center pt-3 border-top"
+                >
+                  <span class="text-muted small">{{ post.readTime }}</span>
+                  <a
+                    [routerLink]="'/resources/blog/' + post.id"
+                    class="text-primary fw-bold text-decoration-none"
+                  >
+                    Read More <i class="fas fa-arrow-right ms-2 small"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          } }
+        </div>
+      </section>
+
+      <!-- Newsletter -->
+      <section class="bg-primary text-white rounded-3 p-4 p-md-5 text-center">
+        <div class="mx-auto" style="max-width: 600px">
+          <h2 class="mb-3">Subscribe to Our Newsletter</h2>
+          <p class="mb-4 opacity-75">
+            Get the latest articles, study tips, and exam strategies directly in
+            your inbox.
+          </p>
+          <form class="row g-2">
+            <div class="col-md-8">
+              <input
+                type="email"
+                class="form-control form-control-lg border-0"
+                placeholder="Your email address"
+              />
+            </div>
+            <div class="col-md-4">
+              <button type="submit" class="btn btn-dark btn-lg w-100">
+                Subscribe
+              </button>
+            </div>
+          </form>
+          <p class="small mt-3 opacity-50">
+            We respect your privacy and won't share your information.
+          </p>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>

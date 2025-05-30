@@ -1,0 +1,97 @@
+<div class="container py-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h2 class="h4 mb-0">
+            <i class="fas fa-clipboard-list me-2"></i>Manage Exams
+          </h2>
+          <a routerLink="/teacher/exams/create" class="btn btn-light btn-sm">
+            <i class="fas fa-plus-circle me-1"></i> Create New Exam
+          </a>
+        </div>
+        <div class="card-body">
+          <!-- Error Message -->
+          @if (error()) {
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-circle me-2"></i>{{ error() }}
+          </div>
+          }
+
+          <!-- Loading Spinner -->
+          @if (loading()) {
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading your exams...</p>
+          </div>
+          }
+
+          <!-- No Exams Message -->
+          @if (!loading() && exams().length === 0 && !error()) {
+          <div class="text-center py-5">
+            <i class="fas fa-clipboard-list fa-3x text-muted mb-3"></i>
+            <h3 class="h5">No Exams Found</h3>
+            <p class="text-muted">You haven't created any exams yet.</p>
+            <a routerLink="/teacher/exams/create" class="btn btn-primary mt-2">
+              <i class="fas fa-plus-circle me-1"></i> Create Your First Exam
+            </a>
+          </div>
+          }
+
+          <!-- Exams List -->
+          @if (!loading() && exams().length > 0) {
+          <div class="table-responsive">
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Title</th>
+                  <th>Questions</th>
+                  <th>Duration</th>
+                  <th>Passing Score</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (exam of exams(); track exam._id) {
+                <tr>
+                  <td>
+                    <span class="fw-medium">{{ exam.title }}</span>
+                    <small class="d-block text-muted">
+                      {{ exam.description | slice : 0 : 50 }}
+                      @if (exam.description.length > 50) { ... }
+                    </small>
+                  </td>
+                  <td>{{ exam.questions.length || 0 }}</td>
+                  <td>{{ exam.duration }} min</td>
+                  <td>{{ exam.passingScore }}%</td>
+                  <td class="text-end">
+                    <div class="btn-group">
+                      <a
+                        [routerLink]="['/teacher/exams/edit', exam._id]"
+                        class="btn btn-sm btn-outline-primary"
+                      >
+                        <i class="fas fa-edit me-1"></i> Edit
+                      </a>
+                      <button
+                        (click)="deleteExam(exam._id)"
+                        class="btn btn-sm btn-outline-danger ms-1"
+                      >
+                        <i class="fas fa-trash-alt me-1"></i> Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

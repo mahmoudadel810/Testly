@@ -1,0 +1,79 @@
+<div class="manage-exams-container">
+  <div class="header-row">
+    <div class="header-title-group">
+      <h1>Manage Exams</h1>
+      <div class="header-divider"></div>
+    </div>
+    <button
+      class="create-btn"
+      aria-label="Create New Exam"
+      routerLink="/admin/exams/create"
+    >
+      <i class="fas fa-plus"></i> <span>Create New Exam</span>
+    </button>
+  </div>
+
+  @if (loading) {
+  <div class="loading"><span class="spinner"></span> Loading exams...</div>
+  }
+
+  <div class="exam-table-responsive">
+    @if (exams.length > 0) {
+    <table class="exams-table">
+      <thead>
+        <tr>
+          <th><i class="fas fa-file-alt"></i> Title</th>
+          <th><i class="fas fa-list-ol"></i> Questions</th>
+          <th><i class="fas fa-clock"></i> Duration</th>
+          <th><i class="fas fa-percentage"></i> Passing Score</th>
+          <th><i class="fas fa-chalkboard-teacher"></i> Teacher</th>
+          <th><i class="fas fa-calendar-alt"></i> Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (exam of exams; track exam._id) {
+        <tr>
+          <td>{{ exam.title }}</td>
+          <td>{{ exam.questions.length }}</td>
+          <td>{{ exam.duration }} mins</td>
+          <td>{{ exam.passingScore }}%</td>
+          <td>
+            {{ getTeacherName(exam) }}
+            @if (getTeacherEmail(exam)) {
+            <small class="d-block text-muted">{{
+              getTeacherEmail(exam)
+            }}</small>
+            }
+          </td>
+          <td>{{ exam.createdAt | date }}</td>
+          <td class="actions">
+            <button
+              class="action-btn icon-btn edit"
+              aria-label="Edit Exam"
+              title="Edit"
+              [routerLink]="['/admin/exams/edit', exam._id]"
+            >
+              <i class="fas fa-pen"></i>
+            </button>
+            <button
+              class="action-btn icon-btn delete"
+              aria-label="Delete Exam"
+              title="Delete"
+              (click)="deleteExam(exam._id!)"
+            >
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+    } @if (!loading && exams.length === 0) {
+    <div class="no-exams">
+      <i class="fas fa-folder-open fa-3x"></i>
+      <p>No exams have been created yet.</p>
+    </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,107 @@
+.card {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.card-header {
+  border-bottom: none;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.btn-group .btn {
+  transition: all 0.2s;
+}
+
+.btn-group .btn:hover {
+  transform: translateY(-2px);
+}
+
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* SweetAlert2 Custom Styles */
+.swal2-popup {
+  border-radius: 12px !important;
+  font-family: "Tajawal", sans-serif !important;
+  direction: rtl !important;
+}
+
+.swal2-title {
+  font-size: 1.5rem !important;
+  color: #343a40 !important;
+}
+
+.swal2-html-container {
+  font-size: 1.1rem !important;
+  color: #6c757d !important;
+}
+
+.swal2-confirm {
+  background-color: #28a745 !important;
+  border: none !important;
+  padding: 10px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+}
+
+.swal2-confirm:hover {
+  background-color: #218838 !important;
+}
+
+.swal2-deny {
+  background-color: #dc3545 !important;
+  border: none !important;
+  padding: 10px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+}
+
+.swal2-deny:hover {
+  background-color: #c82333 !important;
+}
+
+.swal2-cancel {
+  background-color: #6c757d !important;
+  color: white !important;
+  border: none !important;
+  padding: 10px 24px !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+  margin-left: 10px !important;
+}
+
+.swal2-cancel:hover {
+  background-color: #5a6268 !important;
+}
+
+/* Toast Styles */
+.toast-success {
+  background-color: #28a745 !important;
+}
+
+.toast-error {
+  background-color: #dc3545 !important;
+}
+
+.toast-info {
+  background-color: #17a2b8 !important;
+}
+
+.toast-warning {
+  background-color: #ffc107 !important;
+  color: #343a40 !important;
+}

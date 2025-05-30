@@ -1,0 +1,92 @@
+<div class="container my-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+          <div class="d-flex justify-content-between align-items-center">
+            <h2 class="h4 mb-0">Pending Teacher Approvals</h2>
+            <button
+              class="btn btn-light btn-sm"
+              (click)="loadPendingTeachers()"
+            >
+              <i class="fas fa-sync-alt me-1"></i> Refresh
+            </button>
+          </div>
+        </div>
+        <div class="card-body">
+          <!-- Loading Spinner -->
+          <div class="text-center py-5" *ngIf="loading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading teacher applications...</p>
+          </div>
+
+          <!-- No Teachers Message -->
+          <div
+            class="text-center py-5"
+            *ngIf="!loading && pendingTeachers.length === 0"
+          >
+            <i class="fas fa-user-check fa-3x text-muted mb-3"></i>
+            <h3 class="h5">No Pending Teacher Applications</h3>
+            <p class="text-muted">
+              All teacher applications have been reviewed.
+            </p>
+          </div>
+
+          <!-- Teachers List -->
+          <div
+            class="table-responsive"
+            *ngIf="!loading && pendingTeachers.length > 0"
+          >
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>National ID</th>
+                  <th>Registration Date</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let teacher of pendingTeachers; let i = index">
+                  <td>
+                    <span class="fw-medium">{{ teacher.name }}</span>
+                  </td>
+                  <td>
+                    <a [href]="'mailto:' + teacher.email">{{
+                      teacher.email
+                    }}</a>
+                  </td>
+                  <td>{{ teacher.phone }}</td>
+                  <td>{{ teacher.nationalId }}</td>
+                  <td>{{ teacher.createdAt | date : "medium" }}</td>
+                  <td class="text-end">
+                    <div class="btn-group">
+                      <button
+                        class="btn btn-sm btn-success"
+                        (click)="approveTeacher(teacher._id, i)"
+                        title="Approve Teacher"
+                      >
+                        <i class="fas fa-check me-1"></i> Approve
+                      </button>
+                      <button
+                        class="btn btn-sm btn-danger ms-1"
+                        (click)="rejectTeacher(teacher._id, i)"
+                        title="Reject Teacher"
+                      >
+                        <i class="fas fa-times me-1"></i> Reject
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

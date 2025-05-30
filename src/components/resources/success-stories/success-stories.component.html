@@ -1,0 +1,122 @@
+<div class="container-fluid bg-light g-0">
+  <div class="row min-vh-100">
+    <!-- Sidebar Column -->
+    <div class="col-lg-3 p-0 bg-white shadow-sm">
+      <app-resources-sidebar></app-resources-sidebar>
+    </div>
+
+    <!-- Main Content Column -->
+    <div class="col-lg-9 p-4 p-md-5">
+      <header class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-dark mb-3">Success Stories</h1>
+        <p class="lead text-muted mx-auto" style="max-width: 700px">
+          Real stories from people who transformed their careers and lives with
+          Testly.
+        </p>
+      </header>
+
+      <!-- Category Filter -->
+      <div class="d-flex flex-wrap justify-content-center gap-2 mb-5">
+        @for (category of categories; track category) {
+        <button
+          (click)="filterByCategory(category)"
+          class="btn btn-outline-primary rounded-pill"
+          [class.active]="selectedCategory === category"
+        >
+          {{ category }}
+        </button>
+        }
+      </div>
+
+      <!-- Featured Success Story -->
+      <section class="card mb-5 border-0 shadow-sm">
+        <div class="row g-0">
+          <div class="col-md-5">
+            <img
+              [src]="featuredStory.image"
+              class="img-fluid w-100 h-100"
+              style="object-fit: cover; min-height: 400px"
+              [alt]="featuredStory.name"
+            />
+          </div>
+          <div class="col-md-7">
+            <div class="card-body p-4 p-md-5">
+              <span class="badge bg-primary mb-3">Featured Story</span>
+              <h2 class="card-title fw-bold mb-3">{{ featuredStory.title }}</h2>
+
+              <div class="d-flex flex-wrap gap-3 text-muted mb-4">
+                <span
+                  ><i class="fas fa-user me-2"></i
+                  >{{ featuredStory.name }}</span
+                >
+                <span
+                  ><i class="fas fa-trophy me-2"></i
+                  >{{ featuredStory.achievement }}</span
+                >
+              </div>
+
+              <div class="bg-light p-4 mb-4 rounded">
+                <p class="fs-5 fst-italic">"{{ featuredStory.quote }}"</p>
+              </div>
+
+              <p class="card-text mb-4">{{ featuredStory.testimonial }}</p>
+
+              <a href="#" class="btn btn-primary">
+                Read Full Story <i class="fas fa-arrow-right ms-2"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Success Stories Grid -->
+      <section class="mb-5">
+        <div class="row g-4">
+          @for (story of successStories; track story.name) { @if
+          (selectedCategory === 'All Stories' || story.category ===
+          selectedCategory) {
+          <div class="col-md-6 col-lg-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div style="height: 200px; overflow: hidden">
+                <img
+                  [src]="story.image"
+                  class="img-fluid w-100 h-100"
+                  style="object-fit: cover"
+                  [alt]="story.name"
+                />
+              </div>
+              <div class="card-body">
+                <span class="badge bg-primary mb-2">{{ story.category }}</span>
+                <h3 class="h5 fw-bold">{{ story.title }}</h3>
+                <div class="d-flex flex-wrap gap-2 text-muted small mb-3">
+                  <span><i class="fas fa-user me-1"></i>{{ story.name }}</span>
+                  <span
+                    ><i class="fas fa-trophy me-1"></i
+                    >{{ story.achievement }}</span
+                  >
+                </div>
+                <p class="fst-italic">"{{ story.quote }}"</p>
+                <a href="#" class="text-primary fw-bold text-decoration-none">
+                  Read Story <i class="fas fa-arrow-right ms-2 small"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+          }}
+        </div>
+      </section>
+
+      <!-- Call to Action -->
+      <section class="bg-primary text-white rounded-3 p-4 p-md-5 text-center">
+        <h2 class="fw-bold mb-3">Have a Success Story to Share?</h2>
+        <p class="mb-4">
+          Tell us how Testly helped you achieve your goals. Your story could
+          inspire others and be featured on our platform!
+        </p>
+        <a routerLink="/contact" class="btn btn-light btn-lg px-4 fw-bold">
+          Share Your Story <i class="fas fa-arrow-right ms-2"></i>
+        </a>
+      </section>
+    </div>
+  </div>
+</div>

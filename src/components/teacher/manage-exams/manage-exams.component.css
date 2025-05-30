@@ -1,0 +1,90 @@
+:host {
+  --primary-color: #0d6efd;
+  --danger-color: #dc3545;
+  --success-color: #28a745;
+  --border-radius: 0.5rem;
+}
+
+.card {
+  border-radius: var(--border-radius);
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th {
+  font-weight: 600;
+  font-size: 0.9rem;
+  background-color: #f8f9fa;
+  position: sticky;
+  top: 0;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+
+.btn-group .btn {
+  box-shadow: none;
+  transition: all 0.2s;
+}
+
+.btn-group .btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-outline-danger {
+  color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.btn-outline-danger:hover {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+/* Toastr styles */
+.toast-success {
+  background-color: var(--success-color) !important;
+}
+
+.toast-error {
+  background-color: var(--danger-color) !important;
+}
+
+/* SweetAlert2 styles */
+.swal2-popup {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: var(--border-radius);
+}
+
+.swal2-title {
+  font-size: 1.25rem;
+  color: #212529;
+}
+
+.swal2-confirm {
+  background-color: var(--danger-color) !important;
+}

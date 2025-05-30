@@ -1,0 +1,16 @@
+.card {
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.btn-outline-primary.active {
+  background-color: #3498db;
+  color: white;
+}
+
+.bg-light {
+  background-color: #f5f7fa !important;
+}

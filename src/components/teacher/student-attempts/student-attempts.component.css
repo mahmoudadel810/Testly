@@ -1,0 +1,21 @@
+.table th {
+  font-weight: 600;
+}
+
+.badge {
+  font-size: 0.8rem;
+  padding: 0.35em 0.65em;
+}
+
+.form-label {
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.alert {
+  border-radius: 0.25rem;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.05);
+}

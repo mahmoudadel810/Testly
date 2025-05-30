@@ -1,0 +1,218 @@
+<div class="create-exam">
+  <h2>Create New Exam</h2>
+
+  <form (ngSubmit)="onSubmit(examForm)" #examForm="ngForm">
+    <!-- Exam Details Section -->
+    <div class="form-section">
+      <h3><i class="fas fa-info-circle"></i> Exam Details</h3>
+
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          class="form-control"
+          [(ngModel)]="exam.title"
+          required
+          #title="ngModel"
+          placeholder="Enter exam title"
+        />
+        @if (title.invalid && (title.dirty || title.touched)) {
+        <div class="error-text">
+          <i class="fas fa-exclamation-circle"></i>
+          Title is required
+        </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          name="description"
+          class="form-control"
+          [(ngModel)]="exam.description"
+          required
+          rows="3"
+          #description="ngModel"
+          placeholder="Enter exam description"
+        ></textarea>
+        @if (description.invalid && (description.dirty || description.touched))
+        {
+        <div class="error-text">
+          <i class="fas fa-exclamation-circle"></i>
+          Description is required
+        </div>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="duration">
+            <i class="fas fa-clock"></i> Duration (minutes)
+          </label>
+          <input
+            type="number"
+            id="duration"
+            name="duration"
+            class="form-control"
+            [(ngModel)]="exam.duration"
+            required
+            min="5"
+            #duration="ngModel"
+            placeholder="Enter duration"
+          />
+          @if (duration.invalid && (duration.dirty || duration.touched)) {
+          <div class="error-text">
+            <i class="fas fa-exclamation-circle"></i>
+            Duration must be at least 5 minutes
+          </div>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="passingScore">
+            <i class="fas fa-percentage"></i> Passing Score (%)
+          </label>
+          <input
+            type="number"
+            id="passingScore"
+            name="passingScore"
+            class="form-control"
+            [(ngModel)]="exam.passingScore"
+            required
+            min="0"
+            max="100"
+            #passingScore="ngModel"
+            placeholder="Enter passing score"
+          />
+          @if (passingScore.invalid && (passingScore.dirty ||
+          passingScore.touched)) {
+          <div class="error-text">
+            <i class="fas fa-exclamation-circle"></i>
+            Passing score must be between 0 and 100
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Questions Section -->
+    <div class="form-section">
+      <h3><i class="fas fa-question-circle"></i> Questions</h3>
+
+      @for (question of exam.questions; track $index; let i = $index) {
+      <div class="question-card">
+        <div class="question-header">
+          <h4>Question {{ i + 1 }}</h4>
+          <button
+            type="button"
+            class="btn-errorCSS"
+            (click)="removeQuestion(i)"
+          >
+            <i class="fas fa-trash-alt"></i> Remove
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label [for]="'question' + i">Question Text</label>
+          <input
+            type="text"
+            [id]="'question' + i"
+            class="form-control"
+            [(ngModel)]="question.text"
+            [name]="'question' + i"
+            required
+            placeholder="Enter question text"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Options</label>
+          @for (option of question.options; track $index; let j = $index) {
+          <div class="option-row">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="question.options[j]"
+              [name]="'question' + i + 'option' + j"
+              required
+              placeholder="Enter option text"
+            />
+            <button
+              type="button"
+              class="btn-errorCSS"
+              (click)="removeOption(question, j)"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          }
+          <button
+            type="button"
+            class="btn-accentCSS"
+            (click)="addOption(question)"
+          >
+            <i class="fas fa-plus"></i> Add Option
+          </button>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label [for]="'correct' + i">Correct Answer</label>
+            <select
+              [id]="'correct' + i"
+              class="form-control"
+              [(ngModel)]="question.correctAnswer"
+              [name]="'correct' + i"
+              required
+            >
+              @for (option of question.options; track $index; let j = $index) {
+              <option [value]="j">Option {{ j + 1 }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label [for]="'points' + i">Points</label>
+            <input
+              type="number"
+              [id]="'points' + i"
+              class="form-control"
+              [(ngModel)]="question.points"
+              [name]="'points' + i"
+              required
+              min="1"
+              placeholder="Enter points"
+            />
+          </div>
+        </div>
+      </div>
+      }
+
+      <button type="button" class="btn-accentCSS" (click)="addQuestion()">
+        <i class="fas fa-plus"></i> Add Question
+      </button>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn-accentCSS" (click)="cancel()">
+        <i class="fas fa-times"></i> Cancel
+      </button>
+      <button
+        type="submit"
+        class="btn-primaryCSS"
+        [disabled]="!examForm.valid || saving"
+      >
+        <i
+          class="fas"
+          [class.fa-spinner]="saving"
+          [class.fa-save]="!saving"
+        ></i>
+        {{ saving ? "Creating..." : "Create Exam" }}
+      </button>
+    </div>
+  </form>
+</div>

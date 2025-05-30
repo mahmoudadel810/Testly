@@ -1,0 +1,161 @@
+<!-- @format -->
+
+<div class="admin-dashboard">
+  <!-- Header Section -->
+  <div class="dashboard-header">
+    <h2><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+    <p class="dashboard-subtitle">Welcome to your exam management system</p>
+    <button
+      class="btn-refresh"
+      (click)="loadStats()"
+      [disabled]="isLoading"
+      [class.loading]="isLoading"
+    >
+      <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i>
+      {{ isLoading ? "Loading..." : "Refresh Data" }}
+    </button>
+  </div>
+
+  <!-- Quick Stats Section -->
+  <div class="quick-stats">
+    <!-- Total Exams Card -->
+    <div class="stat-card" [class.loading]="stats.totalExams === -1">
+      <div class="stat-icon">
+        <i class="fas fa-file-alt"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Total Exams</h4>
+        <div class="stat-value">
+          {{ stats.totalExams === -1 ? "..." : stats.totalExams }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Attempts Card -->
+    <div class="stat-card" [class.loading]="stats.totalAttempts === -1">
+      <div class="stat-icon">
+        <i class="fas fa-users"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Total Attempts</h4>
+        <div class="stat-value">
+          {{ stats.totalAttempts === -1 ? "..." : stats.totalAttempts }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Pass Rate Card -->
+    <div class="stat-card" [class.loading]="stats.passRate === -1">
+      <div class="stat-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Pass Rate</h4>
+        <div class="stat-value">
+          {{ stats.passRate === -1 ? "..." : stats.passRate }}%
+        </div>
+      </div>
+    </div>
+
+    <!-- Messages Card -->
+    <div class="stat-card" [class.loading]="stats.newMessages === -1">
+      <div class="stat-icon">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Contact Messages</h4>
+        <div class="stat-value">
+          {{ stats.newMessages === -1 ? "..." : stats.newMessages }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Teachers Card -->
+    <div class="stat-card" [class.loading]="stats.pendingTeachers === -1">
+      <div class="stat-icon">
+        <i class="fas fa-chalkboard-teacher"></i>
+      </div>
+      <div class="stat-content">
+        <h4>Pending Teachers</h4>
+        <div class="stat-value">
+          {{ stats.pendingTeachers === -1 ? "..." : stats.pendingTeachers }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Actions Section -->
+  <div class="dashboard-grid">
+    <!-- Exam Management Card -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <i class="fas fa-edit"></i>
+        <h3>Exam Management</h3>
+      </div>
+      <p>Create and manage exams, questions, and settings.</p>
+      <div class="card-actions">
+        <a routerLink="/admin/exams" class="btn btn-primary btn-primaryCSS">
+          <i class="fas fa-list"></i> Manage Exams
+        </a>
+        <a routerLink="/admin/exams/create" class="btn-accent btn-accentCSS">
+          <i class="fas fa-plus"></i> Create New Exam
+        </a>
+      </div>
+    </div>
+
+    <!-- Results Overview Card -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <i class="fas fa-chart-bar"></i>
+        <h3>Results Overview</h3>
+      </div>
+      <p>View and analyze student exam results.</p>
+      <div class="card-actions">
+        <a
+          routerLink="/admin/results"
+          class="btn btn-primary btn-primaryCSS full-width-btn"
+        >
+          <i class="fas fa-eye"></i> View Results
+        </a>
+      </div>
+    </div>
+
+    <!-- Contact Messages Card -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <i class="fas fa-envelope"></i>
+        <h3>Contact Messages</h3>
+      </div>
+      <p>Manage user inquiries and contact form submissions.</p>
+      <div class="card-actions">
+        <a
+          routerLink="/admin/messages"
+          class="btn btn-primary btn-primaryCSS full-width-btn"
+        >
+          <i class="fas fa-inbox"></i> View Messages
+        </a>
+      </div>
+    </div>
+
+    <!-- Teacher Management Card -->
+    <div class="dashboard-card">
+      <div class="card-header">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <h3>Teacher Management</h3>
+      </div>
+      <p>Review and approve teacher applications.</p>
+      <div class="card-actions">
+        <a
+          routerLink="/admin/teachers"
+          class="btn btn-primary btn-primaryCSS"
+          [class.has-badge]="stats.pendingTeachers > 0"
+          [attr.data-badge]="
+            stats.pendingTeachers > 0 ? stats.pendingTeachers : null
+          "
+        >
+          <i class="fas fa-user-check"></i> Pending Teachers
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

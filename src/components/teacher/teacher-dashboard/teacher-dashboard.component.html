@@ -1,0 +1,248 @@
+<div class="container py-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+          <h2 class="h4 mb-0">Teacher Dashboard</h2>
+        </div>
+        <div class="card-body">
+          <h3 class="h5 mb-3">
+            Welcome, <span class="text-primary">Mr</span> {{ teacherName }} !
+          </h3>
+
+          <!-- Error Message -->
+          <div class="alert alert-danger" *ngIf="error">
+            <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+          </div>
+
+          <!-- Loading Spinner -->
+          <div class="text-center py-3" *ngIf="loading">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading your dashboard...</p>
+          </div>
+
+          <!-- Dashboard Content -->
+          <div class="row g-4" *ngIf="!loading">
+            <!-- Stats Cards -->
+            <div class="col-md-4">
+              <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                  <i class="fas fa-book fa-3x text-primary mb-3"></i>
+                  <h3 class="h5">Your Exams</h3>
+                  <p class="display-4 fw-bold">{{ stats.totalExams }}</p>
+                  <a
+                    routerLink="/teacher/exams"
+                    class="btn btn-sm btn-outline-primary"
+                    >Manage Exams</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                  <i class="fas fa-clipboard-check fa-3x text-warning mb-3"></i>
+                  <h3 class="h5">Total Attempts</h3>
+                  <p class="display-4 fw-bold">{{ stats.totalAttempts }}</p>
+                  <a
+                    routerLink="/teacher/attempts"
+                    class="btn btn-sm btn-outline-warning"
+                    >Review Attempts</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="card h-100 border-0 shadow-sm">
+                <div class="card-body text-center">
+                  <i class="fas fa-chart-pie fa-3x text-info mb-3"></i>
+                  <h3 class="h5">Pass Rate</h3>
+                  <p class="display-4 fw-bold">{{ stats.passRate }}%</p>
+                  <a
+                    routerLink="/teacher/pass-rates"
+                    class="btn btn-sm btn-outline-info"
+                    >View Details</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+          <h3 class="h5 mb-0">Quick Actions</h3>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <a
+                routerLink="/teacher/exams/create"
+                class="btn btn-primary w-100"
+              >
+                <i class="fas fa-plus-circle me-2"></i>Create New Exam
+              </a>
+            </div>
+            <div class="col-md-6">
+              <a
+                routerLink="/teacher/reports"
+                class="btn btn-info text-white w-100"
+              >
+                <i class="fas fa-chart-bar me-2"></i>View Reports
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exam Statistics -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div
+          class="card-header bg-light d-flex justify-content-between align-items-center"
+        >
+          <h3 class="h5 mb-0">Exam Statistics</h3>
+          <a routerLink="/teacher/exams" class="btn btn-sm btn-outline-primary"
+            >View All</a
+          >
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Exam Title</th>
+                  <th class="text-center">Students</th>
+                  <th class="text-center">Attempts</th>
+                  <th class="text-center">Pass Rate</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngIf="examStats.length === 0">
+                  <td colspan="5" class="text-center py-3 text-muted">
+                    <i class="fas fa-info-circle me-2"></i>No exam data
+                    available yet.
+                  </td>
+                </tr>
+                <tr *ngFor="let stat of examStats">
+                  <td>{{ stat.exam.title }}</td>
+                  <td class="text-center">{{ stat.studentCount }}</td>
+                  <td class="text-center">{{ stat.attemptCount }}</td>
+                  <td class="text-center">
+                    <div class="progress" style="height: 10px">
+                      <div
+                        class="progress-bar"
+                        [ngClass]="{
+                          'bg-danger': stat.passRate < 50,
+                          'bg-warning':
+                            stat.passRate >= 50 && stat.passRate < 70,
+                          'bg-success': stat.passRate >= 70
+                        }"
+                        [style.width.%]="stat.passRate"
+                      ></div>
+                    </div>
+                    <small class="d-block mt-1">{{ stat.passRate }}%</small>
+                  </td>
+                  <td class="text-end">
+                    <a
+                      [routerLink]="[
+                        '/teacher/exams',
+                        stat.exam._id,
+                        'attempts'
+                      ]"
+                      class="btn btn-sm btn-outline-primary me-1"
+                    >
+                      <i class="fas fa-eye"></i> View
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div
+          class="card-header bg-light d-flex justify-content-between align-items-center"
+        >
+          <h3 class="h5 mb-0">Recent Exam Attempts</h3>
+          <a
+            routerLink="/teacher/attempts"
+            class="btn btn-sm btn-outline-primary"
+            >View All</a
+          >
+        </div>
+        <div class="card-body">
+          <div class="list-group">
+            <div
+              *ngIf="recentAttempts.length === 0"
+              class="text-center text-muted py-4"
+            >
+              <i class="fas fa-info-circle me-2"></i>
+              No recent exam attempts to display.
+            </div>
+            <div
+              *ngFor="let attempt of recentAttempts"
+              class="list-group-item list-group-item-action"
+            >
+              <div
+                class="d-flex w-100 justify-content-between align-items-center"
+              >
+                <div>
+                  <h6 class="mb-1">
+                    <i
+                      [ngClass]="{
+                        'fas fa-check-circle text-success': attempt.passed,
+                        'fas fa-times-circle text-danger': !attempt.passed
+                      }"
+                    ></i>
+                    {{ getStudentName(attempt.userId) }}
+                    attempted
+                    {{ getExamTitle(attempt.examId) }}
+                  </h6>
+                  <p class="mb-1 text-muted small">
+                    Score:
+                    <span
+                      [ngClass]="{
+                        'text-success': attempt.passed,
+                        'text-danger': !attempt.passed
+                      }"
+                    >
+                      {{ attempt.score }} / {{ attempt.totalPoints }} ({{
+                        (attempt.score / attempt.totalPoints) * 100
+                          | number : "1.0-0"
+                      }}%)
+                    </span>
+                  </p>
+                </div>
+                <small>{{
+                  formatDate(attempt.endTime || attempt.startTime)
+                }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

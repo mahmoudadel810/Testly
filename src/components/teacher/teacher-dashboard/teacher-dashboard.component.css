@@ -1,0 +1,34 @@
+.card {
+  transition: transform 0.3s;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  border-bottom: 0;
+}
+
+.fas {
+  transition: transform 0.3s;
+}
+
+.card:hover .fas {
+  transform: scale(1.1);
+}
+
+.btn {
+  transition: all 0.3s;
+}
+
+.display-4 {
+  font-size: 2.5rem;
+}
+
+@media (max-width: 768px) {
+  .display-4 {
+    font-size: 2rem;
+  }
+}

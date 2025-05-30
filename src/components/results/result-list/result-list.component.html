@@ -1,0 +1,64 @@
+<div class="results-container">
+    <header class="results-header">
+        <h2>Your Exam Results</h2>
+    </header>
+
+    @if (loading) {
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading your results...</p>
+    </div>
+    }
+
+    @if (error) {
+    <div class="alert alert-error">
+        <i class="icon-error"></i>
+        <span>{{ error }}</span>
+    </div>
+    }
+
+    <div class="results-grid">
+        @for (attempt of attempts; track attempt._id) {
+        <div class="result-card">
+            <div class="result-header">
+                <h3>{{ getExamTitle(attempt.examId) }}</h3>
+                <span class="badge" [class.badge-success]="attempt.passed" [class.badge-error]="!attempt.passed">
+                    {{ attempt.passed ? 'Passed' : 'Failed' }}
+                </span>
+            </div>
+
+            <div class="result-details">
+                <div class="score-container">
+                    <div class="score-label">Score</div>
+                    <div class="score-value" [class.passed]="attempt.passed">
+                        {{ (attempt.score / attempt.totalPoints * 100).toFixed(1) }}%
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-progress" [style.width]="(attempt.score / attempt.totalPoints * 100) + '%'"
+                            [class.passed]="attempt.passed"></div>
+                    </div>
+                </div>
+                
+                <div class="date">
+                    <i class="icon-calendar"></i>
+                    {{ attempt.endTime | date:'MMM d, y, h:mm a' }}
+                </div>
+            </div>
+
+            <a [routerLink]="['/results', attempt._id]" class="btn-primary">
+                <span>View Details</span>
+                <i class="icon-arrow-right"></i>
+            </a>
+        </div>
+        }
+    </div>
+
+    @if (!loading && attempts.length === 0) {
+    <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <h3>No Exam Results Yet</h3>
+        <p>Once you complete an exam, your results will appear here.</p>
+        <a routerLink="/exams" class="btn-primary">Browse Available Exams</a>
+    </div>
+    }
+</div>

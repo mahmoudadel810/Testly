@@ -1,0 +1,191 @@
+<header class="header">
+  <div class="container header-container">
+    <div class="logo">
+      <a routerLink="/">
+        <i class="fas fa-graduation-cap"></i>
+        <span>Testly</span>
+      </a>
+    </div>
+
+    <nav class="nav">
+      <ul class="nav-list">
+        <li>
+          <a
+            routerLink="/"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+          >
+            <i class="fas fa-home"></i> Home
+          </a>
+        </li>
+
+        @if (currentUser) {
+        <li>
+          <a routerLink="/exams" routerLinkActive="active">
+            <i class="fas fa-book-open"></i> Exams
+          </a>
+        </li>
+        <li>
+          <a routerLink="/results" routerLinkActive="active">
+            <i class="fas fa-chart-bar"></i> Results
+          </a>
+        </li>
+
+        @if (isAdmin) {
+        <li>
+          <a routerLink="/admin" routerLinkActive="active">
+            <i class="fas fa-user-shield"></i> Admin
+          </a>
+        </li>
+        } @if (isTeacher) {
+        <li>
+          <a routerLink="/teacher" routerLinkActive="active">
+            <i class="fas fa-chalkboard-teacher"></i> Teacher
+          </a>
+        </li>
+        }
+
+        <li class="user-dropdown">
+          <a class="user-dropdown-toggle" (click)="toggleDropdown($event)">
+             <i class="fas fa-user-circle"></i>
+            <span>{{ isTeacher ? (currentUser.name || currentUser.username) : currentUser.username }}</span>
+            <i class="fas fa-chevron-down" [class.rotate]="dropdownOpen"></i>
+          </a>
+          <div class="dropdown-menu" [class.show]="dropdownOpen">
+            <a
+              routerLink="/profile"
+              routerLinkActive="active"
+              (click)="closeDropdown()"
+            >
+              <i class="fas fa-id-card"></i> Profile
+            </a>
+            <a
+              routerLink="/settings"
+              routerLinkActive="active"
+              (click)="closeDropdown()"
+            >
+              <i class="fas fa-cog"></i> Settings
+            </a>
+            <div class="dropdown-divider"></div>
+            <a (click)="logout(); closeDropdown()" class="logout">
+              <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+          </div>
+        </li>
+        } @if (!currentUser) {
+        <li>
+          <a
+            routerLink="/login"
+            routerLinkActive="active"
+            class="auth-btn login-btn"
+          >
+            <i class="fas fa-sign-in-alt"></i> Login
+          </a>
+        </li>
+        <li>
+          <a
+            routerLink="/role-selection"
+            routerLinkActive="active"
+            class="auth-btn register-btn"
+          >
+            <i class="fas fa-user-plus"></i> Register
+          </a>
+        </li>
+        }
+      </ul>
+    </nav>
+
+    <button
+      class="mobile-menu-btn"
+      [class.open]="mobileMenuOpen"
+      (click)="toggleMobileMenu()"
+      aria-label="Toggle menu"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" [class.open]="mobileMenuOpen">
+    <div class="mobile-menu-header">
+      <div class="mobile-logo">
+        <i class="fas fa-graduation-cap"></i> Testly
+      </div>
+    </div>
+
+    @if (currentUser) {
+    <div class="mobile-user-info">
+      <div class="mobile-avatar">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="mobile-user-details">
+        <div class="mobile-username">{{ currentUser.username }}</div>
+        <div class="mobile-email">{{ currentUser.email }}</div>
+      </div>
+    </div>
+    }
+
+    <ul class="mobile-nav-list">
+      <li>
+        <a routerLink="/" (click)="closeMobileMenu()">
+          <i class="fas fa-home"></i> Home
+        </a>
+      </li>
+
+      @if (currentUser) {
+      <li>
+        <a routerLink="/exams" (click)="closeMobileMenu()">
+          <i class="fas fa-book-open"></i> Exams
+        </a>
+      </li>
+      <li>
+        <a routerLink="/results" (click)="closeMobileMenu()">
+          <i class="fas fa-chart-bar"></i> Results
+        </a>
+      </li>
+
+      @if (isAdmin) {
+      <li>
+        <a routerLink="/admin" (click)="closeMobileMenu()">
+          <i class="fas fa-user-shield"></i> Admin
+        </a>
+      </li>
+      } @if (isTeacher) {
+      <li>
+        <a routerLink="/teacher" (click)="closeMobileMenu()">
+          <i class="fas fa-chalkboard-teacher"></i> Teacher
+        </a>
+      </li>
+      }
+
+      <li>
+        <a routerLink="/profile" (click)="closeMobileMenu()">
+          <i class="fas fa-id-card"></i> Profile
+        </a>
+      </li>
+      <li>
+        <a routerLink="/settings" (click)="closeMobileMenu()">
+          <i class="fas fa-cog"></i> Settings
+        </a>
+      </li>
+      <li class="mobile-logout">
+        <a (click)="logoutAndClose()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+      </li>
+      } @if (!currentUser) {
+      <li>
+        <a routerLink="/login" (click)="closeMobileMenu()">
+          <i class="fas fa-sign-in-alt"></i> Login
+        </a>
+      </li>
+      <li>
+        <a routerLink="/role-selection" (click)="closeMobileMenu()">
+          <i class="fas fa-user-plus"></i> Register
+        </a>
+      </li>
+      }
+    </ul>
+  </div>
+</header>

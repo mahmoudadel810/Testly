@@ -1,0 +1,58 @@
+<div class="about-container">
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>About {{companyName}}</h1>
+            <p class="tagline">Founded in {{foundedYear}}</p>
+        </div>
+    </section>
+
+    <section class="mission-section">
+        <div class="container">
+            <h2>Our Mission</h2>
+            <p class="mission-statement">{{mission}}</p>
+
+            <div class="values">
+                <div class="value-item">
+                    <h3>Excellence</h3>
+                    <p>We strive for excellence in all our educational materials and platform features.</p>
+                </div>
+                <div class="value-item">
+                    <h3>Accessibility</h3>
+                    <p>Making quality exam preparation accessible to students everywhere is our priority.</p>
+                </div>
+                <div class="value-item">
+                    <h3>Innovation</h3>
+                    <p>We continuously innovate to provide the most effective learning experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="team-section">
+        <div class="container">
+            <h2>Our Team</h2>
+            <p class="team-intro">Meet the dedicated professionals behind {{companyName}}.</p>
+
+            <div class="team-grid">
+                @for (member of teamMembers; track member.name) {
+                <div class="team-member">
+                    <div class="member-image">
+                        <img [src]="member.imageUrl" [alt]="member.name" />
+                    </div>
+                    <h3>{{member.name}}</h3>
+                    <p class="position">{{member.position}}</p>
+                    <p class="bio">{{member.bio}}</p>
+                </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container">
+            <h2>Get in Touch</h2>
+            <p>Have questions about our company or services? We'd love to hear from you!</p>
+            <a routerLink="/contact" class="btn primary-btn">Contact Us</a>
+        </div>
+    </section>
+</div>

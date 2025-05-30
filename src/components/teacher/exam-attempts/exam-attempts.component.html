@@ -1,0 +1,148 @@
+<div class="container py-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h2 class="h4 mb-0">
+            <i class="fas fa-clipboard-list me-2"></i>
+            {{ exam()?.title || "Exam" }} - Student Attempts
+          </h2>
+          <a routerLink="/teacher/exams" class="btn btn-light btn-sm">
+            <i class="fas fa-arrow-left me-1"></i> Back to Exams
+          </a>
+        </div>
+
+        <!-- Error Message -->
+        @if (error()) {
+        <div class="alert alert-danger m-3">
+          <i class="fas fa-exclamation-circle me-2"></i>{{ error() }}
+        </div>
+        }
+
+        <!-- Loading Spinner -->
+        @if (loading()) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          <p class="mt-2 text-muted">Loading attempt data...</p>
+        </div>
+        }
+
+        <!-- Exam Stats -->
+        @if (!loading() && !error()) {
+        <div class="card-body">
+          <div class="row mb-4">
+            <div class="col-md-3">
+              <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Total Attempts</h5>
+                  <p class="display-4 fw-bold">{{ attempts().length }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Unique Students</h5>
+                  <p class="display-4 fw-bold">{{ uniqueStudentCount() }}</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Pass Rate</h5>
+                  <p class="display-4 fw-bold">{{ passRate() }}%</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                  <h5 class="card-title">Avg. Score</h5>
+                  <p class="display-4 fw-bold">{{ averageScore() }}%</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Attempts Table -->
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Student</th>
+                  <th>Date</th>
+                  <th>Score</th>
+                  <th>Time Taken</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                @if (attempts().length === 0) {
+                <tr>
+                  <td colspan="6" class="text-center py-4 text-muted">
+                    <i class="fas fa-info-circle me-2"></i>No attempts for this
+                    exam yet.
+                  </td>
+                </tr>
+                } @for (attempt of attempts(); track attempt._id) {
+                <tr>
+                  <td>{{ getStudentName(attempt.userId) }}</td>
+                  <td>
+                    {{ formatDate(attempt.endTime || attempt.startTime) }}
+                  </td>
+                  <td>
+                    {{ attempt.score }} / {{ attempt.totalPoints }} ({{
+                      (attempt.score / attempt.totalPoints) * 100
+                        | number : "1.0-0"
+                    }}%)
+                  </td>
+                  <td>
+                    @if (attempt.startTime && attempt.endTime) {
+                    {{
+                      (attempt.endTime.getTime() -
+                        attempt.startTime.getTime()) /
+                        60000 | number : "1.0-0"
+                    }}
+                    minutes } @if (!attempt.endTime) {
+                    <span class="badge bg-warning text-dark">In progress</span>
+                    }
+                  </td>
+                  <td>
+                    <span
+                      class="badge"
+                      [ngClass]="{
+                        'bg-success': attempt.passed,
+                        'bg-danger': !attempt.passed
+                      }"
+                    >
+                      {{ attempt.passed ? "PASSED" : "FAILED" }}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="deleteAttempt(attempt._id || '')"
+                    >
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </td>
+                </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

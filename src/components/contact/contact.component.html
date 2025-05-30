@@ -1,0 +1,151 @@
+<div class="contact-container">
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1>Contact Us</h1>
+      <p class="tagline">We'd love to hear from you</p>
+    </div>
+  </section>
+
+  <section class="contact-form-section">
+    <div class="container">
+      <div class="contact-info">
+        <div class="info-card">
+          <div class="icon">
+            <i class="fas fa-map-marker-alt"></i>
+          </div>
+          <h3>Address</h3>
+          <p>1234 Testing Avenue<br />Suite 500<br />San Francisco, CA 94107</p>
+        </div>
+
+        <div class="info-card">
+          <div class="icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <h3>Phone</h3>
+          <p>+1 (555) 123-4567</p>
+        </div>
+
+        <div class="info-card">
+          <div class="icon"><i class="fas fa-envelope"></i></div>
+          <h3>Email</h3>
+          <p>support&#64;testly.com</p>
+        </div>
+      </div>
+
+      <div class="form-container">
+        <h2>Send Us a Message</h2>
+
+        @if (submitSuccess) {
+        <div class="success-message">
+          <h3>Thank you for your message!</h3>
+          <p>
+            We have received your inquiry and will get back to you as soon as
+            possible.
+          </p>
+        </div>
+        } @else {
+        <form [formGroup]="contactForm" (ngSubmit)="onSubmit()">
+          @if (errorMessage) {
+          <div class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+          }
+          <div class="form-group">
+            <label for="name">Your Name</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              [ngClass]="{ invalid: submitted && f['name'].errors }"
+              placeholder="Enter your full name"
+            />
+            @if (submitted && f['name'].errors) {
+            <div class="error-message">
+              @if (f['name'].errors['required']) {
+              <span>Name is required</span>
+              } @if (f['name'].errors['minlength']) {
+              <span>Name must be at least 2 characters</span>
+              }
+            </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              [ngClass]="{ invalid: submitted && f['email'].errors }"
+              placeholder="Enter your email address"
+            />
+            @if (submitted && f['email'].errors) {
+            <div class="error-message">
+              @if (f['email'].errors['required']) {
+              <span>Email is required</span>
+              } @if (f['email'].errors['email']) {
+              <span>Please enter a valid email address</span>
+              }
+            </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input
+              type="text"
+              id="subject"
+              formControlName="subject"
+              [ngClass]="{ invalid: submitted && f['subject'].errors }"
+              placeholder="What is your message about?"
+            />
+            @if (submitted && f['subject'].errors) {
+            <div class="error-message">
+              @if (f['subject'].errors['required']) {
+              <span>Subject is required</span>
+              }
+            </div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea
+              id="message"
+              formControlName="message"
+              rows="5"
+              [ngClass]="{ invalid: submitted && f['message'].errors }"
+              placeholder="Please enter your message here"
+            ></textarea>
+            @if (submitted && f['message'].errors) {
+            <div class="error-message">
+              @if (f['message'].errors['required']) {
+              <span>Message is required</span>
+              } @if (f['message'].errors['minlength']) {
+              <span>Message must be at least 20 characters</span>
+              }
+            </div>
+            }
+          </div>
+
+          <button type="submit" class="btn primary-btn submit-btn">
+            @if (submitted) {
+            <span class="spinner"></span>
+            Sending... } @else { Send Message }
+          </button>
+        </form>
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="map-section">
+    <h2>Find Us</h2>
+    <div class="map-container">
+      <!-- Replace with actual map implementation (Google Maps, etc.) -->
+      <div class="map-placeholder">
+        <p>Interactive Map Will Be Displayed Here</p>
+      </div>
+    </div>
+  </section>
+</div>

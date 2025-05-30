@@ -1,0 +1,274 @@
+<div class="view-results container">
+  <header class="results-header">
+    <h2 class="h2 mb-0">Exam Results Overview</h2>
+    <button class="refresh-btn btn" (click)="loadResults()" [disabled]="loading">
+      <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
+      <span class="ms-2">Refresh</span>
+    </button>
+  </header>
+
+  @if (error) {
+  <div class="alert alert-danger d-flex align-items-center">
+    <i class="fas fa-exclamation-circle me-2"></i>
+    {{ error }}
+  </div>
+  }
+
+  <div class="results-stats row g-4 justify-content-center">
+    @if (loading && !dataLoaded.attempts) {
+    @for (i of [1, 2, 3]; track i) {
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card skeleton"></div>
+    </div>
+    }
+    } @else {
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card">
+        <h4><i class="fas fa-tasks me-2"></i>Total Attempts</h4>
+        <div class="stat-value">{{ attempts.length }}</div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card">
+        <h4><i class="fas fa-chart-pie me-2"></i>Pass Rate</h4>
+        <div class="stat-value">{{ calculatePassRate() }}%</div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6 col-md-4">
+      <div class="stat-card">
+        <h4><i class="fas fa-chart-line me-2"></i>Average Score</h4>
+        <div class="stat-value">{{ calculateAverageScore() }}%</div>
+      </div>
+    </div>
+    }
+  </div>
+
+  <div class="results-table mt-4">
+    @if (loading && !dataLoaded.attempts) {
+    <div class="loading-spinner">
+      <i class="fas fa-circle-notch fa-spin fa-3x"></i>
+      <p class="mt-3">Loading results...</p>
+    </div>
+    } @else if (attempts.length === 0) {
+    <div class="no-results">
+      <i class="fas fa-clipboard-list fa-3x mb-3"></i>
+      <p class="lead">No exam attempts have been recorded yet.</p>
+    </div>
+    } @else {
+    <div class="search-and-filters">
+      <div class="row g-3 align-items-center">
+        <div class="col-md-6">
+          <div class="search-container">
+            <input type="text" class="form-control search-input" placeholder="Search by student, exam or status..."
+              [(ngModel)]="searchTerm" (keyup)="filterResults()" aria-label="Search">
+            <i class="fas fa-search search-icon"></i>
+            @if (searchTerm) {
+            <button class="btn-clear" (click)="clearSearch()">
+              <i class="fas fa-times-circle"></i>
+            </button>
+            }
+          </div>
+          @if (filteredAttempts.length === 0 && searchTerm) {
+          <div class="search-no-results mt-2">
+            No results found for "{{ searchTerm }}"
+          </div>
+          }
+        </div>
+        <div class="col-md-6 text-end">
+          <div class="d-inline-block me-2">
+            <select class="form-select form-select-sm" aria-label="Filter by status" [(ngModel)]="statusFilter"
+              (change)="filterResults()">
+              <option value="">All Statuses</option>
+              <option value="passed">Passed</option>
+              <option value="failed">Failed</option>
+            </select>
+          </div>
+          <div class="d-inline-block">
+            <button class="btn btn-outline-secondary btn-sm" title="Export Results" (click)="exportResults()">
+              <i class="fas fa-download me-1"></i>Export
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-container table-responsive mt-3">
+      @if (loading && dataLoaded.attempts) {
+      <div class="table-loading-overlay">
+        <i class="fas fa-sync-alt fa-spin fa-2x"></i>
+      </div>
+      }
+      <table class="table table-hover d-none d-md-table">
+        <thead>
+          <tr>
+            <th class="sortable" title="Sort by student" (click)="sortBy('student')">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-user me-2"></i>Student
+                <i class="fas" [ngClass]="getSortIcon('student')" [class.ms-auto]="true"></i>
+              </div>
+            </th>
+            <th class="sortable" title="Sort by exam" (click)="sortBy('exam')">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-book me-2"></i>Exam
+                <i class="fas" [ngClass]="getSortIcon('exam')" [class.ms-auto]="true"></i>
+              </div>
+            </th>
+            <th class="text-center sortable" title="Sort by score" (click)="sortBy('score')">
+              <div class="d-flex align-items-center justify-content-center">
+                <i class="fas fa-star me-2"></i>Score
+                <i class="fas" [ngClass]="getSortIcon('score')" [class.ms-auto]="true"></i>
+              </div>
+            </th>
+            <th class="sortable" title="Sort by status" (click)="sortBy('status')">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-check-circle me-2"></i>Status
+                <i class="fas" [ngClass]="getSortIcon('status')" [class.ms-auto]="true"></i>
+              </div>
+            </th>
+            <th class="sortable" title="Sort by completion time" (click)="sortBy('time')">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-clock me-2"></i>Completion Time
+                <i class="fas" [ngClass]="getSortIcon('time')" [class.ms-auto]="true"></i>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (attempt of paginatedAttempts; track attempt._id) {
+          @if (isValidAttempt(attempt)) {
+          <tr class="result-row">
+            <td>
+              @if (!dataLoaded.users) {
+              <div class="skeleton-text"></div>
+              } @else {
+              <div class="user-info">
+                <i class="fas fa-user-graduate"></i>
+                <span class="ms-2 font-name">{{ getUserName(attempt.userId) }}</span>
+              </div>
+              }
+            </td>
+            <td>
+              @if (!dataLoaded.exams) {
+              <div class="skeleton-text"></div>
+              } @else {
+              <div class="exam-title" [title]="getExamTitle(attempt.examId)">
+                <i class="fas fa-file-alt"></i>
+                <span class="ms-2 exam-name">{{ getExamTitle(attempt.examId) }}</span>
+              </div>
+              }
+            </td>
+            <td class="score-cell">
+              <div class="score-container">
+                <div class="progress">
+                  <div class="progress-bar" [class.bg-success]="(attempt.score / attempt.totalPoints) >= 0.7"
+                    [class.bg-warning]="(attempt.score / attempt.totalPoints) >= 0.5 && (attempt.score / attempt.totalPoints) < 0.7"
+                    [class.bg-danger]="(attempt.score / attempt.totalPoints) < 0.5"
+                    [style.width.%]="(attempt.score / attempt.totalPoints) * 100" role="progressbar"
+                    [attr.aria-valuenow]="(attempt.score / attempt.totalPoints) * 100" aria-valuemin="0"
+                    aria-valuemax="100">
+                  </div>
+                </div>
+                <div class="score-value">
+                  {{ ((attempt.score / attempt.totalPoints) * 100).toFixed(1) }}%
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="status-badge" [class.status-passed]="attempt.passed" [class.status-failed]="!attempt.passed">
+                <i class="fas" [class.fa-check-circle]="attempt.passed" [class.fa-times-circle]="!attempt.passed"></i>
+                {{ attempt.passed ? "Passed" : "Failed" }}
+              </span>
+            </td>
+            <td>
+              <div class="completion-time">
+                <i class="far fa-calendar-alt"></i>
+                <span class="ms-2 date-text">{{ attempt.endTime | date : "MMM d, y, h:mm a" }}</span>
+              </div>
+            </td>
+          </tr>
+          }
+          }
+        </tbody>
+      </table>
+
+      <!-- Mobile card view -->
+      <div class="mobile-results d-md-none">
+        @for (attempt of paginatedAttempts; track attempt._id) {
+        @if (isValidAttempt(attempt)) {
+        <div class="result-card">
+          <div class="result-card-header" [class.passed-header]="attempt.passed"
+            [class.failed-header]="!attempt.passed">
+            <div class="card-status">
+              <i class="fas" [class.fa-check-circle]="attempt.passed" [class.fa-times-circle]="!attempt.passed"></i>
+              {{ attempt.passed ? "Passed" : "Failed" }}
+            </div>
+            <div class="card-score">
+              {{ ((attempt.score / attempt.totalPoints) * 100).toFixed(1) }}%
+            </div>
+          </div>
+
+          <div class="result-card-body">
+            <div class="card-row">
+              <div class="card-label">
+                <i class="fas fa-user-graduate"></i> Student
+              </div>
+              <div class="card-value">
+                {{ getUserName(attempt.userId) }}
+              </div>
+            </div>
+
+            <div class="card-row">
+              <div class="card-label">
+                <i class="fas fa-file-alt"></i> Exam
+              </div>
+              <div class="card-value">
+                {{ getExamTitle(attempt.examId) }}
+              </div>
+            </div>
+
+            <div class="card-row">
+              <div class="card-label">
+                <i class="far fa-calendar-alt"></i> Date
+              </div>
+              <div class="card-value">
+                {{ attempt.endTime | date : "MMM d, y, h:mm a" }}
+              </div>
+            </div>
+
+            <div class="card-progress">
+              <div class="progress">
+                <div class="progress-bar" [class.bg-success]="(attempt.score / attempt.totalPoints) >= 0.7"
+                  [class.bg-warning]="(attempt.score / attempt.totalPoints) >= 0.5 && (attempt.score / attempt.totalPoints) < 0.7"
+                  [class.bg-danger]="(attempt.score / attempt.totalPoints) < 0.5"
+                  [style.width.%]="(attempt.score / attempt.totalPoints) * 100" role="progressbar"
+                  [attr.aria-valuenow]="(attempt.score / attempt.totalPoints) * 100" aria-valuemin="0"
+                  aria-valuemax="100">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        }
+        }
+      </div>
+    </div>
+
+    <div class="table-footer d-flex justify-content-between align-items-center mt-3">
+      <div class="showing-entries text-muted">
+        {{ getPaginationDisplay() }}
+      </div>
+      <div class="pagination-controls">
+        <button class="btn btn-outline-secondary btn-sm me-1" [disabled]="currentPage === 1" (click)="previousPage()">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="btn btn-primary btn-sm me-1">{{ currentPage }}</button>
+        <button class="btn btn-outline-secondary btn-sm" [disabled]="isLastPage" (click)="nextPage()">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+    }
+  </div>
+</div>

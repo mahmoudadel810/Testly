@@ -1,0 +1,116 @@
+<!-- @format -->
+<div class="confirmation-container">
+  <div class="confirmation-card">
+    <div class="header">
+      <div class="logo">
+        <h1>Testly</h1>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- Using status from store with async pipe -->
+      <ng-container *ngIf="(status$ | async) as storeStatus; else loadingTemplate">
+        @switch (storeStatus) {
+        @case ('loading') {
+        <div class="loading">
+          <h2><i class="fas fa-spinner fa-spin"></i> Confirming Your Email</h2>
+          <div class="progress-bar">
+            <div class="progress"></div>
+          </div>
+          <p class="instructions">
+            Please wait while we confirm your email address...
+          </p>
+        </div>
+        }
+        @case ('success') {
+        <div class="success">
+          <div class="icon-circle">
+            <i class="fas fa-check"></i>
+          </div>
+          <h2>Email Confirmed!</h2>
+          <div class="message-box success">
+            {{ message$ | async }}
+          </div>
+          <p class="instructions">
+            You can now log in to your account and start using Testly.
+          </p>
+          <button class="action-button" (click)="navigateToLogin()">
+            Go to Login
+          </button>
+        </div>
+        }
+        @case ('error') {
+        <div class="error">
+          <div class="icon-circle">
+            <i class="fas fa-times"></i>
+          </div>
+          <h2>Confirmation Failed</h2>
+          <div class="message-box error">
+            {{ message$ | async }}
+          </div>
+          <p class="instructions">
+            There was an issue confirming your email. Please try again or contact
+            support.
+          </p>
+          <button class="action-button" (click)="navigateToLogin()">
+            Go to Login
+          </button>
+        </div>
+        }
+        }
+      </ng-container>
+
+      <!-- Fallback template using regular variables -->
+      <ng-template #loadingTemplate>
+        @if (status === 'loading') {
+        <div class="loading">
+          <h2><i class="fas fa-spinner fa-spin"></i> Confirming Your Email</h2>
+          <div class="progress-bar">
+            <div class="progress"></div>
+          </div>
+          <p class="instructions">
+            Please wait while we confirm your email address...
+          </p>
+        </div>
+        } @else if (status === 'success') {
+        <div class="success">
+          <div class="icon-circle">
+            <i class="fas fa-check"></i>
+          </div>
+          <h2>Email Confirmed!</h2>
+          <div class="message-box success">
+            {{ message }}
+          </div>
+          <p class="instructions">
+            You can now log in to your account and start using Testly.
+          </p>
+          <button class="action-button" (click)="navigateToLogin()">
+            Go to Login
+          </button>
+        </div>
+        } @else if (status === 'error') {
+        <div class="error">
+          <div class="icon-circle">
+            <i class="fas fa-times"></i>
+          </div>
+          <h2>Confirmation Failed</h2>
+          <div class="message-box error">
+            {{ message }}
+          </div>
+          <p class="instructions">
+            There was an issue confirming your email. Please try again or contact
+            support.
+          </p>
+          <button class="action-button" (click)="navigateToLogin()">
+            Go to Login
+          </button>
+        </div>
+        }
+      </ng-template>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 Testly. All rights reserved.</p>
+    </div>
+  </div>
+</div>

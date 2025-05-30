@@ -1,0 +1,69 @@
+<div class="take-exam">
+  @if (loading) {
+  <div class="loading">
+    <span class="spinner"></span> Loading exam...
+  </div>
+  }
+
+  @if (error) {
+  <div class="alert alert-error">
+    <i class="fas fa-exclamation-circle"></i> {{ error }}
+  </div>
+  }
+
+  @if (exam && !loading) {
+  <div class="exam-container">
+    <div class="exam-header">
+      <h2>{{ exam.title }}</h2>
+      @if (timeRemaining) {
+      <div class="exam-timer">
+        Time Remaining: {{ formatTime(timeRemaining) }}
+      </div>
+      }
+    </div>
+
+    <div class="questions">
+      @for (question of exam.questions; track question._id; let qIndex = $index) {
+      <div class="question-card" [class.answered]="answers[qIndex].selectedOption !== -1">
+        <div class="question-header">
+          <h3>Question {{ qIndex + 1 }}</h3>
+          <div class="status-indicator" [class.unanswered]="answers[qIndex].selectedOption === -1"
+            [class.answered]="answers[qIndex].selectedOption !== -1">
+            {{ answers[qIndex].selectedOption === -1 ? 'Not answered' : 'Answered' }}
+          </div>
+        </div>
+        <p class="question-text">{{ question.text }}</p>
+
+        <div class="options">
+          @for (option of question.options; track oIndex; let oIndex = $index) {
+          <div class="option" [class.selected]="answers[qIndex].selectedOption === oIndex">
+            <input type="radio" [id]="'q' + qIndex + 'o' + oIndex" [name]="'question' + qIndex"
+              [checked]="answers[qIndex].selectedOption === oIndex" (change)="updateAnswer(qIndex, oIndex)"
+              [disabled]="submitted">
+            <label [for]="'q' + qIndex + 'o' + oIndex">{{ option }}</label>
+          </div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+
+    <div class="exam-status">
+      <div class="progress-bar">
+        <div class="progress" [style.width.%]="getCompletionPercentage()"></div>
+      </div>
+      <div class="status-text">
+        {{ getAnsweredCount() }} of {{ answers.length }} questions answered
+      </div>
+    </div>
+
+    <div class="exam-actions">
+      <button class="btn-primaryCSS" (click)="submitExam()" [disabled]="submitted"
+        [class.btn-ready]="allQuestionsAnswered() && !submitted">
+        {{ submitted ? 'Exam Submitted' : (allQuestionsAnswered() ? 'Submit Exam' : 'Submit Exam (Some questions
+        unanswered)') }}
+      </button>
+    </div>
+  </div>
+  }
+</div>

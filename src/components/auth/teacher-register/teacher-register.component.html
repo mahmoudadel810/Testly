@@ -1,0 +1,244 @@
+<div class="container pt-4 pb-5">
+  <div class="row justify-content-center align-items-center">
+    <div class="col-md-6 col-12">
+      <div class="img">
+        <img
+          src="image/Sign up-bro.svg"
+          alt="teacher registration"
+          class="img-fluid w-100"
+          style="display: block"
+        />
+      </div>
+    </div>
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center py-3">
+          <h2 class="h4 mb-0">Teacher Registration</h2>
+        </div>
+        <div class="card-body p-4">
+          <!-- Success Message -->
+          @if (successMessage) {
+            <div class="alert alert-success">
+              {{ successMessage }}
+            </div>
+          }
+
+          <!-- Error Message -->
+          @if (errorMessage) {
+            <div class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
+          }
+
+          <form [formGroup]="teacherForm" (ngSubmit)="onSubmit()">
+            <!-- Name -->
+            <div class="mb-3">
+              <label for="name" class="form-label">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                class="form-control"
+                [class.is-invalid]="
+                  teacherForm.get('name')?.invalid &&
+                  teacherForm.get('name')?.touched
+                "
+              />
+              @if (teacherForm.get('name')?.invalid && teacherForm.get('name')?.touched) {
+                <div class="invalid-feedback">
+                  @if (teacherForm.get('name')?.errors?.['required']) {
+                    <div>Name is required</div>
+                  }
+                  @if (teacherForm.get('name')?.errors?.['minlength']) {
+                    <div>Name must be at least 3 characters</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Email -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                id="email"
+                formControlName="email"
+                class="form-control"
+                [class.is-invalid]="
+                  teacherForm.get('email')?.invalid &&
+                  teacherForm.get('email')?.touched
+                "
+              />
+              @if (teacherForm.get('email')?.invalid && teacherForm.get('email')?.touched) {
+                <div class="invalid-feedback">
+                  @if (teacherForm.get('email')?.errors?.['required']) {
+                    <div>Email is required</div>
+                  }
+                  @if (teacherForm.get('email')?.errors?.['email']) {
+                    <div>Please enter a valid email</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input
+                type="tel"
+                id="phone"
+                formControlName="phone"
+                class="form-control"
+                [class.is-invalid]="
+                  teacherForm.get('phone')?.invalid &&
+                  teacherForm.get('phone')?.touched
+                "
+                placeholder="11 digits"
+              />
+              @if (teacherForm.get('phone')?.invalid && teacherForm.get('phone')?.touched) {
+                <div class="invalid-feedback">
+                  @if (teacherForm.get('phone')?.errors?.['required']) {
+                    <div>Phone number is required</div>
+                  }
+                  @if (teacherForm.get('phone')?.errors?.['pattern']) {
+                    <div>Phone must be 11 digits</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- National ID -->
+            <div class="mb-3">
+              <label for="nationalId" class="form-label">National ID</label>
+              <input
+                type="text"
+                id="nationalId"
+                formControlName="nationalId"
+                class="form-control"
+                [class.is-invalid]="
+                  teacherForm.get('nationalId')?.invalid &&
+                  teacherForm.get('nationalId')?.touched
+                "
+                placeholder="14 digits"
+              />
+              @if (teacherForm.get('nationalId')?.invalid && teacherForm.get('nationalId')?.touched) {
+                <div class="invalid-feedback">
+                  @if (teacherForm.get('nationalId')?.errors?.['required']) {
+                    <div>National ID is required</div>
+                  }
+                  @if (teacherForm.get('nationalId')?.errors?.['pattern']) {
+                    <div>National ID must be 14 digits</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Address -->
+            <div class="mb-3">
+              <label for="address" class="form-label">Address</label>
+              <textarea
+                id="address"
+                formControlName="address"
+                class="form-control"
+                [class.is-invalid]="
+                  teacherForm.get('address')?.invalid &&
+                  teacherForm.get('address')?.touched
+                "
+                rows="2"
+              ></textarea>
+              @if (teacherForm.get('address')?.invalid && teacherForm.get('address')?.touched) {
+                <div class="invalid-feedback">
+                  @if (teacherForm.get('address')?.errors?.['required']) {
+                    <div>Address is required</div>
+                  }
+                  @if (teacherForm.get('address')?.errors?.['minlength']) {
+                    <div>Address must be at least 5 characters</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                class="form-control"
+                [class.is-invalid]="
+                  teacherForm.get('password')?.invalid &&
+                  teacherForm.get('password')?.touched
+                "
+              />
+              @if (teacherForm.get('password')?.invalid && teacherForm.get('password')?.touched) {
+                <div class="invalid-feedback">
+                  @if (teacherForm.get('password')?.errors?.['required']) {
+                    <div>Password is required</div>
+                  }
+                  @if (teacherForm.get('password')?.errors?.['minlength']) {
+                    <div>Password must be at least 6 characters</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label"
+                >Confirm Password</label
+              >
+              <input
+                type="password"
+                id="confirmPassword"
+                formControlName="confirmPassword"
+                class="form-control"
+                [class.is-invalid]="
+                  teacherForm.get('confirmPassword')?.invalid &&
+                  teacherForm.get('confirmPassword')?.touched
+                "
+              />
+              @if (teacherForm.get('confirmPassword')?.invalid && teacherForm.get('confirmPassword')?.touched) {
+                <div class="invalid-feedback">
+                  @if (teacherForm.get('confirmPassword')?.errors?.['required']) {
+                    <div>Confirm password is required</div>
+                  }
+                  @if (teacherForm.get('confirmPassword')?.errors?.['mismatch']) {
+                    <div>Passwords do not match</div>
+                  }
+                </div>
+              }
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-3">
+              <button
+                type="submit"
+                class="btn btn-primary w-100"
+                [disabled]="isSubmitting"
+              >
+                @if (isSubmitting) {
+                  <span
+                    class="spinner-border spinner-border-sm me-2"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Registering...
+                } @else {
+                  Register as Teacher
+                }  
+              </button>
+            </div>
+
+            <!-- Login Link -->
+            <div class="text-center">
+              <p class="mb-0">
+                Already have an account? <a routerLink="/login">Login</a>
+              </p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

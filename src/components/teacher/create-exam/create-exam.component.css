@@ -1,0 +1,99 @@
+/* Modern styling with CSS variables */
+:host {
+  --primary-color: #0d6efd;
+  --danger-color: #dc3545;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --border-radius: 0.5rem;
+}
+
+.card {
+  border-radius: var(--border-radius);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
+}
+
+.input-group {
+  transition: all 0.2s ease;
+}
+
+.input-group:focus-within {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-radius: var(--border-radius);
+}
+
+.input-group-text {
+  background-color: #f8f9fa;
+  border-right: none;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #86b7fe;
+}
+
+.btn {
+  transition: all 0.2s ease;
+}
+
+.btn-outline-danger:hover {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Modern validation styling */
+.is-invalid {
+  border-color: var(--danger-color);
+}
+
+.invalid-feedback {
+  color: var(--danger-color);
+  font-size: 0.875rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .d-md-flex {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .justify-content-md-end {
+    justify-content: flex-start !important;
+  }
+}
+
+/* Animation for adding/removing questions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  animation: fadeIn 0.3s ease-out;
+}

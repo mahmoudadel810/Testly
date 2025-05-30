@@ -1,0 +1,270 @@
+.manage-exams-container {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 18px;
+  gap: 24px;
+}
+
+.header-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.header-title-group h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--primary-700);
+  margin: 0;
+}
+
+.header-divider {
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-300), var(--primary-500));
+  border-radius: 2px;
+}
+
+.create-btn {
+  background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.08);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.create-btn:hover {
+  background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+  transform: translateY(-2px);
+}
+
+.exam-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  background: transparent;
+}
+
+.exams-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  animation: fadeInTable 0.5s;
+}
+
+@keyframes fadeInTable {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.exams-table th,
+.exams-table td {
+  padding: 18px 20px;
+  text-align: left;
+}
+
+.exams-table th {
+  background: var(--neutral-100);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--primary-700);
+  border-bottom: 2px solid var(--neutral-200);
+  white-space: nowrap;
+}
+
+.exams-table th i {
+  margin-right: 6px;
+  color: var(--primary-400);
+}
+
+.exams-table tr {
+  transition: background 0.2s;
+}
+
+.exams-table tr:nth-child(even) {
+  background: var(--neutral-50);
+}
+
+.exams-table tr:hover {
+  background: var(--primary-50);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.action-btn.edit {
+  color: var(--accent-500);
+}
+
+.action-btn.edit:hover {
+  background: var(--accent-100);
+  color: var(--accent-700);
+  transform: scale(1.1);
+}
+
+.action-btn.delete {
+  color: var(--error-500);
+}
+
+.action-btn.delete:hover {
+  background: var(--error-100);
+  color: var(--error-700);
+  transform: scale(1.1);
+}
+
+.icon-btn {
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.no-exams {
+  text-align: center;
+  color: var(--neutral-500);
+  margin: 48px 0 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  font-size: 1.2rem;
+}
+
+.no-exams i {
+  color: var(--primary-200);
+  margin-bottom: 8px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--primary-500);
+  font-size: 1.1rem;
+  margin: 32px 0;
+  justify-content: center;
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid var(--primary-200);
+  border-top: 3px solid var(--primary-500);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Toast Styles */
+.toast-container {
+  margin-top: 70px;
+}
+
+.toast {
+  border-radius: 8px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  padding: 15px 20px !important;
+}
+
+.toast-success {
+  background-color: var(--primary-500) !important;
+}
+
+.toast-error {
+  background-color: var(--error-500) !important;
+}
+
+.toast-warning {
+  background-color: var(--warning-500) !important;
+}
+
+.toast-info {
+  background-color: var(--accent-500) !important;
+}
+
+.toast-title {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.toast-message {
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.toast-close-button {
+  color: white !important;
+  opacity: 0.8;
+  font-size: 18px;
+}
+
+.toast-close-button:hover {
+  opacity: 1;
+}
+
+.toast-progress {
+  height: 3px !important;
+}
+
+@media (max-width: 768px) {
+  .header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .create-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .exams-table th,
+  .exams-table td {
+    padding: 12px 10px;
+  }
+}

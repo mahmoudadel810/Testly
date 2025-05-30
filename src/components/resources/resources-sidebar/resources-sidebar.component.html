@@ -1,0 +1,18 @@
+<aside class="resources-sidebar">
+  <nav class="sidebar-nav">
+    <ul class="sidebar-menu list-unstyled mb-0">
+      @for (item of menuItems; track item.title) {
+      <li class="sidebar-menu-item">
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="d-flex align-items-center"
+        >
+          <i class="fas fa-{{ item.icon }} mx-3"></i>
+          <span>{{ item.title }}</span>
+        </a>
+      </li>
+      }
+    </ul>
+  </nav>
+</aside>

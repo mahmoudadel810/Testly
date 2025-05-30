@@ -1,0 +1,128 @@
+<div class="edit-exam">
+    <h2>Edit Exam</h2>
+
+    @if (loading) {
+    <div class="loading">
+        Loading exam...
+    </div>
+    }
+
+    @if (error) {
+    <div class="alert alert-error">
+        {{ error }}
+    </div>
+    }
+
+    @if (exam && !loading) {
+    <form *ngIf="exam && !loading" (ngSubmit)="onSubmit()" #examForm="ngForm">
+        <div class="form-section">
+            <h3>Exam Details</h3>
+
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" id="title" name="title" class="form-control" [(ngModel)]="exam.title" required
+                    #title="ngModel">
+                @if (title.invalid && (title.dirty || title.touched)) {
+                <div class="error-text">
+                    Title is required
+                </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" [(ngModel)]="exam.description"
+                    required rows="3" #description="ngModel"></textarea>
+                @if (description.invalid && (description.dirty || description.touched)) {
+                <div class="error-text">
+                    Description is required
+                </div>
+                }
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="duration">Duration (minutes)</label>
+                    <input type="number" id="duration" name="duration" class="form-control" [(ngModel)]="exam.duration"
+                        required min="5" #duration="ngModel">
+                    @if (duration.invalid && (duration.dirty || duration.touched)) {
+                    <div class="error-text">
+                        Duration must be at least 5 minutes
+                    </div>
+                    }
+                </div>
+
+                <div class="form-group">
+                    <label for="passingScore">Passing Score (%)</label>
+                    <input type="number" id="passingScore" name="passingScore" class="form-control"
+                        [(ngModel)]="exam.passingScore" required min="0" max="100" #passingScore="ngModel">
+                    @if (passingScore.invalid && (passingScore.dirty || passingScore.touched)) {
+                    <div class="error-text">
+                        Passing score must be between 0 and 100
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Questions</h3>
+
+            @for (question of exam.questions; track $index) {
+            <div class="question-card">
+                <div class="question-header">
+                    <h4>Question {{ $index + 1 }}</h4>
+                    <button type="button" class="btn-errorCSS" (click)="removeQuestion($index)">Remove</button>
+                </div>
+
+                <div class="form-group">
+                    <label [for]="'question' + $index">Question Text</label>
+                    <input type="text" [id]="'question' + $index" class="form-control" [(ngModel)]="question.text"
+                        [name]="'question' + $index" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Options</label>
+                    @for (option of question.options; track $index) {
+                    <div class="option-row">
+                        <input type="text" class="form-control" [(ngModel)]="question.options[$index]"
+                            [name]="'question' + $index + 'option' + $index" required>
+                        <button type="button" class="btn-errorCSS"
+                            (click)="removeOption(question, $index)">Remove</button>
+                    </div>
+                    }
+                    <button type="button" class="btn-accentCSS" (click)="addOption(question)">Add Option</button>
+                </div>
+
+                <div class="form-group">
+                    <label [for]="'correct' + $index">Correct Answer</label>
+                    <select [id]="'correct' + $index" class="form-control" [(ngModel)]="question.correctAnswer"
+                        [name]="'correct' + $index" required>
+                        @for (option of question.options; track $index) {
+                        <option [value]="$index">
+                            Option {{ $index + 1 }}
+                        </option>
+                        }
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label [for]="'points' + $index">Points</label>
+                    <input type="number" [id]="'points' + $index" class="form-control" [(ngModel)]="question.points"
+                        [name]="'points' + $index" required min="1">
+                </div>
+            </div>
+            }
+
+            <button type="button" class="btn-accentCSS" (click)="addQuestion()">Add Question</button>
+        </div>
+
+        <div class="form-actions">
+            <button type="button" class="btn-accentCSS" (click)="cancel()">Cancel</button>
+            <button type="submit" class="btn-primaryCSS" [disabled]="!examForm.valid || saving">
+                {{ saving ? 'Saving...' : 'Save Changes' }}
+            </button>
+        </div>
+    </form>
+    }
+</div>
