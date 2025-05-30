@@ -23,6 +23,16 @@ export class RegisterComponent implements OnInit {
   isLoading = false;
   registerCompleted = false;
   successMessage = '';
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
 
   constructor(
     private authService: AuthService,

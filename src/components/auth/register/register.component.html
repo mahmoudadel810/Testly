@@ -82,12 +82,17 @@
 
             <div class="form-group">
               <label for="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                formControlName="password"
-                class="form-control"
-              />
+              <div class="password-input-wrapper">
+  <input
+    [type]="showPassword ? 'text' : 'password'"
+    id="password"
+    formControlName="password"
+    class="form-control"
+  />
+  <span class="password-toggle-icon" role="button" tabindex="0" aria-label="Toggle password visibility" (click)="togglePasswordVisibility()" (keydown.enter)="togglePasswordVisibility()" (keydown.space)="togglePasswordVisibility()">
+    <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+  </span>
+</div>
               @if (registerForm.get('password')?.invalid &&
               (registerForm.get('password')?.dirty ||
               registerForm.get('password')?.touched)) {
@@ -109,12 +114,17 @@
 
             <div class="form-group">
               <label for="confirmPassword">Confirm Password</label>
-              <input
-                type="password"
-                id="confirmPassword"
-                formControlName="confirmPassword"
-                class="form-control"
-              />
+              <div class="password-input-wrapper">
+  <input
+    [type]="showConfirmPassword ? 'text' : 'password'"
+    id="confirmPassword"
+    formControlName="confirmPassword"
+    class="form-control"
+  />
+  <span class="password-toggle-icon" role="button" tabindex="0" aria-label="Toggle confirm password visibility" (click)="toggleConfirmPasswordVisibility()" (keydown.enter)="toggleConfirmPasswordVisibility()" (keydown.space)="toggleConfirmPasswordVisibility()">
+    <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+  </span>
+</div>
               @if
               (registerForm.get('confirmPassword')?.errors?.['passwordMismatch']
               && registerForm.get('confirmPassword')?.dirty) {
