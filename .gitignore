@@ -2,4 +2,6 @@ node_modules
 .env
 /dist
 .vscode
-
+create-exam.sh
+package-lock.json
+.angular
