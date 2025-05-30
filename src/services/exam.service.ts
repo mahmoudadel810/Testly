@@ -1,4 +1,3 @@
-/** @format */
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -158,7 +157,7 @@ export class ExamService {
 
   createTeacherExam(exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: '' + this.tokenService.getToken(),
+      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
     };
 
     return this.http
