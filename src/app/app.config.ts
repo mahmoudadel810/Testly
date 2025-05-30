@@ -1,32 +1,35 @@
+/** @format */
+
 import {
   ApplicationConfig,
   importProvidersFrom,
   provideZoneChangeDetection,
   PLATFORM_ID,
   inject,
-  isDevMode,
-} from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { provideRouter } from '@angular/router';
+  isDevMode
+} from "@angular/core";
+import { isPlatformBrowser } from "@angular/common";
+import { provideRouter } from "@angular/router";
 import {
   provideHttpClient,
   withFetch,
   withInterceptors,
   HttpRequest,
-  HttpHandlerFn,
-} from '@angular/common/http';
-import { ToastrModule } from 'ngx-toastr';
-import { provideAnimations } from '@angular/platform-browser/animations';
+  HttpHandlerFn
+} from "@angular/common/http";
+import { ToastrModule } from "ngx-toastr";
+import { provideAnimations } from "@angular/platform-browser/animations";
 
 // NgRx imports
-import { provideStore } from '@ngrx/store';
-import { provideEffects } from '@ngrx/effects';
-import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { provideRouterStore } from '@ngrx/router-store';
+import { provideStore } from "@ngrx/store";
+import { provideEffects } from "@ngrx/effects";
+import { provideStoreDevtools } from "@ngrx/store-devtools";
+import { provideRouterStore } from "@ngrx/router-store";
 
-import { routes } from './app.routes';
-import { reducers } from '../store';
-import { AuthEffects } from '../store/auth/effects/auth.effects';
+import { routes } from "./app.routes";
+import { reducers } from "../store";
+import { AuthEffects } from "../store/auth/effects/auth.effects";
+import { environment } from "../environments/environment";
 
 // Create an auth interceptor function
 const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
@@ -37,17 +40,17 @@ const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   let token = null;
   // Only access localStorage in browser environment
   if (isBrowser) {
-    token = localStorage.getItem('auth_token');
+    token = localStorage.getItem("auth_token");
   }
 
   // If token exists, add it to the request headers
   if (token) {
-    console.log('Adding token to request headers for URL:', req.url);
+    console.log("Adding token to request headers for URL:", req.url);
     // Clone the request and add the Authorization header with the token
     req = req.clone({
       setHeaders: {
-        Authorization: `${process.env["BAREAR"]!}${token}`
-      },
+        Authorization: `${environment.bearerTokenPrefix}${token}`
+      }
     });
   }
 
@@ -67,9 +70,9 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(
       ToastrModule.forRoot({
         timeOut: 3000,
-        positionClass: 'toast-top-right',
+        positionClass: "toast-top-right",
         preventDuplicates: true,
-        closeButton: true,
+        closeButton: true
       })
     ),
     // NgRx providers
@@ -82,7 +85,7 @@ export const appConfig: ApplicationConfig = {
       autoPause: true, // Pauses recording actions and state changes when the extension window is not open
       trace: false, // If set to true, will include stack trace for every dispatched action
       traceLimit: 75, // Maximum stack trace frames to be stored (in case trace option was provided as true)
-      connectInZone: true, // If set to true, the connection is established within the Angular zone
-    }),
-  ],
+      connectInZone: true // If set to true, the connection is established within the Angular zone
+    })
+  ]
 };

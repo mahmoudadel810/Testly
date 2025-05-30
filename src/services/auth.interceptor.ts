@@ -10,6 +10,7 @@ import {
 import { Observable } from "rxjs";
 import { AuthService } from "./auth.service";
 import { TokenService } from "./token.service";
+import { environment } from "../environments/environment";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -24,7 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `${process.env["BAREAR"]!}${token}`
+          Authorization: `${environment.bearerTokenPrefix}${token}`
         }
       });
     }
