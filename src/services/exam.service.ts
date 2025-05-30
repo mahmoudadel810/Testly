@@ -81,8 +81,43 @@ export class ExamService {
   }
 
   getAttempts(): Observable<ExamAttempt[]> {
-    return this.http.get<ExamAttempt[]>(
-      `${API_ENDPOINTS.BASE_URL}/exam/attempts`
+    const headers = {
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
+    };
+    
+    return this.http.get<any>(
+      `${API_ENDPOINTS.BASE_URL}/exam/attempts`,
+      { headers }
+    ).pipe(
+      map(response => {
+        // Check if response is array, if not, try to extract attempts from response
+        if (Array.isArray(response)) {
+          return response as ExamAttempt[];
+        } else if (response && typeof response === 'object') {
+          // If response is an object, try to find an array property
+          // Common API patterns might return { attempts: [...] } or { data: [...] }
+          const possibleArrayProps = ['attempts', 'data', 'results', 'items'];
+          for (const prop of possibleArrayProps) {
+            if (Array.isArray(response[prop])) {
+              return response[prop] as ExamAttempt[];
+            }
+          }
+          // If we can't find an array in known properties, try to use Object.values
+          const values = Object.values(response);
+          if (values.length > 0 && Array.isArray(values[0])) {
+            return values[0] as ExamAttempt[];
+          }
+        }
+        // If we can't extract an array, return empty array
+        this.logger.error('Unexpected response format from attempts API:', response);
+        return [] as ExamAttempt[];
+      }),
+      tap(attempts => this.logger.debug('User attempts loaded:', attempts.length)),
+      catchError(error => {
+        this.logger.error('Error fetching user attempts:', error);
+        return of([]);
+      })
     );
   }
 
