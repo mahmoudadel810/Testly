@@ -1,7 +1,7 @@
 /** @format */
 
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Injectable, PLATFORM_ID, Inject } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 import {
   BehaviorSubject,
   Observable,
@@ -10,22 +10,22 @@ import {
   catchError,
   of,
   timer,
-  throwError,
-} from 'rxjs';
-import { User, AuthResponse } from '../models/user.model';
-import { isPlatformBrowser } from '@angular/common';
-import { Router } from '@angular/router';
-import { TokenService } from './token.service';
-import { UserStorageService } from './user-storage.service';
-import { LoggingService } from './logging.service';
-import { API_ENDPOINTS } from '../models/constants';
+  throwError
+} from "rxjs";
+import { User, AuthResponse } from "../models/user.model";
+import { isPlatformBrowser } from "@angular/common";
+import { Router } from "@angular/router";
+import { TokenService } from "./token.service";
+import { UserStorageService } from "./user-storage.service";
+import { LoggingService } from "./logging.service";
+import { API_ENDPOINTS } from "../models/constants";
+import { environment } from "../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class AuthService {
-  getToken()
-  {
+  getToken() {
     throw new Error("Method not implemented.");
   }
   private userSubject: BehaviorSubject<User | null>;
@@ -63,21 +63,21 @@ export class AuthService {
    * @param userData User registration data
    */
   register(userData: any): Observable<any> {
-    this.logger.info('Registering new user');
+    this.logger.info("Registering new user");
 
     return this.http
       .post<{ success: boolean; message: string }>(
         `${API_ENDPOINTS.AUTH}/signUp`,
         userData,
         {
-          headers: { 'Content-Type': 'application/json' },
-          observe: 'response',
-          withCredentials: false,
+          headers: { "Content-Type": "application/json" },
+          observe: "response",
+          withCredentials: false
         }
       )
       .pipe(
         tap((response) => {
-          this.logger.debug('Registration response status:', response.status);
+          this.logger.debug("Registration response status:", response.status);
         }),
         map((response) => response.body)
       );
@@ -88,22 +88,22 @@ export class AuthService {
    * @param teacherData Teacher registration data
    */
   registerTeacher(teacherData: any): Observable<any> {
-    this.logger.info('Registering new teacher');
+    this.logger.info("Registering new teacher");
 
     return this.http
       .post<{ success: boolean; message: string }>(
         `${API_ENDPOINTS.AUTH}/teacher/signUp`,
         teacherData,
         {
-          headers: { 'Content-Type': 'application/json' },
-          observe: 'response',
-          withCredentials: false,
+          headers: { "Content-Type": "application/json" },
+          observe: "response",
+          withCredentials: false
         }
       )
       .pipe(
         tap((response) => {
           this.logger.debug(
-            'Teacher registration response status:',
+            "Teacher registration response status:",
             response.status
           );
         }),
@@ -115,16 +115,16 @@ export class AuthService {
    * Get confirmed teachers for student selection
    */
   getConfirmedTeachers(): Observable<any[]> {
-    this.logger.info('Fetching confirmed teachers');
+    this.logger.info("Fetching confirmed teachers");
 
     return this.http
       .get<any[]>(`${API_ENDPOINTS.AUTH}/teachers/confirmed`)
       .pipe(
         tap((teachers) => {
-          this.logger.debug('Fetched teachers count:', teachers.length);
+          this.logger.debug("Fetched teachers count:", teachers.length);
         }),
         catchError((error) => {
-          this.logger.error('Error fetching teachers:', error);
+          this.logger.error("Error fetching teachers:", error);
           return of([]);
         })
       );
@@ -135,7 +135,7 @@ export class AuthService {
    * @param teacherIds Array of teacher IDs
    */
   updateSelectedTeachers(teacherIds: string[]): Observable<any> {
-    this.logger.info('Updating selected teachers');
+    this.logger.info("Updating selected teachers");
 
     return this.http
       .put(
@@ -144,7 +144,8 @@ export class AuthService {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+            Authorization:
+              environment.bearerTokenPrefix + this.tokenService.getToken()
           }
         }
       )
@@ -168,10 +169,10 @@ export class AuthService {
       .get<any>(`${API_ENDPOINTS.AUTH}/confirmEmail/${token}`)
       .pipe(
         tap((response) =>
-          this.logger.debug('Email confirmation response:', response)
+          this.logger.debug("Email confirmation response:", response)
         ),
         catchError((error) => {
-          this.logger.error('Email confirmation error:', error);
+          this.logger.error("Email confirmation error:", error);
           return throwError(() => error);
         })
       );
@@ -186,10 +187,10 @@ export class AuthService {
       .post<any>(`${API_ENDPOINTS.AUTH}/resendConfirmation`, { email })
       .pipe(
         tap((response) =>
-          this.logger.debug('Resend confirmation response:', response)
+          this.logger.debug("Resend confirmation response:", response)
         ),
         catchError((error) => {
-          this.logger.error('Resend confirmation error:', error);
+          this.logger.error("Resend confirmation error:", error);
           return throwError(() => error);
         })
       );
@@ -201,7 +202,7 @@ export class AuthService {
    * @param password User's password
    */
   login(email: string, password: string): Observable<AuthResponse> {
-    this.logger.info('Attempting login');
+    this.logger.info("Attempting login");
     return this.http
       .post<AuthResponse>(`${API_ENDPOINTS.AUTH}/signIn`, { email, password })
       .pipe(tap((response) => this.handleAuthentication(response)));
@@ -214,13 +215,13 @@ export class AuthService {
     const token = this.tokenService.getToken();
 
     if (!token) {
-      this.logger.debug('No token found for validation');
+      this.logger.debug("No token found for validation");
       return of(false);
     }
 
     // Check if token expired locally first
     if (this.tokenService.isTokenExpired()) {
-      this.logger.debug('Token expired locally, clearing auth state');
+      this.logger.debug("Token expired locally, clearing auth state");
       this.logout();
       return of(false);
     }
@@ -228,7 +229,7 @@ export class AuthService {
     // Token exists and not expired locally, validate with server
     this.http
       .get<{ valid: boolean }>(`${API_ENDPOINTS.AUTH}/validateToken`, {
-        headers: { Authorization: process.env["BAREAR"]! + token }
+        headers: { Authorization: environment.bearerTokenPrefix + token }
       })
       .pipe(
         catchError((err) => {
@@ -266,7 +267,7 @@ export class AuthService {
     const token = this.tokenService.getToken();
     if (!token) {
       this.clearAuthState();
-      this.router.navigate(['/']);
+      this.router.navigate(["/"]);
       return;
     }
 
@@ -276,18 +277,18 @@ export class AuthService {
         `${API_ENDPOINTS.AUTH}/signOut`,
         {},
         {
-          headers: { Authorization: process.env["BAREAR"]! + token }
+          headers: { Authorization: environment.bearerTokenPrefix + token }
         }
       )
       .pipe(
         catchError((error) => {
-          this.logger.warn('Logout API error:', error);
+          this.logger.warn("Logout API error:", error);
           return of(null); // Continue with local logout regardless of API errors
         })
       )
       .subscribe(() => {
         this.clearAuthState();
-        this.router.navigate(['/']);
+        this.router.navigate(["/"]);
       });
   }
 
@@ -303,7 +304,7 @@ export class AuthService {
    */
   isAdmin(): boolean {
     const user = this.userSubject.value;
-    return !!user && user.role === 'admin';
+    return !!user && user.role === "admin";
   }
 
   /**
@@ -311,7 +312,7 @@ export class AuthService {
    */
   isTeacher(): boolean {
     const user = this.userSubject.value;
-    return !!user && user.role === 'teacher';
+    return !!user && user.role === "teacher";
   }
 
   /**
@@ -319,7 +320,7 @@ export class AuthService {
    */
   enterGuestMode(): void {
     if (this.isBrowser) {
-      localStorage.setItem('guest_mode', 'true');
+      localStorage.setItem("guest_mode", "true");
     }
   }
 
@@ -328,7 +329,7 @@ export class AuthService {
    */
   exitGuestMode(): void {
     if (this.isBrowser) {
-      localStorage.removeItem('guest_mode');
+      localStorage.removeItem("guest_mode");
     }
   }
 
@@ -337,7 +338,7 @@ export class AuthService {
    */
   isInGuestMode(): boolean {
     if (!this.isBrowser) return false;
-    return localStorage.getItem('guest_mode') === 'true';
+    return localStorage.getItem("guest_mode") === "true";
   }
 
   /**
@@ -374,7 +375,7 @@ export class AuthService {
    */
   private handleAuthentication(response: AuthResponse): void {
     if (!response.token || !response.user) {
-      this.logger.error('Invalid authentication response');
+      this.logger.error("Invalid authentication response");
       return;
     }
 
@@ -390,7 +391,7 @@ export class AuthService {
     // Setup token refresh
     this.setupTokenRefresh();
 
-    this.logger.info('User authenticated successfully');
+    this.logger.info("User authenticated successfully");
   }
 
   /**
@@ -400,7 +401,7 @@ export class AuthService {
     this.userStorage.clearAllAuthData();
     this.userSubject.next(null);
     this.stopTokenRefresh();
-    this.logger.debug('Auth state cleared');
+    this.logger.debug("Auth state cleared");
   }
 
   /**
@@ -443,7 +444,7 @@ export class AuthService {
    */
   private refreshToken(): void {
     // TODO: Implement token refresh logic when the backend supports it
-    this.logger.debug('Token refresh requested');
+    this.logger.debug("Token refresh requested");
   }
 
   /**
@@ -462,7 +463,7 @@ export class AuthService {
 
     // If token is expired locally, clear auth state
     if (this.tokenService.isTokenExpired()) {
-      this.logger.debug('Token expired during validity check');
+      this.logger.debug("Token expired during validity check");
       this.clearAuthState();
       return;
     }

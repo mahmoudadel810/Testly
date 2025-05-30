@@ -1,18 +1,20 @@
+/** @format */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, map, of, tap, throwError } from 'rxjs';
-import { Exam, ExamAttempt } from '../models/exam.model';
-import { TokenService } from './token.service';
-import { LoggingService } from './logging.service';
-import { API_ENDPOINTS } from '../models/constants';
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable, catchError, map, of, tap, throwError } from "rxjs";
+import { Exam, ExamAttempt } from "../models/exam.model";
+import { TokenService } from "./token.service";
+import { LoggingService } from "./logging.service";
+import { API_ENDPOINTS } from "../models/constants";
+import { environment } from "../environments/environment";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class ExamService {
   deleteExamAttempt(attemptId: string) {
-    throw new Error('Method not implemented.');
+    throw new Error("Method not implemented.");
   }
   constructor(
     private http: HttpClient,
@@ -30,10 +32,10 @@ export class ExamService {
       .get<any[]>(`${API_ENDPOINTS.AUTH}/teachers/confirmed`)
       .pipe(
         tap((teachers) =>
-          this.logger.debug('Confirmed teachers loaded:', teachers.length)
+          this.logger.debug("Confirmed teachers loaded:", teachers.length)
         ),
         catchError((error) => {
-          this.logger.error('Error fetching confirmed teachers:', error);
+          this.logger.error("Error fetching confirmed teachers:", error);
           return of([]);
         })
       );
@@ -73,7 +75,7 @@ export class ExamService {
       `${API_ENDPOINTS.BASE_URL}/exam/attempts/submit`,
       {
         attemptId,
-        answers,
+        answers
       }
     );
   }
@@ -93,7 +95,8 @@ export class ExamService {
   // Teacher endpoints
   getTeacherExams(): Observable<Exam[]> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     // Use the teacher-specific endpoint to get exams created by the current teacher
@@ -101,10 +104,10 @@ export class ExamService {
       .get<Exam[]>(`${API_ENDPOINTS.EXAM}/teacher/exams`, { headers })
       .pipe(
         tap((exams) =>
-          this.logger.debug('Teacher exams loaded:', exams.length)
+          this.logger.debug("Teacher exams loaded:", exams.length)
         ),
         catchError((error) => {
-          this.logger.error('Error fetching teacher exams:', error);
+          this.logger.error("Error fetching teacher exams:", error);
           return of([]);
         })
       );
@@ -112,17 +115,18 @@ export class ExamService {
 
   getTeacherAttempts(): Observable<ExamAttempt[]> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
       .get<ExamAttempt[]>(`${API_ENDPOINTS.EXAM}/teacher/attempts`, { headers })
       .pipe(
         tap((attempts) =>
-          this.logger.debug('Teacher attempts loaded:', attempts.length)
+          this.logger.debug("Teacher attempts loaded:", attempts.length)
         ),
         catchError((error) => {
-          this.logger.error('Error fetching teacher attempts:', error);
+          this.logger.error("Error fetching teacher attempts:", error);
           return of([]);
         })
       );
@@ -130,7 +134,8 @@ export class ExamService {
 
   getExamAttempts(examId: string): Observable<ExamAttempt[]> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
@@ -157,17 +162,18 @@ export class ExamService {
 
   createTeacherExam(exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
       .post<Exam>(`${API_ENDPOINTS.EXAM}/teacher/exams`, exam, {
-        headers,
+        headers
       })
       .pipe(
-        tap((result) => this.logger.debug('Teacher exam created successfully')),
+        tap((result) => this.logger.debug("Teacher exam created successfully")),
         catchError((error) => {
-          this.logger.error('Error creating teacher exam:', error);
+          this.logger.error("Error creating teacher exam:", error);
           return throwError(() => error);
         })
       );
@@ -175,17 +181,18 @@ export class ExamService {
 
   updateTeacherExam(id: string, exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken(),
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
       .put<Exam>(`${API_ENDPOINTS.EXAM}/teacher/exams/${id}`, exam, {
-        headers,
+        headers
       })
       .pipe(
-        tap((result) => this.logger.debug('Teacher exam updated successfully')),
+        tap((result) => this.logger.debug("Teacher exam updated successfully")),
         catchError((error) => {
-          this.logger.error('Error updating teacher exam:', error);
+          this.logger.error("Error updating teacher exam:", error);
           return throwError(() => error);
         })
       );
@@ -193,17 +200,18 @@ export class ExamService {
 
   deleteTeacherExam(id: string): Observable<any> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken(),
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
       .delete(`${API_ENDPOINTS.EXAM}/teacher/exams/${id}`, {
-        headers,
+        headers
       })
       .pipe(
-        tap((result) => this.logger.debug('Teacher exam deleted successfully')),
+        tap((result) => this.logger.debug("Teacher exam deleted successfully")),
         catchError((error) => {
-          this.logger.error('Error deleting teacher exam:', error);
+          this.logger.error("Error deleting teacher exam:", error);
           return throwError(() => error);
         })
       );
@@ -212,7 +220,7 @@ export class ExamService {
   getTeacherStudents(): Observable<any[]> {
     // Since there's no proper endpoint, return an empty array
     this.logger.debug(
-      'No backend endpoint for teacher students, returning empty array'
+      "No backend endpoint for teacher students, returning empty array"
     );
     return of([]);
   }
@@ -220,27 +228,30 @@ export class ExamService {
   // Admin endpoints (unchanged)
   createExam(exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken(),
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http.post<Exam>(`${API_ENDPOINTS.ADMIN}/exams`, exam, {
-      headers,
+      headers
     });
   }
 
   updateExam(id: string, exam: Exam): Observable<Exam> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http.put<Exam>(`${API_ENDPOINTS.ADMIN}/exams/${id}`, exam, {
-      headers,
+      headers
     });
   }
 
   deleteExam(id: string): Observable<any> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http.delete(`${API_ENDPOINTS.ADMIN}/exams/${id}`, { headers });
@@ -248,17 +259,19 @@ export class ExamService {
 
   getAllAttempts(): Observable<ExamAttempt[]> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http.get<ExamAttempt[]>(`${API_ENDPOINTS.ADMIN}/attempts`, {
-      headers,
+      headers
     });
   }
 
   getAdminExams(): Observable<Exam[]> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http.get<Exam[]>(`${API_ENDPOINTS.ADMIN}/exams`, { headers });

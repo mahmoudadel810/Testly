@@ -6,6 +6,7 @@ import { Observable, catchError, map, of, tap, throwError } from "rxjs";
 import { API_ENDPOINTS } from "../models/constants";
 import { TokenService } from "./token.service";
 import { LoggingService } from "./logging.service";
+import { environment } from "../environments/environment";
 
 @Injectable({
   providedIn: "root"
@@ -22,7 +23,8 @@ export class AdminService {
     this.logger.info("Fetching pending teachers");
 
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
@@ -41,7 +43,8 @@ export class AdminService {
   // Get count of pending teachers
   getPendingTeachersCount(): Observable<number> {
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
@@ -65,7 +68,8 @@ export class AdminService {
     this.logger.info(`Approving teacher: ${teacherId}`);
 
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
@@ -90,7 +94,8 @@ export class AdminService {
     this.logger.info(`Rejecting teacher: ${teacherId}`);
 
     const headers = {
-      Authorization: process.env["BAREAR"]! + this.tokenService.getToken()
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
     return this.http
