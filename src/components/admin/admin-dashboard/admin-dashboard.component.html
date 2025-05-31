@@ -9,8 +9,7 @@
       class="btn-refresh"
       (click)="loadStats()"
       [disabled]="isLoading"
-      [class.loading]="isLoading"
-    >
+      [class.loading]="isLoading">
       <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i>
       {{ isLoading ? "Loading..." : "Refresh Data" }}
     </button>
@@ -113,8 +112,7 @@
       <div class="card-actions">
         <a
           routerLink="/admin/results"
-          class="btn btn-primary btn-primaryCSS full-width-btn"
-        >
+          class="btn btn-primary btn-primaryCSS full-width-btn">
           <i class="fas fa-eye"></i> View Results
         </a>
       </div>
@@ -130,8 +128,7 @@
       <div class="card-actions">
         <a
           routerLink="/admin/messages"
-          class="btn btn-primary btn-primaryCSS full-width-btn"
-        >
+          class="btn btn-primary btn-primaryCSS full-width-btn">
           <i class="fas fa-inbox"></i> View Messages
         </a>
       </div>
@@ -151,8 +148,7 @@
           [class.has-badge]="stats.pendingTeachers > 0"
           [attr.data-badge]="
             stats.pendingTeachers > 0 ? stats.pendingTeachers : null
-          "
-        >
+          ">
           <i class="fas fa-user-check"></i> Pending Teachers
         </a>
       </div>

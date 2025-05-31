@@ -38,7 +38,7 @@ export class AdminService {
           return of([]);
         })
       );
-  }
+  } 
 
   // Get count of pending teachers
   getPendingTeachersCount(): Observable<number> {

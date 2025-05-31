@@ -346,7 +346,7 @@ export class AuthService {
    * @param email User's email
    */
   resetPassword(email: string): Observable<any> {
-    return this.http.post(`${API_ENDPOINTS.AUTH}/requestReset`, { email });
+    return this.http.post(`${API_ENDPOINTS.AUTH}/resetPassword`, { email });
   }
 
   /**

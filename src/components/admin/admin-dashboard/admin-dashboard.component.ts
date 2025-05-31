@@ -1,20 +1,20 @@
 /** @format */
 
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
-import { ExamService } from '../../../services/exam.service';
-import { ContactService } from '../../../services/contact.service';
-import { AdminService } from '../../../services/admin.service';
-import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
+import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterLink } from "@angular/router";
+import { ExamService } from "../../../services/exam.service";
+import { ContactService } from "../../../services/contact.service";
+import { AdminService } from "../../../services/admin.service";
+import { ToastrService } from "ngx-toastr";
+import Swal from "sweetalert2";
 
 @Component({
-  selector: 'app-admin-dashboard',
+  selector: "app-admin-dashboard",
   standalone: true,
   imports: [CommonModule, RouterLink],
-  templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.css'],
+  templateUrl: "./admin-dashboard.component.html",
+  styleUrls: ["./admin-dashboard.component.css"]
 })
 export class AdminDashboardComponent implements OnInit {
   stats = {
@@ -22,7 +22,7 @@ export class AdminDashboardComponent implements OnInit {
     totalAttempts: -1,
     passRate: -1,
     newMessages: -1,
-    pendingTeachers: -1,
+    pendingTeachers: -1
   };
   isLoading: boolean = false;
 
@@ -39,10 +39,10 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private showWelcomeMessage(): void {
-    this.toastr.success('Welcome back to your dashboard!', 'Hello Admin', {
-      positionClass: 'toast-top-right',
+    this.toastr.success("Welcome back to your dashboard!", "Hello Admin", {
+      positionClass: "toast-top-right",
       timeOut: 3000,
-      progressBar: true,
+      progressBar: true
     });
   }
 
@@ -53,7 +53,7 @@ export class AdminDashboardComponent implements OnInit {
       totalAttempts: -1,
       passRate: -1,
       newMessages: -1,
-      pendingTeachers: -1,
+      pendingTeachers: -1
     };
 
     // Load exams
@@ -63,11 +63,11 @@ export class AdminDashboardComponent implements OnInit {
         this.checkLoadingComplete();
       },
       error: (error) => {
-        this.toastr.error('Failed to load exams data', 'Error');
-        console.error('Error loading exams', error);
+        this.toastr.error("Failed to load exams data", "Error");
+        console.error("Error loading exams", error);
         this.stats.totalExams = 0;
         this.checkLoadingComplete();
-      },
+      }
     });
 
     // Load attempts
@@ -86,32 +86,32 @@ export class AdminDashboardComponent implements OnInit {
         this.checkLoadingComplete();
       },
       error: (error) => {
-        this.toastr.error('Failed to load attempts data', 'Error');
-        console.error('Error loading attempts', error);
+        this.toastr.error("Failed to load attempts data", "Error");
+        console.error("Error loading attempts", error);
         this.stats.totalAttempts = 0;
         this.stats.passRate = 0;
         this.checkLoadingComplete();
-      },
+      }
     });
 
     // Load new contact messages
-    this.contactService.getAllMessages('new').subscribe({
+    this.contactService.getAllMessages("new").subscribe({
       next: (messages) => {
         this.stats.newMessages = messages.length;
         if (messages.length > 0) {
           this.toastr.info(
             `You have ${messages.length} new messages`,
-            'New Messages'
+            "New Messages"
           );
         }
         this.checkLoadingComplete();
       },
       error: (error) => {
-        this.toastr.error('Failed to load messages', 'Error');
-        console.error('Error loading messages', error);
+        this.toastr.error("Failed to load messages", "Error");
+        console.error("Error loading messages", error);
         this.stats.newMessages = 0;
         this.checkLoadingComplete();
-      },
+      }
     });
 
     // Load pending teachers count
@@ -124,11 +124,11 @@ export class AdminDashboardComponent implements OnInit {
         this.checkLoadingComplete();
       },
       error: (error) => {
-        this.toastr.error('Failed to load pending teachers count', 'Error');
-        console.error('Error loading pending teachers count', error);
+        this.toastr.error("Failed to load pending teachers count", "Error");
+        console.error("Error loading pending teachers count", error);
         this.stats.pendingTeachers = 0;
         this.checkLoadingComplete();
-      },
+      }
     });
   }
 
@@ -136,30 +136,30 @@ export class AdminDashboardComponent implements OnInit {
     const allLoaded = Object.values(this.stats).every((val) => val !== -1);
     if (allLoaded) {
       this.isLoading = false;
-      this.toastr.success('Dashboard data updated successfully!', 'Updated', {
-        timeOut: 2000,
+      this.toastr.success("Dashboard data updated successfully!", "Updated", {
+        timeOut: 2000
       });
     }
   }
 
   private showPendingTeachersAlert(count: number): void {
     Swal.fire({
-      title: 'Pending Teacher Approvals',
+      title: "Pending Teacher Approvals",
       html: `You have <b>${count}</b> teacher applications waiting for review.`,
-      icon: 'warning',
-      confirmButtonText: 'Review Now',
+      icon: "warning",
+      confirmButtonText: "Review Now",
       showCancelButton: true,
-      cancelButtonText: 'Later',
+      cancelButtonText: "Later",
       customClass: {
-        confirmButton: 'btn btn-primaryCSS',
-        cancelButton: 'btn btn-accentCSS',
+        confirmButton: "btn btn-primaryCSS",
+        cancelButton: "btn btn-accentCSS"
       },
-      buttonsStyling: false,
+      buttonsStyling: false
     }).then((result) => {
       if (result.isConfirmed) {
         this.toastr.info(
-          'Redirecting to teachers approval page',
-          'Redirecting'
+          "Redirecting to teachers approval page",
+          "Redirecting"
         );
       }
     });
