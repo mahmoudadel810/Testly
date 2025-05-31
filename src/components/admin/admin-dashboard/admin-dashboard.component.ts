@@ -1,5 +1,6 @@
 /** @format */
 
+<<<<<<< HEAD
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink } from "@angular/router";
@@ -8,6 +9,15 @@ import { ContactService } from "../../../services/contact.service";
 import { AdminService } from "../../../services/admin.service";
 import { ToastrService } from "ngx-toastr";
 import Swal from "sweetalert2";
+=======
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { ExamService } from '../../../services/exam.service';
+import { ContactService } from '../../../services/contact.service';
+import { AdminService } from '../../../services/admin.service';
+import { ToastrService } from 'ngx-toastr';
+>>>>>>> aad350ed2599bfb783658c338a14e4332547666a
 
 @Component({
   selector: "app-admin-dashboard",
@@ -143,6 +153,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   private showPendingTeachersAlert(count: number): void {
+<<<<<<< HEAD
     Swal.fire({
       title: "Pending Teacher Approvals",
       html: `You have <b>${count}</b> teacher applications waiting for review.`,
@@ -165,3 +176,6 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 }
+=======
+  }}
+>>>>>>> aad350ed2599bfb783658c338a14e4332547666a

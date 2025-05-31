@@ -4,7 +4,6 @@ import { RouterLink, Router } from '@angular/router';
 import { ExamService } from '../../../services/exam.service';
 import { Exam } from '../../../models/exam.model';
 import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-manage-exams',
@@ -72,34 +71,19 @@ export class ManageExamsComponent implements OnInit {
   }
 
   deleteExam(id: string): void {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.confirmDelete(id);
-      }
-    });
+    if (confirm("Are you sure you want to delete this exam? You won't be able to revert this!")) {
+      this.confirmDelete(id);
+    }
   }
 
   private confirmDelete(id: string): void {
     this.examService.deleteExam(id).subscribe({
       next: () => {
         this.exams = this.exams.filter((e) => e._id !== id);
-        Swal.fire('Deleted!', 'Exam has been deleted.', 'success');
+        this.toastr.success('Exam has been deleted.', 'Deleted!');
       },
       error: (error) => {
-        Swal.fire(
-          'Error!',
-          error.error?.message || 'Failed to delete exam',
-          'error'
-        );
+        this.toastr.error(error.error?.message || 'Failed to delete exam', 'Error!');
       },
     });
   }

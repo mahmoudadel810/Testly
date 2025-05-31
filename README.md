@@ -18,7 +18,7 @@ This project leverages a modern MEAN-adjacent stack with a focus on performance,
 - **Core Framework:** Angular 19.x
 - **State Management:** NgRx (Store, Effects, Entity, Router-Store) for predictable state management and side effect handling.
 - **Reactive Programming:** RxJS for handling asynchronous operations.
-- **UI/UX:** Bootstrap 5.3.6 (responsive design), Font Awesome 6.7.2 (icons), animate.css (animations), ngx-toastr (notifications), ngx-sweetalert2 (interactive alerts).
+- **UI/UX:** Bootstrap 5.3.6 (responsive design), Font Awesome 6.7.2 (icons), animate.css (animations), ngx-toastr (notifications).
 - **Language:** TypeScript
 - **Testing:** Jasmine & Karma
 

@@ -64,11 +64,38 @@ export class ExamListComponent implements OnInit {
   loadTeachers(): void {
     this.loadingTeachers = true;
     this.examService.getConfirmedTeachers().subscribe({
-      next: (teachers) => {
-        this.teachers = teachers;
+      next: (response: any) => {
+        // Ensure teachers is always an array, even if API returns object
+        if (response && !Array.isArray(response)) {
+          // If response is an object with data property
+          if (response.data && Array.isArray(response.data)) {
+            this.teachers = response.data;
+          } 
+          // If response is an object with teachers property
+          else if (response.teachers && Array.isArray(response.teachers)) {
+            this.teachers = response.teachers;
+          }
+          // If response is an object with items property
+          else if (response.items && Array.isArray(response.items)) {
+            this.teachers = response.items;
+          }
+          // If it's an object but we can't find array properties, convert to array if possible
+          else if (typeof response === 'object') {
+            this.teachers = Object.values(response);
+          }
+          // Last resort - empty array
+          else {
+            this.teachers = [];
+            this.logger.error('Received non-array teachers data:', response);
+          }
+        } else {
+          // If it's already an array, use it directly
+          this.teachers = Array.isArray(response) ? response : [];
+        }
         this.loadingTeachers = false;
       },
       error: (error) => {
+        this.teachers = []; // Ensure it's an empty array on error
         this.logger.error('Error loading teachers:', error);
         this.loadingTeachers = false;
       },
@@ -79,6 +106,12 @@ export class ExamListComponent implements OnInit {
    * Fetches question counts for exams that don't have questions loaded
    */
   fetchMissingQuestionCounts(): void {
+    // Ensure exams is an array before filtering
+    if (!Array.isArray(this.exams)) {
+      this.logger.error('Exams is not an array:', this.exams);
+      return; // Exit if exams is not an array
+    }
+    
     const examObservables = this.exams
       .filter((exam) => !exam.questions || exam.questions.length === 0)
       .map((exam) => {
@@ -240,11 +273,29 @@ export class ExamListComponent implements OnInit {
       searchTerm = searchInput ? searchInput.value : '';
     }
 
-    this.filteredExams = this.examFilterService.filterExams(
-      this.exams,
-      searchTerm,
-      this.activeFilter
-    );
+    // Ensure exams is an array before filtering
+    if (!Array.isArray(this.exams)) {
+      this.exams = [];
+      this.logger.error('Exams is not an array in applyFilters');
+    }
+
+    // Ensure filteredExams is always an array
+    try {
+      this.filteredExams = this.examFilterService.filterExams(
+        this.exams,
+        searchTerm,
+        this.activeFilter
+      );
+      
+      // Double check that filteredExams is an array
+      if (!Array.isArray(this.filteredExams)) {
+        this.filteredExams = [];
+        this.logger.error('FilteredExams is not an array after filtering');
+      }
+    } catch (error) {
+      this.filteredExams = [];
+      this.logger.error('Error in applyFilters:', error);
+    }
   }
 
   /**
@@ -255,13 +306,44 @@ export class ExamListComponent implements OnInit {
     this.loading = true;
 
     this.examService.getExamsByTeacher(teacherId).subscribe({
-      next: (exams) => {
-        this.exams = exams;
+      next: (response: any) => {
+        // Ensure exams is always an array, similar to teachers handling
+        if (response && !Array.isArray(response)) {
+          // If response is an object with data property
+          if (response.data && Array.isArray(response.data)) {
+            this.exams = response.data;
+          }
+          // If response is an object with exams property
+          else if (response.exams && Array.isArray(response.exams)) {
+            this.exams = response.exams;
+          }
+          // If response is an object with items property
+          else if (response.items && Array.isArray(response.items)) {
+            this.exams = response.items;
+          }
+          // If it's an object but we can't find array properties, convert to array if possible
+          else if (typeof response === 'object') {
+            this.exams = Object.values(response);
+          }
+          // Last resort - empty array
+          else {
+            this.exams = [];
+            this.logger.error('Received non-array exams data:', response);
+          }
+        } else {
+          // If it's already an array, use it directly
+          this.exams = Array.isArray(response) ? response : [];
+        }
+        
         this.applyFilters();
         this.loading = false;
-        this.fetchMissingQuestionCounts();
+        // Only fetch missing question counts if exams is an array
+        if (Array.isArray(this.exams)) {
+          this.fetchMissingQuestionCounts();
+        }
       },
       error: (error) => {
+        this.exams = []; // Ensure it's an empty array on error
         this.error = 'Failed to load exams for this teacher.';
         this.loading = false;
         this.logger.error('Error loading teacher exams:', error);

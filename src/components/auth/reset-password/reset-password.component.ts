@@ -24,6 +24,16 @@ export class ResetPasswordComponent implements OnInit {
   passwordError: string = "";
   confirmPasswordError: string = "";
   codeError: string = "";
+  showNewPassword: boolean = false;
+  showConfirmNewPassword: boolean = false;
+
+  toggleNewPasswordVisibility() {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  toggleConfirmNewPasswordVisibility() {
+    this.showConfirmNewPassword = !this.showConfirmNewPassword;
+  }
 
   constructor(
     private authService: AuthService,

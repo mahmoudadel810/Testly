@@ -44,7 +44,7 @@
       <div class="answer-card">
         <div class="question">
           <span class="question-number">Q{{ $index + 1 }}</span>
-          <p>{{ exam.questions[$index].text || "Question not available" }}</p>
+          <p>{{ exam.questions[$index] && exam.questions[$index].text || "Question not available" }}</p>
         </div>
 
         <div class="options">
@@ -53,12 +53,12 @@
           <div
             class="option"
             [class.selected]="answer.selectedOption === optIndex"
-            [class.correct]="exam.questions[$index].correctAnswer !== undefined && exam.questions[$index].correctAnswer === optIndex"
+            [class.correct]="exam.questions[$index] && exam.questions[$index].correctAnswer !== undefined && exam.questions[$index].correctAnswer === optIndex"
           >
             {{ option }}
             @if (answer.selectedOption === optIndex) {
             <span class="selected-marker">Your Answer</span>
-            } @if (exam.questions[$index].correctAnswer !== undefined && exam.questions[$index].correctAnswer === optIndex) {
+            } @if (exam.questions[$index] && exam.questions[$index].correctAnswer !== undefined && exam.questions[$index].correctAnswer === optIndex) {
             <span class="correct-marker">Correct Answer</span>
             }
           </div>

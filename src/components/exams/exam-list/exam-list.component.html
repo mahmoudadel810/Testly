@@ -205,7 +205,7 @@
   </div>
   } @else {
   <div class="exam-grid" [class.list-view]="viewMode === 'list'" role="list">
-    @for (exam of filteredExams; track exam._id) {
+    @for (exam of (filteredExams || []); track $index) {
     <div class="exam-card" role="listitem">
       <div class="exam-card-header">
         <div

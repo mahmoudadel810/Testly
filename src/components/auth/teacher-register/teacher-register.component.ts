@@ -22,6 +22,16 @@ export class TeacherRegisterComponent implements OnInit {
   isSubmitting = false;
   errorMessage = '';
   successMessage = '';
+  showPassword: boolean = false;
+  showConfirmPassword: boolean = false;
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility() {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
 
   constructor(
     private fb: FormBuilder,

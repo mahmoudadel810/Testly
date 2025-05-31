@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { ExamService } from '../../../services/exam.service';
 import { Exam } from '../../../models/exam.model';
 import { ToastrService } from 'ngx-toastr';
-import Swal from 'sweetalert2';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -49,24 +48,13 @@ export class ManageExamsComponent implements OnInit {
       });
   }
 
-  async deleteExam(examId: string | undefined): Promise<void> {
+  deleteExam(examId: string | undefined): void {
     if (!examId) {
       this.toastr.error('Invalid exam ID');
       return;
     }
 
-    const result = await Swal.fire({
-      title: 'Delete Exam',
-      text: 'Are you sure you want to delete this exam? This action cannot be undone.',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Delete',
-      cancelButtonText: 'Cancel',
-    });
-
-    if (result.isConfirmed) {
+    if (confirm('Are you sure you want to delete this exam? This action cannot be undone.')) {
       this.examService
         .deleteTeacherExam(examId)
         .pipe(take(1))

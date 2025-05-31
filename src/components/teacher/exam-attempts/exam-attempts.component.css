@@ -47,25 +47,6 @@
   color: #212529 !important;
 }
 
-/* SweetAlert2 Custom Styles */
-.swal2-popup {
-  font-family: "Roboto", sans-serif;
-  border-radius: var(--border-radius);
-}
-
-.swal2-title {
-  font-size: 1.25rem;
-  color: #495057;
-}
-
-.swal2-confirm {
-  background-color: var(--danger-color) !important;
-}
-
-.swal2-cancel {
-  background-color: #6c757d !important;
-}
-
 /* Hover effects */
 .table-hover tbody tr:hover {
   background-color: rgba(13, 110, 253, 0.05);

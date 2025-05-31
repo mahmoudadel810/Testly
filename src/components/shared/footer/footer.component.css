@@ -41,6 +41,11 @@
   align-items: center;
   margin-bottom: 1.2rem;
   gap: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.footer-logo:hover {
+  transform: translateY(-3px);
 }
 
 .footer-logo i {
@@ -61,7 +66,7 @@
   margin-bottom: 1.5rem;
 }
 
-/* Language Selector - تصميم مخصص */
+/* Language Selector */
 .language-selector {
   position: relative;
   margin-bottom: 1.5rem;
@@ -125,7 +130,6 @@
   transform: translateY(-50%) rotate(180deg);
 }
 
-/* تنسيق options */
 .custom-select select option {
   background-color: var(--neutral-800);
   color: white;
@@ -139,6 +143,7 @@
 
 .custom-select select option:checked {
   background-color: var(--primary-600);
+  font-weight: bold;
 }
 
 /* Social links */
@@ -168,10 +173,15 @@
 }
 
 /* Navigation columns */
-.footer-nav {
+.footer-nav,
+.footer-contact,
+.footer-app-download {
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  padding: 15px;
+  border-radius: 8px;
 }
 
 .footer-nav h4,
@@ -234,12 +244,6 @@
 }
 
 /* Contact section */
-.footer-contact {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 .footer-contact ul li {
   display: flex;
   align-items: flex-start;
@@ -286,6 +290,12 @@
   padding: 0 1rem;
   color: white;
   border-radius: 4px 0 0 4px;
+  transition: background-color 0.3s ease;
+}
+
+.newsletter-form input:focus {
+  background-color: rgba(255, 255, 255, 0.2);
+  outline: none;
 }
 
 .newsletter-form input::placeholder {
@@ -313,35 +323,33 @@
 }
 
 /* App Download Section */
-.footer-app-download {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
 .app-buttons {
   display: flex;
-  gap: 0.8rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
+  height: 100px;
 }
 
 .app-buttons .app-button {
   padding: 0;
+  margin: 0;
   background: transparent;
   border-radius: 6px;
   transition: transform 0.3s ease;
+  overflow: hidden;
 }
 
 .app-buttons .app-button img {
-  width: 135px;
-  height: auto;
+  width: 125px;
+  margin-bottom: 0;
   border-radius: 6px;
   transition: transform 0.3s ease;
+  display: block;
 }
 
-.app-buttons .app-button:hover img {
-  transform: translateY(-2px);
-}
+/* .app-buttons .app-button:hover img {
+  transform: scale(1.03);
+} */
 
 /* Middle section - Awards */
 .footer-middle {
@@ -363,6 +371,11 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.award-item:hover {
+  transform: translateY(-3px);
 }
 
 .award-item i {
@@ -392,14 +405,77 @@
   display: flex;
   gap: 1.5rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .footer-links-secondary a {
   color: var(--neutral-400);
   text-decoration: none;
   transition: color 0.3s ease;
+  position: relative;
+  padding: 0.2rem 0;
 }
 
 .footer-links-secondary a:hover {
   color: var(--neutral-200);
+}
+
+.footer-links-secondary a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--primary-400);
+  transition: width 0.3s ease;
+}
+
+.footer-links-secondary a:hover::after {
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .footer-top {
+    padding: 2rem 0;
+  }
+
+  .footer-brand,
+  .footer-nav,
+  .footer-contact,
+  .footer-app-download {
+    margin-bottom: 1.5rem;
+  }
+
+  .app-buttons {
+    justify-content: flex-start;
+  }
+
+  .footer-nav,
+  .footer-contact,
+  .footer-app-download {
+    padding: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-logo {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-nav ul li,
+  .footer-contact ul li {
+    text-align: left;
+  }
+
+  .newsletter-form {
+    max-width: 100%;
+  }
+
+  .footer-links-secondary {
+    gap: 1rem;
+    justify-content: center;
+  }
 }

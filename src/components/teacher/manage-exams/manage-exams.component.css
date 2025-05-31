@@ -74,17 +74,3 @@
   background-color: var(--danger-color) !important;
 }
 
-/* SweetAlert2 styles */
-.swal2-popup {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  border-radius: var(--border-radius);
-}
-
-.swal2-title {
-  font-size: 1.25rem;
-  color: #212529;
-}
-
-.swal2-confirm {
-  background-color: var(--danger-color) !important;
-}

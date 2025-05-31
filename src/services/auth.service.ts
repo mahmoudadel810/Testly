@@ -341,7 +341,7 @@ export class AuthService {
     return localStorage.getItem("guest_mode") === "true";
   }
 
-  /**
+  /** 
    * Initiates password reset process
    * @param email User's email
    */

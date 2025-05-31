@@ -24,7 +24,7 @@ import { of, Subscription } from 'rxjs';
 export class TakeExamComponent implements OnInit, OnDestroy {
   exam: Exam | null = null;
   loading = true;
-  error = '';
+  error: string = '';
   answers: Answer[] = [];
   timeRemaining: number = 0;
   submitted = false;
@@ -48,21 +48,42 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   }
 
   private loadExam(id: string): void {
+    this.loading = true;
+    this.error = ''; // Clear any previous errors
+    
     const sub = this.examService
       .getExam(id)
       .pipe(
         catchError((error) => {
           this.error = 'Failed to load exam. Please try again later.';
           this.loading = false;
+          console.error('Error loading exam:', error);
           return of(null);
         })
       )
       .subscribe((exam) => {
-        if (exam) {
+        if (exam) {          
+          // Ensure exam has questions property and it's an array
+          if (!exam.questions) {
+            exam.questions = [];
+          } else if (!Array.isArray(exam.questions)) {
+            exam.questions = [];
+          }
+          
+          // If no questions are available, show an error message
+          if (exam.questions.length === 0) {
+            this.error = 'This exam does not have any questions yet. Please try another exam or contact your teacher.';
+            this.loading = false;
+            return; // Exit early without initializing exam
+          }
+          
           this.exam = exam;
           this.initializeAnswers();
           this.startExam(id);
+        } else {
+          this.error = 'Failed to load exam. Please try again later.';
         }
+        this.loading = false;
       });
 
     this.subscriptions.add(sub);
@@ -90,11 +111,15 @@ export class TakeExamComponent implements OnInit, OnDestroy {
   }
 
   private initializeAnswers(): void {
-    if (this.exam) {
+    if (this.exam && this.exam.questions && Array.isArray(this.exam.questions)) {
+      // Safely map questions if they exist
       this.answers = this.exam.questions.map((q) => ({
-        questionId: q._id!,
+        questionId: q._id || `temp-${Math.random().toString(36).substring(2, 9)}`,
         selectedOption: -1,
       }));
+    } else {
+      // Initialize with empty array if no questions are available
+      this.answers = [];
     }
   }
 
