@@ -1,27 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, ActivatedRoute } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+/** @format */
+
+import { Component, OnInit } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule, ActivatedRoute } from "@angular/router";
+import { FormsModule } from "@angular/forms";
 import {
   ContactService,
-  ContactMessage,
-} from '../../../services/contact.service';
-import { ToastrService } from 'ngx-toastr';
+  ContactMessage
+} from "../../../services/contact.service";
+import { ToastrService } from "ngx-toastr";
 
 @Component({
-  selector: 'app-admin-messages',
+  selector: "app-admin-messages",
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule],
-  templateUrl: './admin-messages.component.html',
-  styleUrls: ['./admin-messages.component.css'],
+  templateUrl: "./admin-messages.component.html",
+  styleUrls: ["./admin-messages.component.css"]
 })
 export class AdminMessagesComponent implements OnInit {
   messages: ContactMessage[] = [];
   filteredMessages: ContactMessage[] = [];
   selectedMessage: ContactMessage | null = null;
-  statusFilter: string = '';
+  statusFilter: string = "";
   loading = true;
-  error = '';
+  error = "";
 
   constructor(
     private contactService: ContactService,
@@ -31,27 +33,27 @@ export class AdminMessagesComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      this.statusFilter = params['filter'] || '';
+      this.statusFilter = params["filter"] || "";
       this.loadMessages(this.statusFilter);
     });
   }
 
   loadMessages(status?: string): void {
     this.loading = true;
-    this.error = '';
+    this.error = "";
 
     this.contactService.getAllMessages(status).subscribe({
       next: (data) => {
         this.messages = data;
         this.filteredMessages = data;
         this.loading = false;
-        this.toastr.success('Messages loaded successfully');
+        this.toastr.success("Messages loaded successfully");
       },
       error: (err) => {
-        this.error = 'Failed to load messages';
+        this.error = "Failed to load messages";
         this.loading = false;
-        this.toastr.error('Failed to load messages');
-      },
+        this.toastr.error("Failed to load messages");
+      }
     });
   }
 
@@ -70,30 +72,29 @@ export class AdminMessagesComponent implements OnInit {
 
   updateStatus(
     message: ContactMessage,
-    newStatus: 'new' | 'in-progress' | 'resolved'
+    newStatus: "new" | "in-progress" | "resolved"
   ): void {
     if (message.status === newStatus) return;
-
   }
 
   deleteMessage(message: ContactMessage): void {
-    if (confirm('Are you sure you want to delete this message?')) {
-        this.contactService.deleteMessage(message._id).subscribe({
-          next: () => {
-            this.messages = this.messages.filter((m) => m._id !== message._id);
-            this.filteredMessages = this.filteredMessages.filter(
-              (m) => m._id !== message._id
-            );
-            if (this.selectedMessage?._id === message._id) {
-              this.selectedMessage = null;
-            }
-            this.toastr.success('Message deleted successfully');
-          },
-          error: (err) => {
-            this.toastr.error('Failed to delete message');
-          },
-        });
-      }
+    if (confirm("Are you sure you want to delete this message?")) {
+      this.contactService.deleteMessage(message._id).subscribe({
+        next: () => {
+          this.messages = this.messages.filter((m) => m._id !== message._id);
+          this.filteredMessages = this.filteredMessages.filter(
+            (m) => m._id !== message._id
+          );
+          if (this.selectedMessage?._id === message._id) {
+            this.selectedMessage = null;
+          }
+          this.toastr.success("Message deleted successfully");
+        },
+        error: (err) => {
+          this.toastr.error("Failed to delete message");
+        }
+      });
+    }
   }
 
   formatDate(date: Date): string {

@@ -1,3 +1,5 @@
+<!-- @format -->
+
 <div class="manage-exams-container">
   <div class="header-row">
     <div class="header-title-group">
@@ -7,8 +9,7 @@
     <button
       class="create-btn"
       aria-label="Create New Exam"
-      routerLink="/admin/exams/create"
-    >
+      routerLink="/admin/exams/create">
       <i class="fas fa-plus"></i> <span>Create New Exam</span>
     </button>
   </div>
@@ -52,16 +53,14 @@
               class="action-btn icon-btn edit"
               aria-label="Edit Exam"
               title="Edit"
-              [routerLink]="['/admin/exams/edit', exam._id]"
-            >
+              [routerLink]="['/admin/exams/edit', exam._id]">
               <i class="fas fa-pen"></i>
             </button>
             <button
               class="action-btn icon-btn delete"
               aria-label="Delete Exam"
               title="Delete"
-              (click)="deleteExam(exam._id!)"
-            >
+              (click)="deleteExam(exam._id!)">
               <i class="fas fa-trash"></i>
             </button>
           </td>

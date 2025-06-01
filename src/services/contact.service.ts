@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { API_ENDPOINTS } from '../models/constants';
+/** @format */
+
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { Observable } from "rxjs";
+import { API_ENDPOINTS } from "../models/constants";
 
 export interface ContactMessage {
   _id: string;
@@ -10,11 +12,11 @@ export interface ContactMessage {
   subject: string;
   message: string;
   createdAt: Date;
-  status: 'new' | 'in-progress' | 'resolved';
+  status: "new" | "in-progress" | "resolved";
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class ContactService {
   constructor(private http: HttpClient) {}
@@ -46,10 +48,10 @@ export class ContactService {
 
   updateMessageStatus(
     id: string,
-    status: 'new' | 'in-progress' | 'resolved'
+    status: "new" | "in-progress" | "resolved"
   ): Observable<any> {
     return this.http.put(`${API_ENDPOINTS.CONTACT}/admin/messages/${id}`, {
-      status,
+      status
     });
   }
 
