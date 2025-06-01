@@ -1,41 +1,41 @@
 .edit-exam {
   max-width: 800px;
   margin: 0 auto;
-  padding: var(--space-4);
+  padding: 1.5rem;
 }
 
 .form-section {
   background: white;
   border-radius: 8px;
-  padding: var(--space-4);
-  margin-bottom: var(--space-4);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .form-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--space-3);
+  gap: 1rem;
 }
 
 .question-card {
-  border: 1px solid var(--neutral-200);
+  border: 1px solid #dee2e6;
   border-radius: 4px;
-  padding: var(--space-3);
-  margin-bottom: var(--space-3);
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 .question-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-3);
+  margin-bottom: 1rem;
 }
 
 .option-row {
   display: flex;
-  gap: var(--space-2);
-  margin-bottom: var(--space-2);
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .option-row .form-control {
@@ -45,18 +45,41 @@
 .form-actions {
   display: flex;
   justify-content: flex-end;
-  gap: var(--space-3);
-  margin-top: var(--space-4);
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .loading {
   text-align: center;
-  padding: var(--space-4);
-  color: var(--neutral-600);
+  padding: 1.5rem;
+  color: #6c757d;
 }
 
 .error-text {
-  color: var(--error-700);
+  color: #dc3545;
   font-size: 0.85rem;
-  margin-top: var(--space-1);
+  margin-top: 0.25rem;
+}
+
+/* Bootstrap responsive additions */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .question-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .option-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }

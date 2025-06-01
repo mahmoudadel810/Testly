@@ -1,16 +1,15 @@
-/** @format */
-
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ExamService } from "../../../services/exam.service";
 import { Exam, Question } from "../../../models/exam.model";
+import { ConfirmationPopupComponent } from "../../shared/confirmation-popup/confirmation-popup.component";
 
 @Component({
   selector: "app-edit-exam",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmationPopupComponent],
   templateUrl: "./edit-exam.component.html",
   styleUrls: ["./edit-exam.component.css"]
 })
@@ -19,6 +18,10 @@ export class EditExamComponent implements OnInit {
   loading = true;
   saving = false;
   error = "";
+  showCancelConfirmation = false;
+  showRemoveQuestionConfirmation = false;
+  questionToRemoveIndex: number | null = null;
+  initialExamState: string = '';
 
   constructor(
     private examService: ExamService,
@@ -40,6 +43,7 @@ export class EditExamComponent implements OnInit {
     this.examService.getExam(id).subscribe({
       next: (exam) => {
         this.exam = exam;
+        this.initialExamState = JSON.stringify(exam);
         this.loading = false;
       },
       error: (error) => {
@@ -47,6 +51,11 @@ export class EditExamComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  hasChanges(): boolean {
+    if (!this.exam) return false;
+    return this.initialExamState !== JSON.stringify(this.exam);
   }
 
   addQuestion(): void {
@@ -62,8 +71,20 @@ export class EditExamComponent implements OnInit {
   }
 
   removeQuestion(index: number): void {
-    if (!this.exam) return;
-    this.exam.questions.splice(index, 1);
+    this.questionToRemoveIndex = index;
+    this.showRemoveQuestionConfirmation = true;
+  }
+
+  confirmRemoveQuestion(): void {
+    if (this.questionToRemoveIndex !== null && this.exam) {
+      this.exam.questions.splice(this.questionToRemoveIndex, 1);
+    }
+    this.hideRemoveQuestionConfirmation();
+  }
+
+  hideRemoveQuestionConfirmation(): void {
+    this.questionToRemoveIndex = null;
+    this.showRemoveQuestionConfirmation = false;
   }
 
   addOption(question: Question): void {
@@ -99,6 +120,18 @@ export class EditExamComponent implements OnInit {
   }
 
   cancel(): void {
+    if (this.hasChanges()) {
+      this.showCancelConfirmation = true;
+    } else {
+      this.router.navigate(["/admin/exams"]);
+    }
+  }
+
+  confirmCancel(): void {
     this.router.navigate(["/admin/exams"]);
+  }
+
+  hideCancelConfirmation(): void {
+    this.showCancelConfirmation = false;
   }
 }

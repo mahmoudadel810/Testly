@@ -1,6 +1,28 @@
 <div class="edit-exam">
     <h2>Edit Exam</h2>
 
+    @if (showCancelConfirmation) {
+    <app-confirmation-popup 
+        title="Discard Changes" 
+        message="You have unsaved changes. Are you sure you want to leave?" 
+        actionType="remove"
+        cancelButtonText="Continue Editing"
+        confirmButtonText="Discard Changes"
+        (confirm)="confirmCancel()"
+        (cancel)="hideCancelConfirmation()">
+    </app-confirmation-popup>
+    }
+
+    @if (showRemoveQuestionConfirmation) {
+    <app-confirmation-popup 
+        title="Remove Question" 
+        message="Are you sure you want to remove this question?" 
+        actionType="remove"
+        (confirm)="confirmRemoveQuestion()"
+        (cancel)="hideRemoveQuestionConfirmation()">
+    </app-confirmation-popup>
+    }
+
     @if (loading) {
     <div class="loading">
         Loading exam...
@@ -8,7 +30,7 @@
     }
 
     @if (error) {
-    <div class="alert alert-error">
+    <div class="alert alert-danger">
         {{ error }}
     </div>
     }
@@ -72,7 +94,7 @@
             <div class="question-card">
                 <div class="question-header">
                     <h4>Question {{ $index + 1 }}</h4>
-                    <button type="button" class="btn-errorCSS" (click)="removeQuestion($index)">Remove</button>
+                    <button type="button" class="btn btn-danger btn-sm" (click)="removeQuestion($index)">Remove</button>
                 </div>
 
                 <div class="form-group">
@@ -87,11 +109,11 @@
                     <div class="option-row">
                         <input type="text" class="form-control" [(ngModel)]="question.options[$index]"
                             [name]="'question' + $index + 'option' + $index" required>
-                        <button type="button" class="btn-errorCSS"
+                        <button type="button" class="btn btn-danger btn-sm"
                             (click)="removeOption(question, $index)">Remove</button>
                     </div>
                     }
-                    <button type="button" class="btn-accentCSS" (click)="addOption(question)">Add Option</button>
+                    <button type="button" class="btn btn-secondary btn-sm" (click)="addOption(question)">Add Option</button>
                 </div>
 
                 <div class="form-group">
@@ -114,12 +136,12 @@
             </div>
             }
 
-            <button type="button" class="btn-accentCSS" (click)="addQuestion()">Add Question</button>
+            <button type="button" class="btn btn-primary" (click)="addQuestion()">Add Question</button>
         </div>
 
         <div class="form-actions">
-            <button type="button" class="btn-accentCSS" (click)="cancel()">Cancel</button>
-            <button type="submit" class="btn-primaryCSS" [disabled]="!examForm.valid || saving">
+            <button type="button" class="btn btn-outline-secondary" (click)="cancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!examForm.valid || saving">
                 {{ saving ? 'Saving...' : 'Save Changes' }}
             </button>
         </div>
