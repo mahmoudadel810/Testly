@@ -33,9 +33,7 @@ export class ManageExamsComponent implements OnInit {
       next: (exams) => {
         this.exams = exams;
         this.loading = false;
-<<<<<<< HEAD
         this.toastr.success("Exams loaded successfully", "Success");
-=======
         
         // Debug: Log the structure of the first exam to understand the data
         if (exams.length > 0) {
@@ -56,7 +54,6 @@ export class ManageExamsComponent implements OnInit {
         }
         
         this.toastr.success('Exams loaded successfully', 'Success');
->>>>>>> f45ad3314e843a2ee274adb7e50654f3783452eb
       },
       error: (error) => {
         this.toastr.error("Failed to load exams. Please try again.", "Error");
