@@ -62,7 +62,6 @@ export class AdminDashboardComponent implements OnInit {
         this.checkLoadingComplete();
       },
       error: (error) => {
-        this.toastr.error("Failed to load exams data", "Error");
         console.error("Error loading exams", error);
         this.stats.totalExams = 0;
         this.checkLoadingComplete();
@@ -85,7 +84,6 @@ export class AdminDashboardComponent implements OnInit {
         this.checkLoadingComplete();
       },
       error: (error) => {
-        this.toastr.error("Failed to load attempts data", "Error");
         console.error("Error loading attempts", error);
         this.stats.totalAttempts = 0;
         this.stats.passRate = 0;
@@ -100,13 +98,16 @@ export class AdminDashboardComponent implements OnInit {
         if (messages.length > 0) {
           this.toastr.info(
             `You have ${messages.length} new messages`,
-            "New Messages"
+            "New Messages",
+            {
+              timeOut: 5000,
+              progressBar: true
+            }
           );
         }
         this.checkLoadingComplete();
       },
       error: (error) => {
-        this.toastr.error("Failed to load messages", "Error");
         console.error("Error loading messages", error);
         this.stats.newMessages = 0;
         this.checkLoadingComplete();
@@ -117,10 +118,19 @@ export class AdminDashboardComponent implements OnInit {
     this.adminService.getPendingTeachersCount().subscribe({
       next: (count) => {
         this.stats.pendingTeachers = count;
+        if (count > 0) {
+          this.toastr.warning(
+            `You have ${count} pending teacher requests`,
+            "Pending Teachers",
+            {
+              timeOut: 5000,
+              progressBar: true
+            }
+          );
+        }
         this.checkLoadingComplete();
       },
       error: (error) => {
-        this.toastr.error("Failed to load pending teachers count", "Error");
         console.error("Error loading pending teachers count", error);
         this.stats.pendingTeachers = 0;
         this.checkLoadingComplete();
@@ -132,9 +142,6 @@ export class AdminDashboardComponent implements OnInit {
     const allLoaded = Object.values(this.stats).every((val) => val !== -1);
     if (allLoaded) {
       this.isLoading = false;
-      this.toastr.success("Dashboard data updated successfully!", "Updated", {
-        timeOut: 2000
-      });
     }
   }
 }
