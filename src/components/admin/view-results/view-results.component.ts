@@ -186,8 +186,8 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
   }
 
   filterResults(): void {
-    console.log("Filtering with status:", this.statusFilter);
-    console.log("Filtering with search term:", this.searchTerm);
+    // console.log("Filtering with status:", this.statusFilter);
+    // console.log("Filtering with search term:", this.searchTerm);
 
     // Start with all attempts
     let filtered = [...this.attempts];
@@ -228,7 +228,7 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
       });
     }
 
-    console.log("Filtered attempts:", filtered.length);
+    // console.log("Filtered attempts:", filtered.length);
 
     // Update filtered attempts
     this.filteredAttempts = filtered;
@@ -349,7 +349,7 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
         new Date().toISOString().split("T")[0]
       }.csv`;
 
-      console.log("Downloading file:", filename);
+      // console.log("Downloading file:", filename);
 
       link.setAttribute("href", url);
       link.setAttribute("download", filename);
@@ -361,7 +361,7 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
       // Clean up
       URL.revokeObjectURL(url);
 
-      console.log("Export complete");
+      // console.log("Export complete");
     } catch (error) {
       console.error("Error exporting results:", error);
       alert("An error occurred while exporting results. Please try again.");

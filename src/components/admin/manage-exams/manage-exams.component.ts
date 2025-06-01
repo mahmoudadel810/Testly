@@ -37,18 +37,18 @@ export class ManageExamsComponent implements OnInit {
         
         // Debug: Log the structure of the first exam to understand the data
         if (exams.length > 0) {
-          console.log('Exam data structure:', exams[0]);
-          console.log('Creator details:', exams[0].createdBy);
-          console.log('Teacher details:', exams[0].teacherId);
+          // console.log('Exam data structure:', exams[0]);
+          // console.log('Creator details:', exams[0].createdBy);
+          // console.log('Teacher details:', exams[0].teacherId);
           
           // Check what role information is available
           const creator = exams[0].createdBy;
           if (creator) {
-            console.log('Creator type:', typeof creator);
+            // console.log('Creator type:', typeof creator);
             if (typeof creator === 'object') {
-              console.log('Creator properties:', Object.keys(creator));
+              // console.log('Creator properties:', Object.keys(creator));
               // Don't try to access role directly as it doesn't exist in the model
-              console.log('Teacher ID info:', exams[0].teacherId);
+              // console.log('Teacher ID info:', exams[0].teacherId);
             }
           }
         }

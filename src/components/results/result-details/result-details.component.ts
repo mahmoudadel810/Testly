@@ -34,10 +34,10 @@ export class ResultDetailsComponent implements OnInit {
   }
 
   private loadAttempt(id: string): void {
-    console.log('Loading attempt with ID:', id);
+    // console.log('Loading attempt with ID:', id);
     this.examService.getAttempt(id).subscribe({
       next: (attempt: ExamAttempt) => {
-        console.log('Received attempt data:', attempt);
+        // console.log('Received attempt data:', attempt);
         
         if (!attempt) {
           this.error = 'No attempt data found';
@@ -52,7 +52,7 @@ export class ResultDetailsComponent implements OnInit {
           ? attempt.examId 
           : attempt.examId?._id;
           
-        console.log('Extracted exam ID:', examId);
+        // console.log('Extracted exam ID:', examId);
         
         if (!examId) {
           this.error = 'Could not determine exam ID from attempt';
@@ -60,10 +60,10 @@ export class ResultDetailsComponent implements OnInit {
           return;
         }
         
-        console.log('Fetching exam with ID:', examId);
+        // console.log('Fetching exam with ID:', examId);
         this.examService.getExam(examId).subscribe({
           next: (exam: Exam) => {
-            console.log('Received exam data:', exam);
+            // console.log('Received exam data:', exam);
             
             if (!exam) {
               this.error = 'No exam data found';
@@ -73,10 +73,10 @@ export class ResultDetailsComponent implements OnInit {
             
             // Ensure the exam has questions property
             if (!exam.questions) {
-              console.warn('Exam has no questions property');
+              // console.warn('Exam has no questions property');
               exam.questions = [];
             } else if (!Array.isArray(exam.questions)) {
-              console.warn('Exam questions is not an array');
+              // console.warn('Exam questions is not an array');
               exam.questions = [];
             }
             

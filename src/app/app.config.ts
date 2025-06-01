@@ -45,7 +45,7 @@ const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
 
   // If token exists, add it to the request headers
   if (token) {
-    console.log("Adding token to request headers for URL:", req.url);
+    // console.log("Adding token to request headers for URL:", req.url);
     // Clone the request and add the Authorization header with the token
     req = req.clone({
       setHeaders: {

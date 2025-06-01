@@ -34,7 +34,7 @@ export class AdminService {
       Authorization: `${environment.bearerTokenPrefix}${token}`
     };
 
-    this.logger.debug('Authorization header:', headers.Authorization);
+    // this.logger.debug('Authorization header:', headers.Authorization);
 
     // Define an interface for the API response format
     interface ApiResponse {
@@ -113,7 +113,7 @@ export class AdminService {
       Authorization: `${environment.bearerTokenPrefix}${token}`
     };
     
-    this.logger.debug('Authorization header:', headers.Authorization);
+    // this.logger.debug('Authorization header:', headers.Authorization);
     
     return this.http
       .get<any>(`${API_ENDPOINTS.ADMIN}/teachers/pending/count`, { headers })

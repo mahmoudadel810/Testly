@@ -53,7 +53,7 @@ export class ContactService {
       Authorization: `${environment.bearerTokenPrefix}${token}`
     };
 
-    console.debug('Authorization header:', headers.Authorization);
+    // console.debug('Authorization header:', headers.Authorization);
 
     // Define an interface for the API response format
     interface ApiResponse {
@@ -67,11 +67,11 @@ export class ContactService {
       .pipe(
         tap(response => {
           // Log the raw response to debug what's coming back
-          console.debug('Raw API response for messages:', response);
+          // console.debug('Raw API response for messages:', response);
 
           // Check if response is empty or null
           if (!response) {
-            console.warn('Empty response received for messages');
+            // console.warn('Empty response received for messages');
           }
         }),
         map(response => {
@@ -100,15 +100,15 @@ export class ContactService {
           return [] as ContactMessage[];
         }),
         tap(messages => {
-          console.debug('Messages loaded:', messages.length);
+          // console.debug('Messages loaded:', messages.length);
 
           // Log additional info if no messages were found
           if (messages.length === 0) {
-            console.warn('No messages found. Check API endpoint.');
+            // console.warn('No messages found. Check API endpoint.');
           }
         }),
         catchError((error) => {
-          console.error('Error fetching messages:', error);
+          // console.error('Error fetching messages:', error);
           return of([]);
         })
       );
@@ -118,7 +118,7 @@ export class ContactService {
     // Ensure we have a valid token
     const token = this.tokenService.getToken();
     if (!token) {
-      console.error('No authentication token available');
+      // console.error('No authentication token available');
       return of({} as ContactMessage);
     }
     
