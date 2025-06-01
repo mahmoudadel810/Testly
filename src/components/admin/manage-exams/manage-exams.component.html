@@ -27,6 +27,7 @@
           <th><i class="fas fa-clock"></i> Duration</th>
           <th><i class="fas fa-percentage"></i> Passing Score</th>
           <th><i class="fas fa-chalkboard-teacher"></i> Teacher</th>
+          <th><i class="fas fa-user-tag"></i> Role</th>
           <th><i class="fas fa-calendar-alt"></i> Created</th>
           <th>Actions</th>
         </tr>
@@ -45,6 +46,11 @@
               getTeacherEmail(exam)
             }}</small>
             }
+          </td>
+          <td>
+            <span class="role-badge {{ getCreatorRole(exam).toLowerCase() }}">
+              {{ getCreatorRole(exam) }}
+            </span>
           </td>
           <td>{{ exam.createdAt | date }}</td>
           <td class="actions">
