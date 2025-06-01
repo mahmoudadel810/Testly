@@ -79,7 +79,7 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
 
     const attemptsSubscription = this.examService.getAllAttempts().subscribe({
       next: (attempts) => {
-        console.log("Got attempts:", attempts);
+        // console.log("Got attempts:", attempts);
         this.attempts = attempts.filter(
           (attempt) =>
             attempt &&

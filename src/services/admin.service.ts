@@ -87,7 +87,7 @@ export class AdminService {
           
           // Log additional info if no teachers were found
           if (teachers.length === 0) {
-            this.logger.warn('No pending teachers found. Check API endpoint.');
+            // this.logger.warn('No pending teachers found. Check API endpoint.');
           }
         }),
         catchError((error) => {
