@@ -374,6 +374,23 @@
           </button>
         </div>
       </form>
+      @if (showConfirmPopup()) {
+      <app-confirmation-popup
+        [title]="
+          confirmAction() === 'removeQuestion'
+            ? 'Delete Question'
+            : 'Delete Option'
+        "
+        [message]="
+          confirmAction() === 'removeQuestion'
+            ? 'Are you sure you want to delete this question?'
+            : 'Are you sure you want to delete this option?'
+        "
+        [actionType]="'delete'"
+        (confirm)="onConfirm()"
+        (cancel)="onCancel()"
+      />
+      }
     </div>
   </div>
 </div>

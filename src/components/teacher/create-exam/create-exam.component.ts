@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import {
@@ -8,24 +8,34 @@ import {
   FormGroup,
   FormArray,
   Validators,
-  FormControl,
 } from '@angular/forms';
 import { ExamService } from '../../../services/exam.service';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
+import { ConfirmationPopupComponent } from '../../shared/confirmation-popup/confirmation-popup.component';
 
 @Component({
   selector: 'app-create-exam',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ConfirmationPopupComponent,
+  ],
   templateUrl: './create-exam.component.html',
   styleUrls: ['./create-exam.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateExamComponent implements OnInit {
   examForm: FormGroup;
   isSubmitting = signal(false);
-  formStatus = computed(() => this.isSubmitting() ? 'Submitting...' : 'Ready');
+  formStatus = computed(() => (this.isSubmitting() ? 'Submitting...' : 'Ready'));
+  
+  // For confirmation popup
+  showConfirmPopup = signal(false);
+  confirmAction = signal<'removeQuestion' | 'removeOption' | null>(null);
+  confirmData = signal<{ index: number; optionIndex?: number } | null>(null);
 
   constructor(
     private fb: FormBuilder,
@@ -47,7 +57,6 @@ export class CreateExamComponent implements OnInit {
       questions: this.fb.array([]),
     });
 
-    // Add first question by default
     this.addQuestion();
   }
 
@@ -78,10 +87,9 @@ export class CreateExamComponent implements OnInit {
       return;
     }
 
-    if (confirm('Are you sure you want to delete this question?')) {
-      this.questions.removeAt(index);
-      this.toastr.success('Question deleted successfully');
-    }
+    this.confirmAction.set('removeQuestion');
+    this.confirmData.set({ index });
+    this.showConfirmPopup.set(true);
   }
 
   getOptions(questionIndex: number): FormArray {
@@ -102,20 +110,45 @@ export class CreateExamComponent implements OnInit {
       return;
     }
 
-    if (confirm('Are you sure you want to delete this option?')) {
-      options.removeAt(optionIndex);
+    this.confirmAction.set('removeOption');
+    this.confirmData.set({ index: questionIndex, optionIndex });
+    this.showConfirmPopup.set(true);
+  }
+
+  onConfirm(): void {
+    const action = this.confirmAction();
+    const data = this.confirmData();
+
+    if (!action || !data) return;
+
+    if (action === 'removeQuestion') {
+      this.questions.removeAt(data.index);
+      this.toastr.success('Question deleted successfully');
+    } else if (action === 'removeOption') {
+      const options = this.getOptions(data.index);
+      options.removeAt(data.optionIndex!);
 
       // Update correct answer if needed
-      const questionControl = this.questions.at(questionIndex);
+      const questionControl = this.questions.at(data.index);
       const correctAnswerControl = questionControl.get('correctAnswer');
       const currentCorrectAnswer = correctAnswerControl?.value;
 
-      if (currentCorrectAnswer >= optionIndex && currentCorrectAnswer > 0) {
+      if (currentCorrectAnswer >= data.optionIndex! && currentCorrectAnswer > 0) {
         correctAnswerControl?.setValue(currentCorrectAnswer - 1);
       }
 
       this.toastr.success('Option deleted successfully');
     }
+
+    this.showConfirmPopup.set(false);
+    this.confirmAction.set(null);
+    this.confirmData.set(null);
+  }
+
+  onCancel(): void {
+    this.showConfirmPopup.set(false);
+    this.confirmAction.set(null);
+    this.confirmData.set(null);
   }
 
   onSubmit(): void {
@@ -127,7 +160,8 @@ export class CreateExamComponent implements OnInit {
 
     this.isSubmitting.set(true);
 
-    this.examService.createTeacherExam(this.examForm.value)
+    this.examService
+      .createTeacherExam(this.examForm.value)
       .pipe(take(1))
       .subscribe({
         next: () => {
@@ -139,7 +173,8 @@ export class CreateExamComponent implements OnInit {
         },
         error: (err) => {
           this.isSubmitting.set(false);
-          const errorMsg = err.error?.message || 'Failed to create exam. Please try again.';
+          const errorMsg =
+            err.error?.message || 'Failed to create exam. Please try again.';
           this.toastr.error(errorMsg);
           console.error('Error creating exam:', err);
         },

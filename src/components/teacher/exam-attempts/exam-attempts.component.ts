@@ -7,11 +7,12 @@ import { Exam, ExamAttempt } from '../../../models/exam.model';
 import { switchMap } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
+import { ConfirmationPopupComponent } from '../../shared/confirmation-popup/confirmation-popup.component';
 
 @Component({
   selector: 'app-exam-attempts',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmationPopupComponent],
   templateUrl: './exam-attempts.component.html',
   styleUrls: ['./exam-attempts.component.css'],
 })
@@ -20,6 +21,9 @@ export class ExamAttemptsComponent implements OnInit {
   attempts = signal<ExamAttempt[]>([]);
   loading = signal(true);
   error = signal('');
+  
+  showConfirmPopup = signal(false);
+  attemptToDelete = signal<string | null>(null);
 
   // Computed properties
   uniqueStudentCount = computed(() => {
@@ -102,29 +106,39 @@ export class ExamAttemptsComponent implements OnInit {
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
   }
 
-  deleteAttempt(attemptId: string | undefined): void {
-    if (!attemptId) {
-      this.toastr.warning('Attempt ID is missing');
-      return;
+openDeleteConfirmation(attemptId: string): void {
+  console.log('Opening popup for attempt:', attemptId);
+  this.attemptToDelete.set(attemptId);
+  this.showConfirmPopup.set(true);
+  console.log('Popup should be visible now');
+}
+  confirmDelete(): void {
+    if (this.attemptToDelete()) {
+      this.performDelete(this.attemptToDelete()!);
     }
+    this.showConfirmPopup.set(false);
+  }
 
-    if (confirm('Are you sure you want to delete this attempt?')) {
-      this.examService
-        .getExamAttempts(attemptId)
-        .pipe(take(1))
-        .subscribe({
-          next: () => {
-            this.attempts.update((attempts) =>
-              attempts.filter((attempt) => attempt._id !== attemptId)
-            );
-            this.toastr.success('Attempt deleted successfully');
-          },
-          error: (err: any) => {
-            this.toastr.error('Failed to delete attempt. Please try again.');
-            console.error('Error deleting attempt:', err);
-          },
-        });
-    }
+  cancelDelete(): void {
+    this.showConfirmPopup.set(false);
+    this.attemptToDelete.set(null);
+  }
+
+  private performDelete(attemptId: string): void {
+    this.examService.deleteExamAttempt(attemptId)
+      .pipe(take(1))
+      .subscribe({
+        next: () => {
+          this.attempts.update((attempts) =>
+            attempts.filter((attempt) => attempt._id !== attemptId)
+          );
+          this.toastr.success('Attempt deleted successfully');
+        },
+        error: (err) => {
+          this.toastr.error('Failed to delete attempt. Please try again.');
+          console.error('Error deleting attempt:', err);
+        },
+      });
   }
 
   getStudentName(

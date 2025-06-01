@@ -1,0 +1,150 @@
+:host {
+  display: contents;
+}
+
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: grid;
+  place-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.popup-container {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  width: min(100%, 32rem);
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+
+.popup-header {
+  padding: 1.25rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.popup-header i {
+  font-size: 1.5rem;
+  color: #6c757d;
+}
+
+.popup-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #343a40;
+}
+
+.popup-body {
+  padding: 1.25rem;
+}
+
+.popup-body p {
+  margin: 0 0 0.9375rem;
+  color: #495057;
+  font-size: 1rem;
+}
+
+.popup-body p:last-child {
+  margin-bottom: 0;
+}
+
+.popup-footer {
+  padding: 0.9375rem 1.25rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.625rem;
+  border-top: 1px solid #eee;
+}
+
+.popup-footer .btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.popup-footer .btn-cancel {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  color: #495057;
+}
+
+.popup-footer .btn-cancel:hover {
+  background-color: #e9ecef;
+}
+
+.popup-footer .btn-confirm {
+  color: white;
+  border: none;
+}
+
+.popup-footer .btn-confirm.btn-danger {
+  background-color: #dc3545;
+}
+
+.popup-footer .btn-confirm.btn-danger:hover {
+  background-color: #c82333;
+}
+
+.popup-footer .btn-confirm.btn-primary {
+  background-color: #007bff;
+}
+
+.popup-footer .btn-confirm.btn-primary:hover {
+  background-color: #0069d9;
+}
+.popup-footer .btn-confirm.btn-success {
+  background-color: #28a745;
+}
+
+.popup-footer .btn-confirm.btn-success:hover {
+  background-color: #218838;
+}
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile responsiveness */
+@media (max-width: 36rem) {
+  .popup-header,
+  .popup-body,
+  .popup-footer {
+    padding: 1rem;
+  }
+
+  .popup-footer {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .popup-footer .btn {
+    width: 100%;
+  }
+}

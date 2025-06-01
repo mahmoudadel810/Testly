@@ -13,9 +13,9 @@ import { environment } from "../environments/environment";
   providedIn: "root"
 })
 export class ExamService {
-  deleteExamAttempt(attemptId: string) {
-    throw new Error("Method not implemented.");
-  }
+deleteExamAttempt(attemptId: string): Observable<void> {
+  return this.http.delete<void>(`${API_ENDPOINTS.BASE_URL}/exam/attempts/${attemptId}`);
+}
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
