@@ -110,7 +110,7 @@
             </button>
             <button
               class="action-btn delete-btn"
-              (click)="deleteMessage(message); $event.stopPropagation()"
+              (click)="openDeleteModal(message); $event.stopPropagation()"
               title="Delete Message"
             >
               <i class="fas fa-trash-alt"></i>
@@ -189,5 +189,16 @@
       </div>
     </div>
   </div>
+  }
+
+  @if (showDeleteModal && messageToDelete) {
+    <app-confirmation-popup
+      title="Delete Message"
+      message="Are you sure you want to delete this message?"
+      actionType="delete"
+      [itemName]="messageToDelete.subject"
+      (confirm)="onDeleteConfirmed()"
+      (cancel)="onDeleteCancelled()"
+    ></app-confirmation-popup>
   }
 </div>

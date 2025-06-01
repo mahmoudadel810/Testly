@@ -1,19 +1,14 @@
-/** @format */
-
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule, ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
-import {
-  ContactService,
-  ContactMessage
-} from "../../../services/contact.service";
-import { ToastrService } from "ngx-toastr";
+import { ContactService, ContactMessage } from "../../../services/contact.service";
+import { ConfirmationPopupComponent } from "../../shared/confirmation-popup/confirmation-popup.component";
 
 @Component({
   selector: "app-admin-messages",
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, ConfirmationPopupComponent],
   templateUrl: "./admin-messages.component.html",
   styleUrls: ["./admin-messages.component.css"]
 })
@@ -24,11 +19,12 @@ export class AdminMessagesComponent implements OnInit {
   statusFilter: string = "";
   loading = true;
   error = "";
+  showDeleteModal = false;
+  messageToDelete: ContactMessage | null = null;
 
   constructor(
     private contactService: ContactService,
-    private route: ActivatedRoute,
-    private toastr: ToastrService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -47,12 +43,10 @@ export class AdminMessagesComponent implements OnInit {
         this.messages = data;
         this.filteredMessages = data;
         this.loading = false;
-        this.toastr.success("Messages loaded successfully");
       },
       error: (err) => {
         this.error = "Failed to load messages";
         this.loading = false;
-        this.toastr.error("Failed to load messages");
       }
     });
   }
@@ -77,24 +71,37 @@ export class AdminMessagesComponent implements OnInit {
     if (message.status === newStatus) return;
   }
 
-  deleteMessage(message: ContactMessage): void {
-    if (confirm("Are you sure you want to delete this message?")) {
-      this.contactService.deleteMessage(message._id).subscribe({
-        next: () => {
-          this.messages = this.messages.filter((m) => m._id !== message._id);
-          this.filteredMessages = this.filteredMessages.filter(
-            (m) => m._id !== message._id
-          );
-          if (this.selectedMessage?._id === message._id) {
-            this.selectedMessage = null;
-          }
-          this.toastr.success("Message deleted successfully");
-        },
-        error: (err) => {
-          this.toastr.error("Failed to delete message");
+  openDeleteModal(message: ContactMessage): void {
+    this.messageToDelete = message;
+    this.showDeleteModal = true;
+  }
+
+  onDeleteConfirmed(): void {
+    if (!this.messageToDelete) return;
+
+    const messageId = this.messageToDelete._id;
+    this.contactService.deleteMessage(messageId).subscribe({
+      next: () => {
+        this.messages = this.messages.filter((m) => m._id !== messageId);
+        this.filteredMessages = this.filteredMessages.filter(
+          (m) => m._id !== messageId
+        );
+        if (this.selectedMessage?._id === messageId) {
+          this.selectedMessage = null;
         }
-      });
-    }
+        this.showDeleteModal = false;
+        this.messageToDelete = null;
+      },
+      error: (err) => {
+        this.showDeleteModal = false;
+        this.messageToDelete = null;
+      }
+    });
+  }
+
+  onDeleteCancelled(): void {
+    this.showDeleteModal = false;
+    this.messageToDelete = null;
   }
 
   formatDate(date: Date): string {
