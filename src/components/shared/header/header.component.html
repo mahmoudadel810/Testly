@@ -48,7 +48,7 @@
         <li class="user-dropdown">
           <a class="user-dropdown-toggle" (click)="toggleDropdown($event)">
              <i class="fas fa-user-circle"></i>
-            <span>{{ isTeacher ? (currentUser.name || currentUser.username) : currentUser.username }}</span>
+            <span>{{ (isTeacher || isAdmin) ? (currentUser.name || currentUser.username) : currentUser.username }}</span>
             <i class="fas fa-chevron-down" [class.rotate]="dropdownOpen"></i>
           </a>
           <div class="dropdown-menu" [class.show]="dropdownOpen">
@@ -120,7 +120,7 @@
         <i class="fas fa-user-circle"></i>
       </div>
       <div class="mobile-user-details">
-        <div class="mobile-username">{{ currentUser.username }}</div>
+        <div class="mobile-username">{{ (isTeacher || isAdmin) ? (currentUser.name || currentUser.username) : currentUser.username }}</div>
         <div class="mobile-email">{{ currentUser.email }}</div>
       </div>
     </div>
