@@ -130,7 +130,7 @@
                   <td>
                     <button
                       class="btn btn-sm btn-outline-danger"
-                      (click)="openDeleteConfirmation(attempt._id || '')"
+                      (click)="deleteAttempt(attempt._id || '')"
                     >
                       <i class="fas fa-trash-alt"></i>
                     </button>
@@ -145,18 +145,4 @@
       </div>
     </div>
   </div>
-
-  <!-- Confirmation Popup -->
-@if (showConfirmPopup()) {
-  <div class="modal-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 20px; border-radius: 8px; max-width: 500px;">
-      <h3>Delete Attempt</h3>
-      <p>Are you sure you want to delete this exam attempt?</p>
-      <div style="display: flex; gap: 10px; justify-content: flex-end;">
-        <button (click)="cancelDelete()">Cancel</button>
-        <button (click)="confirmDelete()" style="background: #dc3545; color: white;">Delete</button>
-      </div>
-    </div>
-  </div>
-}
 </div>

@@ -44,8 +44,8 @@ export class CreateExamComponent implements OnInit {
     private toastr: ToastrService
   ) {
     this.examForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
+      title: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(5)]],
       duration: [
         60,
         [Validators.required, Validators.min(5), Validators.max(180)],
