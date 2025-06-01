@@ -4,4 +4,5 @@ node_modules
 .vscode
 create-exam.sh
 package-lock.json
-.angular
+..angular/cache/
+.angular/cache/

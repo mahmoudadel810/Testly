@@ -25,131 +25,141 @@ import { forkJoin } from 'rxjs';
             </div>
 
             <!-- Error Message -->
-            <div class="alert alert-danger m-3" *ngIf="error">
-              <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
-            </div>
+            @if (error) {
+              <div class="alert alert-danger m-3">
+                <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+              </div>
+            }
 
             <!-- Loading Spinner -->
-            <div class="text-center py-5" *ngIf="loading">
-              <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+            @if (loading) {
+              <div class="text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-2 text-muted">Loading pass rate data...</p>
               </div>
-              <p class="mt-2 text-muted">Loading pass rate data...</p>
-            </div>
+            }
 
             <!-- Content -->
-            <div class="card-body" *ngIf="!loading && !error">
-              <!-- Overall Stats -->
-              <div class="row mb-4">
-                <div class="col-md-4">
-                  <div class="card border-0 bg-light">
-                    <div class="card-body text-center">
-                      <h5 class="card-title">Total Exams</h5>
-                      <p class="display-4 fw-bold">{{ examStats.length }}</p>
+            @if (!loading && !error) {
+              <div class="card-body">
+                <!-- Overall Stats -->
+                <div class="row mb-4">
+                  <div class="col-md-4">
+                    <div class="card border-0 bg-light">
+                      <div class="card-body text-center">
+                        <h5 class="card-title">Total Exams</h5>
+                        <p class="display-4 fw-bold">{{ examStats.length }}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="card border-0 bg-light">
+                      <div class="card-body text-center">
+                        <h5 class="card-title">Overall Pass Rate</h5>
+                        <p class="display-4 fw-bold">{{ overallPassRate }}%</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4">
+                    <div class="card border-0 bg-light">
+                      <div class="card-body text-center">
+                        <h5 class="card-title">Total Attempts</h5>
+                        <p class="display-4 fw-bold">{{ totalAttempts }}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="col-md-4">
-                  <div class="card border-0 bg-light">
-                    <div class="card-body text-center">
-                      <h5 class="card-title">Overall Pass Rate</h5>
-                      <p class="display-4 fw-bold">{{ overallPassRate }}%</p>
-                    </div>
-                  </div>
-                </div>
+                <!-- Pass Rate Charts -->
+                <div class="row mb-4">
+                  <div class="col-12">
+                    <h4 class="h5 mb-3">Pass Rate by Exam</h4>
 
-                <div class="col-md-4">
-                  <div class="card border-0 bg-light">
-                    <div class="card-body text-center">
-                      <h5 class="card-title">Total Attempts</h5>
-                      <p class="display-4 fw-bold">{{ totalAttempts }}</p>
+                    <div class="list-group">
+                      @if (examStats.length === 0) {
+                        <div class="text-center text-muted py-4">
+                          <i class="fas fa-info-circle me-2"></i>No exam data
+                          available yet.
+                        </div>
+                      }
+
+                      @for (stat of examStats; track stat.exam._id) {
+                        <div class="list-group-item">
+                          <div
+                            class="d-flex justify-content-between align-items-center mb-2"
+                          >
+                            <h5 class="mb-0">{{ stat.exam.title }}</h5>
+                            <span
+                              class="badge"
+                              [ngClass]="{
+                                'bg-danger': stat.passRate < 50,
+                                'bg-warning':
+                                  stat.passRate >= 50 && stat.passRate < 70,
+                                'bg-success': stat.passRate >= 70
+                              }"
+                            >
+                              {{ stat.passRate }}%
+                            </span>
+                          </div>
+
+                          <!-- Progress Bar -->
+                          <div class="progress mb-3" style="height: 10px">
+                            <div
+                              class="progress-bar"
+                              [ngClass]="{
+                                'bg-danger': stat.passRate < 50,
+                                'bg-warning':
+                                  stat.passRate >= 50 && stat.passRate < 70,
+                                'bg-success': stat.passRate >= 70
+                              }"
+                              [style.width.%]="stat.passRate"
+                              role="progressbar"
+                              [attr.aria-valuenow]="stat.passRate"
+                              aria-valuemin="0"
+                              aria-valuemax="100"
+                            ></div>
+                          </div>
+
+                          <!-- Stats Info -->
+                          <div
+                            class="d-flex justify-content-between align-items-center text-muted small"
+                          >
+                            <div>
+                              <i class="fas fa-users me-1"></i>
+                              {{ stat.studentCount }} students
+                            </div>
+                            <div>
+                              <i class="fas fa-clipboard-check me-1"></i>
+                              {{ stat.attemptCount }} attempts
+                            </div>
+                            <div>
+                              <i class="fas fa-check-circle me-1"></i>
+                              {{ stat.passCount }} passed
+                            </div>
+                            <div>
+                              <a
+                                [routerLink]="[
+                                  '/teacher/exams',
+                                  stat.exam._id,
+                                  'attempts'
+                                ]"
+                                class="btn btn-sm btn-outline-primary"
+                              >
+                                <i class="fas fa-eye me-1"></i> View Details
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      }
                     </div>
                   </div>
                 </div>
               </div>
-
-              <!-- Pass Rate Charts -->
-              <div class="row mb-4">
-                <div class="col-12">
-                  <h4 class="h5 mb-3">Pass Rate by Exam</h4>
-
-                  <div class="list-group">
-                    <div
-                      *ngIf="examStats.length === 0"
-                      class="text-center text-muted py-4"
-                    >
-                      <i class="fas fa-info-circle me-2"></i>No exam data
-                      available yet.
-                    </div>
-
-                    <div *ngFor="let stat of examStats" class="list-group-item">
-                      <div
-                        class="d-flex justify-content-between align-items-center mb-2"
-                      >
-                        <h5 class="mb-0">{{ stat.exam.title }}</h5>
-                        <span
-                          class="badge"
-                          [ngClass]="{
-                            'bg-danger': stat.passRate < 50,
-                            'bg-warning':
-                              stat.passRate >= 50 && stat.passRate < 70,
-                            'bg-success': stat.passRate >= 70
-                          }"
-                          >{{ stat.passRate }}%</span
-                        >
-                      </div>
-
-                      <div class="progress" style="height: 20px">
-                        <div
-                          class="progress-bar"
-                          [ngClass]="{
-                            'bg-danger': stat.passRate < 50,
-                            'bg-warning':
-                              stat.passRate >= 50 && stat.passRate < 70,
-                            'bg-success': stat.passRate >= 70
-                          }"
-                          [style.width.%]="stat.passRate"
-                        >
-                          <span *ngIf="stat.passRate > 15"
-                            >{{ stat.passRate }}%</span
-                          >
-                        </div>
-                      </div>
-
-                      <div
-                        class="d-flex justify-content-between mt-2 text-muted small"
-                      >
-                        <div>
-                          <i class="fas fa-users me-1"></i>
-                          {{ stat.studentCount }} students
-                        </div>
-                        <div>
-                          <i class="fas fa-clipboard-check me-1"></i>
-                          {{ stat.attemptCount }} attempts
-                        </div>
-                        <div>
-                          <i class="fas fa-check-circle me-1"></i>
-                          {{ stat.passCount }} passed
-                        </div>
-                        <div>
-                          <a
-                            [routerLink]="[
-                              '/teacher/exams',
-                              stat.exam._id,
-                              'attempts'
-                            ]"
-                            class="btn btn-sm btn-outline-primary"
-                          >
-                            <i class="fas fa-eye me-1"></i> View Details
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            }
           </div>
         </div>
       </div>
@@ -233,6 +243,10 @@ export class PassRatesComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  trackExamStat(index: number, stat: any): string {
+    return stat.exam._id;
   }
 
   private processExamStats(exams: Exam[], attempts: ExamAttempt[]): void {

@@ -7,6 +7,13 @@ import { LoggingService } from '../../../services/logging.service';
 import { Exam, ExamAttempt } from '../../../models/exam.model';
 import { forkJoin } from 'rxjs';
 
+// Interface for API responses
+interface ApiResponse<T> {
+  success?: boolean;
+  data?: T;
+  message?: string;
+}
+
 @Component({
   selector: 'app-teacher-dashboard',
   standalone: true,
@@ -70,33 +77,42 @@ export class TeacherDashboardComponent implements OnInit {
       exams: this.examService.getTeacherExams(),
       attempts: this.examService.getTeacherAttempts(),
     }).subscribe({
-      next: ({ exams, attempts }) => {
+      next: ({ exams, attempts }: { 
+        exams: Exam[] | ApiResponse<Exam[]>, 
+        attempts: ExamAttempt[] | ApiResponse<ExamAttempt[]> 
+      }) => {
+        // Ensure we have arrays to work with
+        const examArray = Array.isArray(exams) ? exams : 
+                         (exams && typeof exams === 'object' && 'data' in exams ? exams.data ?? [] : []);
+        const attemptArray = Array.isArray(attempts) ? attempts : 
+                           (attempts && typeof attempts === 'object' && 'data' in attempts ? attempts.data ?? [] : []);
+        
         // Basic stats
-        this.stats.totalExams = exams.length;
-        this.stats.totalAttempts = attempts.length;
+        this.stats.totalExams = examArray.length;
+        this.stats.totalAttempts = attemptArray.length;
 
         // Count unique students
         const uniqueStudentIds = new Set(
-          attempts.map((a) =>
+          attemptArray.map((a: ExamAttempt) =>
             typeof a.userId === 'string' ? a.userId : a.userId?._id
           )
         );
         this.stats.totalStudents = uniqueStudentIds.size;
 
         // Calculate overall pass rate
-        const passedAttempts = attempts.filter((a) => a.passed).length;
+        const passedAttempts = attemptArray.filter((a: ExamAttempt) => a.passed).length;
         this.stats.passRate =
-          attempts.length > 0
-            ? Math.round((passedAttempts / attempts.length) * 100)
+          attemptArray.length > 0
+            ? Math.round((passedAttempts / attemptArray.length) * 100)
             : 0;
 
         // Process exam-specific stats
-        this.processExamStats(exams, attempts);
+        this.processExamStats(examArray, attemptArray);
 
         // Get recent attempts
-        this.recentAttempts = attempts
+        this.recentAttempts = attemptArray
           .sort(
-            (a, b) =>
+            (a: ExamAttempt, b: ExamAttempt) =>
               new Date(b.createdAt || '').getTime() -
               new Date(a.createdAt || '').getTime()
           )

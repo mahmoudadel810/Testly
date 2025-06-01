@@ -350,13 +350,36 @@ export class ExamService {
         environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
+    // Define interface for the API response format
+    interface ApiResponse {
+      success: boolean;
+      data: Exam[];
+      message: string;
+    }
+
     // Use the teacher-specific endpoint to get exams created by the current teacher
     return this.http
-      .get<Exam[]>(`${API_ENDPOINTS.EXAM}/teacher/exams`, { headers })
+      .get<ApiResponse | Exam[]>(`${API_ENDPOINTS.EXAM}/teacher/exams`, { headers })
       .pipe(
-        tap((exams) =>
-          this.logger.debug("Teacher exams loaded:", exams.length)
-        ),
+        map(response => {
+          // Check if response is in the wrapper format
+          if (response && typeof response === 'object' && 'success' in response && 'data' in response) {
+            const apiResponse = response as ApiResponse;
+            this.logger.debug("Teacher exams loaded from API response:", apiResponse.data.length);
+            return apiResponse.data;
+          } else {
+            // Handle the case where direct array is returned
+            const exams = response as Exam[];
+            this.logger.debug("Teacher exams loaded directly:", exams.length);
+            return exams;
+          }
+        }),
+        tap(exams => {
+          // Log whether exams were loaded
+          if (!exams || !Array.isArray(exams)) {
+            this.logger.warn("Unexpected exams format, empty array will be used");
+          }
+        }),
         catchError((error) => {
           this.logger.error("Error fetching teacher exams:", error);
           return of([]);
@@ -370,12 +393,35 @@ export class ExamService {
         environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
+    // Define interface for the API response format
+    interface ApiResponse {
+      success: boolean;
+      data: ExamAttempt[];
+      message: string;
+    }
+
     return this.http
-      .get<ExamAttempt[]>(`${API_ENDPOINTS.EXAM}/teacher/attempts`, { headers })
+      .get<ApiResponse | ExamAttempt[]>(`${API_ENDPOINTS.EXAM}/teacher/attempts`, { headers })
       .pipe(
-        tap((attempts) =>
-          this.logger.debug("Teacher attempts loaded:", attempts.length)
-        ),
+        map(response => {
+          // Check if response is in the wrapper format
+          if (response && typeof response === 'object' && 'success' in response && 'data' in response) {
+            const apiResponse = response as ApiResponse;
+            this.logger.debug("Teacher attempts loaded from API response:", apiResponse.data.length);
+            return apiResponse.data;
+          } else {
+            // Handle the case where direct array is returned
+            const attempts = response as ExamAttempt[];
+            this.logger.debug("Teacher attempts loaded directly:", attempts.length);
+            return attempts;
+          }
+        }),
+        tap(attempts => {
+          // Log whether attempts were loaded
+          if (!attempts || !Array.isArray(attempts)) {
+            this.logger.warn("Unexpected attempts format, empty array will be used");
+          }
+        }),
         catchError((error) => {
           this.logger.error("Error fetching teacher attempts:", error);
           return of([]);
@@ -509,22 +555,154 @@ export class ExamService {
   }
 
   getAllAttempts(): Observable<ExamAttempt[]> {
+    this.logger.debug('Fetching all exam attempts for admin');
+    
+    // Ensure we have a valid token
+    const token = this.tokenService.getToken();
+    if (!token) {
+      this.logger.error('No authentication token available');
+      return of([]);
+    }
+    
+    // Add authorization header with proper format
     const headers = {
-      Authorization:
-        environment.bearerTokenPrefix + this.tokenService.getToken()
+      Authorization: `${environment.bearerTokenPrefix}${token}`
     };
-
-    return this.http.get<ExamAttempt[]>(`${API_ENDPOINTS.ADMIN}/attempts`, {
-      headers
-    });
+    
+    this.logger.debug('Authorization header:', headers.Authorization);
+    
+    // Define an interface for the API response format
+    interface ApiResponse {
+      success: boolean;
+      data: ExamAttempt[];
+      message: string;
+    }
+    
+    return this.http
+      .get<any>(`${API_ENDPOINTS.ADMIN}/attempts`, { headers })
+      .pipe(
+        tap(response => {
+          // Log the raw response to debug what's coming back
+          this.logger.debug('Raw API response for all attempts:', response);
+          
+          // Check if response is empty or null
+          if (!response) {
+            this.logger.warn('Empty response received for all attempts');
+          }
+        }),
+        map(response => {
+          // Handle different response formats
+          if (Array.isArray(response)) {
+            return response as ExamAttempt[];
+          } else if (response && typeof response === 'object') {
+            // Check for common response patterns
+            if (response.success && response.data && Array.isArray(response.data)) {
+              return response.data as ExamAttempt[];
+            } else if (response.attempts && Array.isArray(response.attempts)) {
+              return response.attempts as ExamAttempt[];
+            } else if (response.items && Array.isArray(response.items)) {
+              return response.items as ExamAttempt[];
+            } else {
+              // Try to extract array from response
+              const possibleArray = Object.values(response).find(val => Array.isArray(val));
+              if (possibleArray) {
+                return possibleArray as ExamAttempt[];
+              }
+            }
+          }
+          
+          // If we can't extract an array, return empty array
+          this.logger.warn('Could not extract attempts array from response');
+          return [] as ExamAttempt[];
+        }),
+        tap(attempts => {
+          this.logger.debug('All attempts loaded:', attempts.length);
+          
+          // Log additional info if no attempts were found
+          if (attempts.length === 0) {
+            this.logger.warn('No attempts found. Check API endpoint.');
+          }
+        }),
+        catchError((error) => {
+          this.logger.error('Error fetching all attempts:', error);
+          return of([]);
+        })
+      );
   }
 
   getAdminExams(): Observable<Exam[]> {
+    this.logger.debug('Fetching exams for admin');
+    
+    // Ensure we have a valid token
+    const token = this.tokenService.getToken();
+    if (!token) {
+      this.logger.error('No authentication token available');
+      return of([]);
+    }
+    
+    // Add authorization header with proper format
     const headers = {
-      Authorization:
-        environment.bearerTokenPrefix + this.tokenService.getToken()
+      Authorization: `${environment.bearerTokenPrefix}${token}`
     };
-
-    return this.http.get<Exam[]>(`${API_ENDPOINTS.ADMIN}/exams`, { headers });
+    
+    this.logger.debug('Authorization header:', headers.Authorization);
+    
+    // Define an interface for the API response format
+    interface ApiResponse {
+      success: boolean;
+      data: Exam[];
+      message: string;
+    }
+    
+    return this.http
+      .get<any>(`${API_ENDPOINTS.ADMIN}/exams`, { headers })
+      .pipe(
+        tap(response => {
+          // Log the raw response to debug what's coming back
+          this.logger.debug('Raw API response for admin exams:', response);
+          
+          // Check if response is empty or null
+          if (!response) {
+            this.logger.warn('Empty response received for admin exams');
+          }
+        }),
+        map(response => {
+          // Handle different response formats
+          if (Array.isArray(response)) {
+            return response as Exam[];
+          } else if (response && typeof response === 'object') {
+            // Check for common response patterns
+            if (response.success && response.data && Array.isArray(response.data)) {
+              return response.data as Exam[];
+            } else if (response.exams && Array.isArray(response.exams)) {
+              return response.exams as Exam[];
+            } else if (response.items && Array.isArray(response.items)) {
+              return response.items as Exam[];
+            } else {
+              // Try to extract array from response
+              const possibleArray = Object.values(response).find(val => Array.isArray(val));
+              if (possibleArray) {
+                return possibleArray as Exam[];
+              }
+            }
+          }
+          
+          // If we can't extract an array, return empty array
+          this.logger.warn('Could not extract exams array from admin response');
+          return [] as Exam[];
+        }),
+        tap(exams => {
+          this.logger.debug('Admin exams loaded:', exams.length);
+          
+          // Log additional info if no exams were found
+          if (exams.length === 0) {
+            this.logger.warn('No exams found for admin. Check API endpoint.');
+          }
+        }),
+        catchError((error) => {
+          this.logger.error('Error fetching exams for admin:', error);
+          return of([]);
+        })
+      );
   }
 }

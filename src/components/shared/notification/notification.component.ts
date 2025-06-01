@@ -8,9 +8,10 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="notification-container" *ngIf="notifications.length > 0">
+    @if (notifications.length > 0) {
+    <div class="notification-container">
+      @for (notification of notifications; track notification.id) {
       <div
-        *ngFor="let notification of notifications"
         class="notification"
         [ngClass]="notification.type"
       >
@@ -22,7 +23,9 @@ import { Subscription } from 'rxjs';
           <i class="icon-close" aria-hidden="true"></i>
         </button>
       </div>
+      }
     </div>
+    }
   `,
   styles: [`
     .notification-container {
