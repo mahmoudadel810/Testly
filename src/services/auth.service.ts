@@ -274,7 +274,7 @@ export class AuthService {
     // Call backend logout with proper error handling
     this.http
       .post(
-        `${API_ENDPOINTS.AUTH}/signOut`,
+        `${API_ENDPOINTS.BASE_URL}/auth/logout`,
         {},
         {
           headers: { Authorization: environment.bearerTokenPrefix + token }
@@ -341,7 +341,7 @@ export class AuthService {
     return localStorage.getItem("guest_mode") === "true";
   }
 
-  /** 
+  /**
    * Initiates password reset process
    * @param email User's email
    */
