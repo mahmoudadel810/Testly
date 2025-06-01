@@ -1,13 +1,16 @@
 <div class="container py-4">
   <!-- Loading Spinner -->
-  <div *ngIf="isLoading" class="text-center py-5">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2 text-muted">Loading your profile...</p>
     </div>
-    <p class="mt-2 text-muted">Loading your profile...</p>
-  </div>
+  }
 
-  <div *ngIf="!isLoading" class="row">
+  @if (!isLoading) {
+    <div class="row">
     <!-- Profile Information -->
     <div class="col-lg-8 mb-4">
       <div class="card shadow-sm border-0">
@@ -16,14 +19,18 @@
         </div>
         <div class="card-body">
           <!-- Success Message -->
-          <div *ngIf="successMessage" class="alert alert-success">
-            <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
-          </div>
+          @if (successMessage) {
+            <div class="alert alert-success">
+              <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
+            </div>
+          }
 
           <!-- Error Message -->
-          <div *ngIf="error" class="alert alert-danger">
-            <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
-          </div>
+          @if (error) {
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+            </div>
+          }
 
           <form [formGroup]="profileForm" (ngSubmit)="onProfileSubmit()">
             <div class="mb-3">
@@ -38,20 +45,19 @@
                   profileForm.get('name')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  profileForm.get('name')?.invalid &&
-                  profileForm.get('name')?.touched
-                "
-              >
-                <span *ngIf="profileForm.get('name')?.errors?.['required']"
-                  >Name is required</span
-                >
-                <span *ngIf="profileForm.get('name')?.errors?.['minlength']"
-                  >Name must be at least 3 characters</span
-                >
-              </div>
+              @if (
+                profileForm.get('name')?.invalid &&
+                profileForm.get('name')?.touched
+              ) {
+                <div class="invalid-feedback">
+                  @if (profileForm.get('name')?.errors?.['required']) {
+                    <span>Name is required</span>
+                  }
+                  @if (profileForm.get('name')?.errors?.['minlength']) {
+                    <span>Name must be at least 3 characters</span>
+                  }
+                </div>
+              }
             </div>
 
             <div class="mb-3">
@@ -80,20 +86,19 @@
                   profileForm.get('phone')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  profileForm.get('phone')?.invalid &&
-                  profileForm.get('phone')?.touched
-                "
-              >
-                <span *ngIf="profileForm.get('phone')?.errors?.['required']"
-                  >Phone number is required</span
-                >
-                <span *ngIf="profileForm.get('phone')?.errors?.['pattern']"
-                  >Please enter a valid phone number (10-12 digits)</span
-                >
+              @if (
+                profileForm.get('phone')?.invalid &&
+                profileForm.get('phone')?.touched
+              ) {
+              <div class="invalid-feedback">
+                @if (profileForm.get('phone')?.errors?.['required']) {
+                <span>Phone number is required</span>
+                }
+                @if (profileForm.get('phone')?.errors?.['pattern']) {
+                <span>Please enter a valid phone number (10-12 digits)</span>
+                }
               </div>
+              }
             </div>
 
             <div class="mb-3">
@@ -108,17 +113,16 @@
                   profileForm.get('address')?.touched
                 "
               ></textarea>
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  profileForm.get('address')?.invalid &&
-                  profileForm.get('address')?.touched
-                "
-              >
-                <span *ngIf="profileForm.get('address')?.errors?.['required']"
-                  >Address is required</span
-                >
+              @if (
+                profileForm.get('address')?.invalid &&
+                profileForm.get('address')?.touched
+              ) {
+              <div class="invalid-feedback">
+                @if (profileForm.get('address')?.errors?.['required']) {
+                <span>Address is required</span>
+                }
               </div>
+              }
             </div>
 
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
@@ -127,12 +131,13 @@
                 class="btn btn-primary"
                 [disabled]="profileForm.invalid || isSaving"
               >
+                @if (isSaving) {
                 <span
-                  *ngIf="isSaving"
                   class="spinner-border spinner-border-sm me-1"
                   role="status"
                   aria-hidden="true"
                 ></span>
+                }
                 Save Changes
               </button>
             </div>
@@ -149,14 +154,18 @@
         </div>
         <div class="card-body">
           <!-- Success Message -->
-          <div *ngIf="passwordSuccess" class="alert alert-success">
+          @if (passwordSuccess) {
+          <div class="alert alert-success">
             <i class="fas fa-check-circle me-2"></i>{{ passwordSuccess }}
           </div>
+          }
 
           <!-- Error Message -->
-          <div *ngIf="passwordError" class="alert alert-danger">
+          @if (passwordError) {
+          <div class="alert alert-danger">
             <i class="fas fa-exclamation-circle me-2"></i>{{ passwordError }}
           </div>
+          }
 
           <form [formGroup]="passwordForm" (ngSubmit)="onPasswordSubmit()">
             <div class="mb-3">
@@ -173,22 +182,19 @@
                   passwordForm.get('currentPassword')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  passwordForm.get('currentPassword')?.invalid &&
-                  passwordForm.get('currentPassword')?.touched
-                "
-              >
-                <span
-                  *ngIf="passwordForm.get('currentPassword')?.errors?.['required']"
-                  >Current password is required</span
-                >
-                <span
-                  *ngIf="passwordForm.get('currentPassword')?.errors?.['minlength']"
-                  >Password must be at least 6 characters</span
-                >
+              @if (
+                passwordForm.get('currentPassword')?.invalid &&
+                passwordForm.get('currentPassword')?.touched
+              ) {
+              <div class="invalid-feedback">
+                @if (passwordForm.get('currentPassword')?.errors?.['required']) {
+                <span>Current password is required</span>
+                }
+                @if (passwordForm.get('currentPassword')?.errors?.['minlength']) {
+                <span>Password must be at least 6 characters</span>
+                }
               </div>
+              }
             </div>
 
             <div class="mb-3">
@@ -203,22 +209,19 @@
                   passwordForm.get('newPassword')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  passwordForm.get('newPassword')?.invalid &&
-                  passwordForm.get('newPassword')?.touched
-                "
-              >
-                <span
-                  *ngIf="passwordForm.get('newPassword')?.errors?.['required']"
-                  >New password is required</span
-                >
-                <span
-                  *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']"
-                  >Password must be at least 6 characters</span
-                >
+              @if (
+                passwordForm.get('newPassword')?.invalid &&
+                passwordForm.get('newPassword')?.touched
+              ) {
+              <div class="invalid-feedback">
+                @if (passwordForm.get('newPassword')?.errors?.['required']) {
+                <span>New password is required</span>
+                }
+                @if (passwordForm.get('newPassword')?.errors?.['minlength']) {
+                <span>Password must be at least 6 characters</span>
+                }
               </div>
+              }
             </div>
 
             <div class="mb-3">
@@ -235,22 +238,19 @@
                   passwordForm.get('confirmPassword')?.touched
                 "
               />
-              <div
-                class="invalid-feedback"
-                *ngIf="
-                  passwordForm.get('confirmPassword')?.invalid &&
-                  passwordForm.get('confirmPassword')?.touched
-                "
-              >
-                <span
-                  *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']"
-                  >Please confirm your new password</span
-                >
-                <span
-                  *ngIf="passwordForm.get('confirmPassword')?.errors?.['mismatch']"
-                  >Passwords do not match</span
-                >
+              @if (
+                passwordForm.get('confirmPassword')?.invalid &&
+                passwordForm.get('confirmPassword')?.touched
+              ) {
+              <div class="invalid-feedback">
+                @if (passwordForm.get('confirmPassword')?.errors?.['required']) {
+                <span>Please confirm your new password</span>
+                }
+                @if (passwordForm.get('confirmPassword')?.errors?.['mismatch']) {
+                <span>Passwords do not match</span>
+                }
               </div>
+              }
             </div>
 
             <div class="d-grid gap-2">
@@ -259,12 +259,13 @@
                 class="btn btn-secondary"
                 [disabled]="passwordForm.invalid || isChangingPassword"
               >
+                @if (isChangingPassword) {
                 <span
-                  *ngIf="isChangingPassword"
                   class="spinner-border spinner-border-sm me-1"
                   role="status"
                   aria-hidden="true"
                 ></span>
+                }
                 Change Password
               </button>
             </div>
@@ -273,4 +274,4 @@
       </div>
     </div>
   </div>
-</div>
+}

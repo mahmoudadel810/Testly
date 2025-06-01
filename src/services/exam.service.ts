@@ -350,13 +350,36 @@ export class ExamService {
         environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
+    // Define interface for the API response format
+    interface ApiResponse {
+      success: boolean;
+      data: Exam[];
+      message: string;
+    }
+
     // Use the teacher-specific endpoint to get exams created by the current teacher
     return this.http
-      .get<Exam[]>(`${API_ENDPOINTS.EXAM}/teacher/exams`, { headers })
+      .get<ApiResponse | Exam[]>(`${API_ENDPOINTS.EXAM}/teacher/exams`, { headers })
       .pipe(
-        tap((exams) =>
-          this.logger.debug("Teacher exams loaded:", exams.length)
-        ),
+        map(response => {
+          // Check if response is in the wrapper format
+          if (response && typeof response === 'object' && 'success' in response && 'data' in response) {
+            const apiResponse = response as ApiResponse;
+            this.logger.debug("Teacher exams loaded from API response:", apiResponse.data.length);
+            return apiResponse.data;
+          } else {
+            // Handle the case where direct array is returned
+            const exams = response as Exam[];
+            this.logger.debug("Teacher exams loaded directly:", exams.length);
+            return exams;
+          }
+        }),
+        tap(exams => {
+          // Log whether exams were loaded
+          if (!exams || !Array.isArray(exams)) {
+            this.logger.warn("Unexpected exams format, empty array will be used");
+          }
+        }),
         catchError((error) => {
           this.logger.error("Error fetching teacher exams:", error);
           return of([]);
@@ -370,12 +393,35 @@ export class ExamService {
         environment.bearerTokenPrefix + this.tokenService.getToken()
     };
 
+    // Define interface for the API response format
+    interface ApiResponse {
+      success: boolean;
+      data: ExamAttempt[];
+      message: string;
+    }
+
     return this.http
-      .get<ExamAttempt[]>(`${API_ENDPOINTS.EXAM}/teacher/attempts`, { headers })
+      .get<ApiResponse | ExamAttempt[]>(`${API_ENDPOINTS.EXAM}/teacher/attempts`, { headers })
       .pipe(
-        tap((attempts) =>
-          this.logger.debug("Teacher attempts loaded:", attempts.length)
-        ),
+        map(response => {
+          // Check if response is in the wrapper format
+          if (response && typeof response === 'object' && 'success' in response && 'data' in response) {
+            const apiResponse = response as ApiResponse;
+            this.logger.debug("Teacher attempts loaded from API response:", apiResponse.data.length);
+            return apiResponse.data;
+          } else {
+            // Handle the case where direct array is returned
+            const attempts = response as ExamAttempt[];
+            this.logger.debug("Teacher attempts loaded directly:", attempts.length);
+            return attempts;
+          }
+        }),
+        tap(attempts => {
+          // Log whether attempts were loaded
+          if (!attempts || !Array.isArray(attempts)) {
+            this.logger.warn("Unexpected attempts format, empty array will be used");
+          }
+        }),
         catchError((error) => {
           this.logger.error("Error fetching teacher attempts:", error);
           return of([]);

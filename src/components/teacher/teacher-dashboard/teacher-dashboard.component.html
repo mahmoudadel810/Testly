@@ -11,20 +11,25 @@
           </h3>
 
           <!-- Error Message -->
-          <div class="alert alert-danger" *ngIf="error">
-            <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
-          </div>
+          @if (error) {
+            <div class="alert alert-danger">
+              <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+            </div>
+          }
 
           <!-- Loading Spinner -->
-          <div class="text-center py-3" *ngIf="loading">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
+          @if (loading) {
+            <div class="text-center py-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2 text-muted">Loading your dashboard...</p>
             </div>
-            <p class="mt-2 text-muted">Loading your dashboard...</p>
-          </div>
+          }
 
           <!-- Dashboard Content -->
-          <div class="row g-4" *ngIf="!loading">
+          @if (!loading) {
+            <div class="row g-4">
             <!-- Stats Cards -->
             <div class="col-md-4">
               <div class="card h-100 border-0 shadow-sm">
@@ -70,7 +75,8 @@
                 </div>
               </div>
             </div>
-          </div>
+            </div>
+          }
         </div>
       </div>
     </div>
@@ -132,44 +138,48 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngIf="examStats.length === 0">
-                  <td colspan="5" class="text-center py-3 text-muted">
-                    <i class="fas fa-info-circle me-2"></i>No exam data
-                    available yet.
-                  </td>
-                </tr>
-                <tr *ngFor="let stat of examStats">
-                  <td>{{ stat.exam.title }}</td>
-                  <td class="text-center">{{ stat.studentCount }}</td>
-                  <td class="text-center">{{ stat.attemptCount }}</td>
-                  <td class="text-center">
-                    <div class="progress" style="height: 10px">
-                      <div
-                        class="progress-bar"
-                        [ngClass]="{
-                          'bg-danger': stat.passRate < 50,
-                          'bg-warning':
-                            stat.passRate >= 50 && stat.passRate < 70,
-                          'bg-success': stat.passRate >= 70
-                        }"
-                        [style.width.%]="stat.passRate"
-                      ></div>
-                    </div>
-                    <small class="d-block mt-1">{{ stat.passRate }}%</small>
-                  </td>
-                  <td class="text-end">
-                    <a
-                      [routerLink]="[
-                        '/teacher/exams',
-                        stat.exam._id,
-                        'attempts'
-                      ]"
-                      class="btn btn-sm btn-outline-primary me-1"
-                    >
-                      <i class="fas fa-eye"></i> View
-                    </a>
-                  </td>
-                </tr>
+                @if (examStats.length === 0) {
+                  <tr>
+                    <td colspan="5" class="text-center py-3 text-muted">
+                      <i class="fas fa-info-circle me-2"></i>No exam data
+                      available yet.
+                    </td>
+                  </tr>
+                }
+                @for (stat of examStats; track stat.exam._id) {
+                  <tr>
+                    <td>{{ stat.exam.title }}</td>
+                    <td class="text-center">{{ stat.studentCount }}</td>
+                    <td class="text-center">{{ stat.attemptCount }}</td>
+                    <td class="text-center">
+                      <div class="progress" style="height: 10px">
+                        <div
+                          class="progress-bar"
+                          [ngClass]="{
+                            'bg-danger': stat.passRate < 50,
+                            'bg-warning':
+                              stat.passRate >= 50 && stat.passRate < 70,
+                            'bg-success': stat.passRate >= 70
+                          }"
+                          [style.width.%]="stat.passRate"
+                        ></div>
+                      </div>
+                      <small class="d-block mt-1">{{ stat.passRate }}%</small>
+                    </td>
+                    <td class="text-end">
+                      <a
+                        [routerLink]="[
+                          '/teacher/exams',
+                          stat.exam._id,
+                          'attempts'
+                        ]"
+                        class="btn btn-sm btn-outline-primary me-1"
+                      >
+                        <i class="fas fa-eye"></i> View
+                      </a>
+                    </td>
+                  </tr>
+                }
               </tbody>
             </table>
           </div>
@@ -194,17 +204,14 @@
         </div>
         <div class="card-body">
           <div class="list-group">
-            <div
-              *ngIf="recentAttempts.length === 0"
-              class="text-center text-muted py-4"
-            >
-              <i class="fas fa-info-circle me-2"></i>
-              No recent exam attempts to display.
-            </div>
-            <div
-              *ngFor="let attempt of recentAttempts"
-              class="list-group-item list-group-item-action"
-            >
+            @if (recentAttempts.length === 0) {
+              <div class="text-center text-muted py-4">
+                <i class="fas fa-info-circle me-2"></i>
+                No recent exam attempts to display.
+              </div>
+            }
+            @for (attempt of recentAttempts; track attempt._id) {
+              <div class="list-group-item list-group-item-action">
               <div
                 class="d-flex w-100 justify-content-between align-items-center"
               >
@@ -240,6 +247,7 @@
                 }}</small>
               </div>
             </div>
+            }
           </div>
         </div>
       </div>

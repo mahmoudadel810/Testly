@@ -14,7 +14,7 @@
     }
 
     @if (exam && !loading) {
-    <form *ngIf="exam && !loading" (ngSubmit)="onSubmit()" #examForm="ngForm">
+    <form (ngSubmit)="onSubmit()" #examForm="ngForm">
         <div class="form-section">
             <h3>Exam Details</h3>
 

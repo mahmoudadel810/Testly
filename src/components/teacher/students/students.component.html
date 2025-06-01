@@ -5,23 +5,25 @@
     </div>
     <div class="card-body">
       <!-- Error Message -->
-      <div *ngIf="error" class="alert alert-danger">
+      @if (error) {
+      <div class="alert alert-danger">
         <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
       </div>
+      }
 
       <!-- Loading Spinner -->
-      <div *ngIf="loading" class="text-center py-5">
+      @if (loading) {
+      <div class="text-center py-5">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
         <p class="mt-2 text-muted">Loading student data...</p>
       </div>
+      }
 
       <!-- No Students Message -->
-      <div
-        *ngIf="!loading && students.length === 0 && !error"
-        class="text-center py-5"
-      >
+      @if (!loading && students.length === 0 && !error) {
+      <div class="text-center py-5">
         <i class="fas fa-user-graduate fa-3x text-muted mb-3"></i>
         <h3 class="h5">No Students Found</h3>
         <p class="text-muted">
@@ -29,9 +31,11 @@
           yet.
         </p>
       </div>
+      }
 
       <!-- Students List -->
-      <div *ngIf="!loading && students.length > 0" class="table-responsive">
+      @if (!loading && students.length > 0) {
+      <div class="table-responsive">
         <table class="table table-hover">
           <thead class="table-light">
             <tr>
@@ -43,7 +47,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let student of students">
+            @for (student of students; track student._id) {
+            <tr>
               <td>{{ student.username }}</td>
               <td>{{ student.email }}</td>
               <td>{{ student.examsTaken || 0 }}</td>
@@ -54,9 +59,11 @@
                 </button>
               </td>
             </tr>
+            }
           </tbody>
         </table>
       </div>
+      }
     </div>
   </div>
 </div>
