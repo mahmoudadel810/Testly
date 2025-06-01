@@ -14,6 +14,30 @@
           </div>
         </div>
         <div class="card-body">
+          <!-- Approve Confirmation Popup -->
+          @if (showApproveConfirmation) {
+          <app-confirmation-popup 
+            title="Approve Teacher"
+            message="Are you sure you want to approve this teacher?"
+            actionType="edit"
+            confirmButtonText="Approve"
+            (confirm)="approveTeacher()"
+            (cancel)="hideApproveConfirmation()">
+          </app-confirmation-popup>
+          }
+
+          <!-- Reject Confirmation Popup -->
+          @if (showRejectConfirmation) {
+          <app-confirmation-popup 
+            title="Reject Teacher"
+            message="Are you sure you want to reject this teacher? This action cannot be undone."
+            actionType="delete"
+            confirmButtonText="Reject"
+            (confirm)="rejectTeacher()"
+            (cancel)="hideRejectConfirmation()">
+          </app-confirmation-popup>
+          }
+
           <!-- Loading Spinner -->
           @if (loading) {
           <div class="text-center py-5">
@@ -67,14 +91,14 @@
                     <div class="btn-group">
                       <button
                         class="btn btn-sm btn-success"
-                        (click)="approveTeacher(teacher._id, i)"
+                        (click)="openApproveConfirmation(teacher._id, i)"
                         title="Approve Teacher"
                       >
                         <i class="fas fa-check me-1"></i> Approve
                       </button>
                       <button
                         class="btn btn-sm btn-danger ms-1"
-                        (click)="rejectTeacher(teacher._id, i)"
+                        (click)="openRejectConfirmation(teacher._id, i)"
                         title="Reject Teacher"
                       >
                         <i class="fas fa-times me-1"></i> Reject

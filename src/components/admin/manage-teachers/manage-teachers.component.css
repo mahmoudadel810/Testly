@@ -33,20 +33,42 @@
   -webkit-overflow-scrolling: touch;
 }
 
-/* Toast Styles */
-.toast-success {
-  background-color: #28a745 !important;
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .table th, .table td {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+
+  .btn-group {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .btn-group .btn {
+    width: 100%;
+    margin-left: 0 !important;
+  }
 }
 
-.toast-error {
-  background-color: #dc3545 !important;
-}
+@media (max-width: 576px) {
+  .table-responsive {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    width: calc(100% + 1.5rem);
+  }
 
-.toast-info {
-  background-color: #17a2b8 !important;
-}
+  .table {
+    font-size: 0.8rem;
+  }
 
-.toast-warning {
-  background-color: #ffc107 !important;
-  color: #343a40 !important;
+  .card-header h2 {
+    font-size: 1.25rem;
+  }
 }

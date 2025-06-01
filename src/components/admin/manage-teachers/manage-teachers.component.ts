@@ -2,22 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AdminService } from '../../../services/admin.service';
-import { ToastrService } from 'ngx-toastr';
+import { ConfirmationPopupComponent } from '../../shared/confirmation-popup/confirmation-popup.component';
 
 @Component({
   selector: 'app-manage-teachers',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ConfirmationPopupComponent],
   templateUrl: './manage-teachers.component.html',
   styleUrls: ['./manage-teachers.component.css'],
 })
 export class ManageTeachersComponent implements OnInit {
   pendingTeachers: any[] = [];
   loading = true;
+  showApproveConfirmation = false;
+  showRejectConfirmation = false;
+  selectedTeacherId: string | null = null;
+  selectedTeacherIndex: number | null = null;
 
   constructor(
-    private adminService: AdminService,
-    private toastr: ToastrService
+    private adminService: AdminService
   ) {}
 
   ngOnInit(): void {
@@ -30,56 +33,65 @@ export class ManageTeachersComponent implements OnInit {
       next: (teachers) => {
         this.pendingTeachers = teachers;
         this.loading = false;
-        this.toastr.success(
-          'Pending teachers list loaded successfully',
-          'Success',
-          {
-            positionClass: 'toast-top-right',
-            timeOut: 3000,
-          }
-        );
       },
       error: (error) => {
         this.loading = false;
-        this.toastr.error('Failed to load the pending teachers list. Please try again.', 'Error');
         console.error('Failed to load pending teachers:', error);
       },
     });
   }
 
-  approveTeacher(teacherId: string, index: number): void {
-    if (confirm('Are you sure you want to approve this teacher?')) {
-      this.adminService.approveTeacher(teacherId).subscribe({
-        next: (response) => {
-          this.pendingTeachers.splice(index, 1);
-          this.toastr.success('Teacher approved successfully', 'Success', {
-            positionClass: 'toast-top-right',
-            timeOut: 3000,
-          });
-        },
-        error: (error) => {
-          this.toastr.error('Failed to approve the teacher', 'Error');
-          console.error('Error approving teacher:', error);
-        },
-      });
-    }
+  openApproveConfirmation(teacherId: string, index: number): void {
+    this.selectedTeacherId = teacherId;
+    this.selectedTeacherIndex = index;
+    this.showApproveConfirmation = true;
   }
 
-  rejectTeacher(teacherId: string, index: number): void {
-    if (confirm('Are you sure you want to reject this teacher? This action cannot be undone.')) {
-      this.adminService.rejectTeacher(teacherId).subscribe({
-        next: (response) => {
-          this.pendingTeachers.splice(index, 1);
-          this.toastr.success('Teacher rejected successfully', 'Success', {
-            positionClass: 'toast-top-right',
-            timeOut: 3000,
-          });
-        },
-        error: (error) => {
-          this.toastr.error('Failed to reject the teacher', 'Error');
-          console.error('Error rejecting teacher:', error);
-        },
-      });
-    }
+  openRejectConfirmation(teacherId: string, index: number): void {
+    this.selectedTeacherId = teacherId;
+    this.selectedTeacherIndex = index;
+    this.showRejectConfirmation = true;
+  }
+
+  approveTeacher(): void {
+    if (this.selectedTeacherId === null || this.selectedTeacherIndex === null) return;
+
+    this.adminService.approveTeacher(this.selectedTeacherId).subscribe({
+      next: (response) => {
+        this.pendingTeachers.splice(this.selectedTeacherIndex!, 1);
+        this.hideApproveConfirmation();
+      },
+      error: (error) => {
+        console.error('Error approving teacher:', error);
+        this.hideApproveConfirmation();
+      },
+    });
+  }
+
+  rejectTeacher(): void {
+    if (this.selectedTeacherId === null || this.selectedTeacherIndex === null) return;
+
+    this.adminService.rejectTeacher(this.selectedTeacherId).subscribe({
+      next: (response) => {
+        this.pendingTeachers.splice(this.selectedTeacherIndex!, 1);
+        this.hideRejectConfirmation();
+      },
+      error: (error) => {
+        console.error('Error rejecting teacher:', error);
+        this.hideRejectConfirmation();
+      },
+    });
+  }
+
+  hideApproveConfirmation(): void {
+    this.selectedTeacherId = null;
+    this.selectedTeacherIndex = null;
+    this.showApproveConfirmation = false;
+  }
+
+  hideRejectConfirmation(): void {
+    this.selectedTeacherId = null;
+    this.selectedTeacherIndex = null;
+    this.showRejectConfirmation = false;
   }
 }
