@@ -34,16 +34,10 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStats();
-    this.showWelcomeMessage();
+   
   }
 
-  private showWelcomeMessage(): void {
-    this.toastr.success("Welcome back to your dashboard!", "Hello Admin", {
-      positionClass: "toast-top-right",
-      timeOut: 3000,
-      progressBar: true
-    });
-  }
+
 
   loadStats(): void {
     this.isLoading = true;

@@ -4,6 +4,7 @@ import { RouterModule, ActivatedRoute } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 import { ContactService, ContactMessage } from "../../../services/contact.service";
 import { ConfirmationPopupComponent } from "../../shared/confirmation-popup/confirmation-popup.component";
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: "app-admin-messages",
@@ -24,7 +25,8 @@ export class AdminMessagesComponent implements OnInit {
 
   constructor(
     private contactService: ContactService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +49,7 @@ export class AdminMessagesComponent implements OnInit {
       error: (err) => {
         this.error = "Failed to load messages";
         this.loading = false;
+        this.toastr.error('Failed to load messages', 'Error');
       }
     });
   }
@@ -69,6 +72,32 @@ export class AdminMessagesComponent implements OnInit {
     newStatus: "new" | "in-progress" | "resolved"
   ): void {
     if (message.status === newStatus) return;
+
+    this.contactService.updateMessageStatus(message._id, newStatus).subscribe({
+      next: (response: any) => {
+        // Update in messages array
+        const index = this.messages.findIndex(m => m._id === message._id);
+        if (index !== -1) {
+          this.messages[index].status = newStatus;
+        }
+
+        // Update in filteredMessages array
+        const filteredIndex = this.filteredMessages.findIndex(m => m._id === message._id);
+        if (filteredIndex !== -1) {
+          this.filteredMessages[filteredIndex].status = newStatus;
+        }
+
+        // Update selected message if it's the current one
+        if (this.selectedMessage && this.selectedMessage._id === message._id) {
+          this.selectedMessage.status = newStatus;
+        }
+
+        this.toastr.success(`Status updated to ${newStatus}`, 'Success');
+      },
+      error: (err) => {
+        this.toastr.error('Failed to update status', 'Error');
+      }
+    });
   }
 
   openDeleteModal(message: ContactMessage): void {
@@ -91,10 +120,12 @@ export class AdminMessagesComponent implements OnInit {
         }
         this.showDeleteModal = false;
         this.messageToDelete = null;
+        this.toastr.success('Message deleted successfully', 'Success');
       },
       error: (err) => {
         this.showDeleteModal = false;
         this.messageToDelete = null;
+        this.toastr.error('Failed to delete message', 'Error');
       }
     });
   }
