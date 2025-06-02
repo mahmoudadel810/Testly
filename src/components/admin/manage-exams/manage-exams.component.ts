@@ -48,24 +48,26 @@ export class ManageExamsComponent implements OnInit, OnDestroy {
         this.exams = exams;
         this.loading = false;
         this.toastr.success("Exams loaded successfully", "Success");
-        
+
         // Debug: Log the structure of the first exam to understand the data
         if (exams.length > 0) {
           // console.log('Exam data structure:', exams[0]);
           // console.log('Creator details:', exams[0].createdBy);
           // console.log('Teacher details:', exams[0].teacherId);
-          
+
           // Check what role information is available
           const creator = exams[0].createdBy;
           if (creator) {
             // console.log('Creator type:', typeof creator);
-            if (typeof creator === 'object') {
+            if (typeof creator === "object") {
               // console.log('Creator properties:', Object.keys(creator));
               // Don't try to access role directly as it doesn't exist in the model
               // console.log('Teacher ID info:', exams[0].teacherId);
             }
           }
         }
+
+        this.toastr.success("Exams loaded successfully", "Success");
       },
       error: (error) => {
         this.toastr.error(this.translationService.translate('ADMIN.FAILED_TO_LOAD_EXAMS'), this.translationService.translate('ADMIN.ERROR'));
@@ -75,8 +77,15 @@ export class ManageExamsComponent implements OnInit, OnDestroy {
   }
 
   getTeacherName(exam: Exam): string {
-    if (exam.createdBy && typeof exam.createdBy === 'object' && 'name' in exam.createdBy) {
-      return String(exam.createdBy.name) || this.translationService.translate('COMMON.UNKNOWN');
+    const teacher = exam.teacherId;
+    const creator = exam.createdBy;
+    // Check if teacherId is populated and has a name
+    if (teacher && typeof teacher === "object" && "name" in teacher) {
+      return teacher.name ?? "Unknown";
+    }
+    // If teacherId is not available or doesn't have a name, check if createdBy is populated and has a username
+    if (creator && typeof creator === "object" && "username" in creator) {
+      return creator.username ?? "Unknown";
     }
     return this.translationService.translate('COMMON.UNKNOWN');
   }
@@ -98,48 +107,56 @@ export class ManageExamsComponent implements OnInit, OnDestroy {
     }
     return email;
   }
-  
+
   getCreatorRole(exam: Exam): string {
     // If the exam has a teacherId property that's the same as the createdBy ID,
     // or if teacherId is an object that contains information, it's a teacher
     if (exam.teacherId) {
-      if (typeof exam.teacherId === 'object' && '_id' in exam.teacherId) {
+      if (typeof exam.teacherId === "object" && "_id" in exam.teacherId) {
         // If we have a populated teacherId object
         const teacherIdObj = exam.teacherId;
-        
+
         // Check if createdBy is an object with the same ID as teacherId
-        if (exam.createdBy && typeof exam.createdBy === 'object' && '_id' in exam.createdBy) {
+        if (
+          exam.createdBy &&
+          typeof exam.createdBy === "object" &&
+          "_id" in exam.createdBy
+        ) {
           const creatorId = exam.createdBy._id;
           if (creatorId === teacherIdObj._id) {
-            return 'Teacher';
+            return "Teacher";
           }
         }
-        
+
         // If we have a teacherId with details, this was created by a teacher
-        return 'Teacher';
-      } else if (typeof exam.teacherId === 'string') {
+        return "Teacher";
+      } else if (typeof exam.teacherId === "string") {
         // If teacherId is a string, check if it matches createdBy
-        if (exam.createdBy && typeof exam.createdBy === 'object' && '_id' in exam.createdBy) {
+        if (
+          exam.createdBy &&
+          typeof exam.createdBy === "object" &&
+          "_id" in exam.createdBy
+        ) {
           if (exam.teacherId === exam.createdBy._id) {
-            return 'Teacher';
+            return "Teacher";
           }
         } else if (exam.createdBy === exam.teacherId) {
-          return 'Teacher';
+          return "Teacher";
         }
-        
+
         // If we have a teacherId string, this was likely created by a teacher
-        return 'Teacher';
+        return "Teacher";
       }
     }
-    
+
     // If we have a createdBy but no matching teacherId, or teacherId is different
     // from createdBy, it's likely an admin
     if (exam.createdBy) {
-      return 'Admin';
+      return "Admin";
     }
-    
+
     // Default fallback
-    return 'Unknown';
+    return "Unknown";
   }
 
   deleteExam(id: string): void {
