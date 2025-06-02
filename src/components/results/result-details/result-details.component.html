@@ -1,50 +1,50 @@
 <div class="result-details">
   @if (loading) {
-  <div class="loading">Loading result details...</div>
+  <div class="loading" appTranslate="RESULTS.LOADING">Loading result details...</div>
   } @if (error) {
   <div class="alert alert-error">
     {{ error }}
   </div>
   } @if (attempt && exam) {
   <div class="result-content">
-    <h2>Exam Result: {{ exam.title }}</h2>
+    <h2><span appTranslate="RESULTS.EXAM_RESULT">Exam Result</span>: {{ exam.title }}</h2>
 
     <div class="summary-card">
       <div class="summary-item">
-        <span class="label">Score</span>
+        <span class="label" appTranslate="RESULTS.SCORE">Score</span>
         <span class="value" [class.passed]="attempt.passed">
           {{ ((attempt.score / attempt.totalPoints) * 100).toFixed(1) }}%
         </span>
       </div>
 
       <div class="summary-item">
-        <span class="label">Status</span>
+        <span class="label" appTranslate="RESULTS.STATUS">Status</span>
         <span class="value" [class.passed]="attempt.passed">
-          {{ attempt.passed ? "Passed" : "Failed" }}
+          {{ attempt.passed ? ("RESULTS.PASSED" | translate) : ("RESULTS.FAILED" | translate) }}
         </span>
       </div>
 
       <div class="summary-item">
-        <span class="label">Points</span>
+        <span class="label" appTranslate="RESULTS.POINTS">Points</span>
         <span class="value"
           >{{ attempt.score }} / {{ attempt.totalPoints }}</span
         >
       </div>
 
       <div class="summary-item">
-        <span class="label">Completion Time</span>
+        <span class="label" appTranslate="RESULTS.COMPLETION_TIME">Completion Time</span>
         <span class="value">{{ attempt.endTime | date : "medium" }}</span>
       </div>
     </div>
 
     <div class="answers-section">
-      <h3>Question Review</h3>
+      <h3 appTranslate="RESULTS.QUESTION_REVIEW">Question Review</h3>
 
       @for (answer of attempt.answers; track $index) {
       <div class="answer-card">
         <div class="question">
           <span class="question-number">Q{{ $index + 1 }}</span>
-          <p>{{ exam.questions[$index] && exam.questions[$index].text || "Question not available" }}</p>
+          <p>{{ exam.questions[$index] && exam.questions[$index].text || ("RESULTS.QUESTION_NOT_AVAILABLE" | translate) }}</p>
         </div>
 
         <div class="options">
@@ -57,13 +57,13 @@
           >
             {{ option }}
             @if (answer.selectedOption === optIndex) {
-            <span class="selected-marker">Your Answer</span>
+            <span class="selected-marker" appTranslate="RESULTS.YOUR_ANSWER">Your Answer</span>
             } @if (exam.questions[$index] && exam.questions[$index].correctAnswer !== undefined && exam.questions[$index].correctAnswer === optIndex) {
-            <span class="correct-marker">Correct Answer</span>
+            <span class="correct-marker" appTranslate="RESULTS.CORRECT_ANSWER">Correct Answer</span>
             }
           </div>
           } } @else {
-          <div class="option">Options not available</div>
+          <div class="option" appTranslate="RESULTS.OPTIONS_NOT_AVAILABLE">Options not available</div>
           }
         </div>
       </div>
@@ -71,8 +71,8 @@
     </div>
 
     <div class="actions">
-      <a routerLink="/results" class="btn-accentCSS">Back to Results</a>
-      <a routerLink="/exams" class="btn-primaryCSS">Take Another Exam</a>
+      <a routerLink="/results" class="btn-accentCSS" appTranslate="RESULTS.BACK_TO_RESULTS">Back to Results</a>
+      <a routerLink="/exams" class="btn-primaryCSS" appTranslate="RESULTS.TAKE_ANOTHER_EXAM">Take Another Exam</a>
     </div>
   </div>
   }

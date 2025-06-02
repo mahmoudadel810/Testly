@@ -7,24 +7,20 @@
           <div class="footer-brand">
             <div class="footer-logo" routerLink="/" style="cursor: pointer">
               <i class="fas fa-graduation-cap"></i>
-              <h3>Testly</h3>
+              <h3 appTranslate="APP.TITLE">Testly</h3>
             </div>
-            <p class="brand-description">
+            <p class="brand-description" appTranslate="APP.DESCRIPTION">
               A modern platform for online assessments and examinations to
               enhance your learning journey
             </p>
 
             <div class="language-selector">
               <label for="language"
-                ><i class="fas fa-globe"></i> Language:</label
+                ><i class="fas fa-globe"></i> <span appTranslate="FOOTER.LANGUAGE">Language</span>:</label
               >
               <div class="custom-select">
-                <select id="language" aria-label="Select language">
-                  <option value="en">English</option>
-                  <option value="es">Español</option>
-                  <option value="fr">Français</option>
-                  <option value="de">Deutsch</option>
-                  <option value="ar">العربية</option>
+                <select id="language" [value]="currentLang" (change)="changeLanguage($event)" aria-label="Select language">
+                  <option *ngFor="let lang of supportedLanguages" [value]="lang.code">{{ lang.name }}</option>
                 </select>
                 <span class="custom-arrow"></span>
               </div>
@@ -53,31 +49,31 @@
         <!-- Quick Links Column -->
         <div class="col-lg-2 col-md-6 col-6">
           <div class="footer-nav quick-links">
-            <h4>Quick Links</h4>
+            <h4>{{ 'FOOTER.QUICK_LINKS' | translate }}</h4>
             <ul>
               <li>
                 <a routerLink="/" aria-label="Home"
-                  ><i class="fas fa-chevron-right"></i> Home</a
+                  ><i class="fas fa-chevron-right"></i> {{ 'NAV.HOME' | translate }}</a
                 >
               </li>
               <li>
                 <a routerLink="/exams" aria-label="Exams"
-                  ><i class="fas fa-chevron-right"></i> Exams</a
+                  ><i class="fas fa-chevron-right"></i> {{ 'NAV.EXAMS' | translate }}</a
                 >
               </li>
               <li>
                 <a routerLink="/login" aria-label="Login"
-                  ><i class="fas fa-chevron-right"></i> Login</a
+                  ><i class="fas fa-chevron-right"></i> {{ 'NAV.LOGIN' | translate }}</a
                 >
               </li>
               <li>
-                <a routerLink="/register" aria-label="Register"
-                  ><i class="fas fa-chevron-right"></i> Register</a
+                <a routerLink="/register" [attr.aria-label]="'NAV.REGISTER' | translate"
+                  ><i class="fas fa-chevron-right"></i> <span appTranslate="NAV.REGISTER">Register</span></a
                 >
               </li>
               <li>
-                <a routerLink="/about" aria-label="About Us"
-                  ><i class="fas fa-chevron-right"></i> About Us</a
+                <a routerLink="/about" [attr.aria-label]="'FOOTER.ABOUT_US' | translate"
+                  ><i class="fas fa-chevron-right"></i> <span appTranslate="FOOTER.ABOUT_US">About Us</span></a
                 >
               </li>
             </ul>
@@ -87,31 +83,31 @@
         <!-- Resources Column -->
         <div class="col-lg-2 col-md-6 col-6">
           <div class="footer-nav resources">
-            <h4>Resources</h4>
+            <h4>{{ 'FOOTER.RESOURCES' | translate }}</h4>
             <ul>
               <li>
-                <a routerLink="/help-center" aria-label="Help Center"
-                  ><i class="fas fa-chevron-right"></i> Help Center</a
+                <a routerLink="/help-center" [attr.aria-label]="'FOOTER.HELP_CENTER' | translate"
+                  ><i class="fas fa-chevron-right"></i> <span appTranslate="FOOTER.HELP_CENTER">Help Center</span></a
                 >
               </li>
               <li>
-                <a routerLink="/faqs" aria-label="FAQs"
-                  ><i class="fas fa-chevron-right"></i> FAQs</a
+                <a routerLink="/faqs" [attr.aria-label]="'FOOTER.FAQS' | translate"
+                  ><i class="fas fa-chevron-right"></i> <span appTranslate="FOOTER.FAQS">FAQs</span></a
                 >
               </li>
               <li>
-                <a routerLink="/tutorials" aria-label="Tutorials"
-                  ><i class="fas fa-chevron-right"></i> Tutorials</a
+                <a routerLink="/tutorials" [attr.aria-label]="'FOOTER.TUTORIALS' | translate"
+                  ><i class="fas fa-chevron-right"></i> <span appTranslate="FOOTER.TUTORIALS">Tutorials</span></a
                 >
               </li>
               <li>
-                <a routerLink="/blog" aria-label="Blog"
-                  ><i class="fas fa-chevron-right"></i> Blog</a
+                <a routerLink="/blog" [attr.aria-label]="'FOOTER.BLOG' | translate"
+                  ><i class="fas fa-chevron-right"></i> <span appTranslate="FOOTER.BLOG">Blog</span></a
                 >
               </li>
               <li>
-                <a routerLink="/success-stories" aria-label="Success Stories"
-                  ><i class="fas fa-chevron-right"></i> Success Stories</a
+                <a routerLink="/success-stories" [attr.aria-label]="'FOOTER.SUCCESS_STORIES' | translate"
+                  ><i class="fas fa-chevron-right"></i> <span appTranslate="FOOTER.SUCCESS_STORIES">Success Stories</span></a
                 >
               </li>
             </ul>
@@ -121,44 +117,44 @@
         <!-- Contact Column -->
         <div class="col-lg-3 col-md-6 col-12">
           <div class="footer-contact">
-            <h4>Contact Us</h4>
+            <h4>{{ 'FOOTER.CONTACT_US' | translate }}</h4>
             <ul class="contact-info">
               <li>
                 <i class="fas fa-envelope"></i>
-                <a href="mailto:support@testly.com" aria-label="Email support"
+                <a href="mailto:support@testly.com" [attr.aria-label]="'FOOTER.EMAIL_SUPPORT' | translate"
                   >support&#64;testly.com</a
                 >
               </li>
               <li>
                 <i class="fas fa-phone-alt"></i>
-                <a href="tel:+1234567890" aria-label="Call us"
+                <a href="tel:+1234567890" [attr.aria-label]="'FOOTER.CALL_US' | translate"
                   >(123) 456-7890</a
                 >
               </li>
               <li>
                 <i class="fas fa-map-marker-alt"></i>
-                <span>123 Education St, Learning City</span>
+                <span appTranslate="FOOTER.ADDRESS">123 Education St, Learning City</span>
               </li>
               <li>
                 <i class="fas fa-clock"></i>
-                <span>Mon-Fri: 9AM-6PM</span>
+                <span appTranslate="FOOTER.WORKING_HOURS">Mon-Fri: 9AM-6PM</span>
               </li>
             </ul>
 
             <div class="newsletter">
-              <h5>Subscribe to our newsletter</h5>
+              <h5>{{ 'FOOTER.NEWSLETTER' | translate }}</h5>
               <div class="newsletter-form">
                 <input
                   type="email"
-                  placeholder="Your email"
+                  [placeholder]="'FOOTER.EMAIL_PLACEHOLDER' | translate"
                   aria-label="Email for newsletter"
                 />
-                <button type="button" aria-label="Subscribe">
+                <button type="button" [attr.aria-label]="'FOOTER.SUBSCRIBE' | translate">
                   <i class="fas fa-paper-plane"></i>
                 </button>
               </div>
               <p class="newsletter-info">
-                Get updates on new exams and features
+                {{ 'FOOTER.GET_UPDATES' | translate }}
               </p>
             </div>
           </div>
@@ -167,8 +163,8 @@
         <!-- App Download Column -->
         <div class="col-lg-2 col-md-6 col-12">
           <div class="footer-app-download">
-            <h4>Get Our App</h4>
-            <p class="app-description">
+            <h4 appTranslate="FOOTER.GET_APP">Get Our App</h4>
+            <p class="app-description" appTranslate="FOOTER.APP_DESCRIPTION">
               Study on the go with our mobile application
             </p>
             <div class="app-buttons">
@@ -200,7 +196,7 @@
             <div class="award-item">
               <i class="fas fa-medal"></i>
               <div class="award-text">
-                <p>EdTech Excellence Award 2025</p>
+                <p appTranslate="FOOTER.AWARD_EDTECH">EdTech Excellence Award 2025</p>
               </div>
             </div>
           </div>
@@ -210,7 +206,7 @@
             <div class="award-item">
               <i class="fas fa-shield-alt"></i>
               <div class="award-text">
-                <p>ISO 27001 Certified</p>
+                <p appTranslate="FOOTER.AWARD_ISO">ISO 27001 Certified</p>
               </div>
             </div>
           </div>
@@ -220,7 +216,7 @@
             <div class="award-item">
               <i class="fas fa-star"></i>
               <div class="award-text">
-                <p>4.9/5 Customer Rating</p>
+                <p appTranslate="FOOTER.AWARD_RATING">4.9/5 Customer Rating</p>
               </div>
             </div>
           </div>
@@ -234,22 +230,22 @@
       <div class="row align-items-center">
         <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
           <div class="copyright">
-            <p>&copy; {{ currentYear }} Testly. All rights reserved.</p>
+            <p>&copy; {{ currentYear }} Testly. {{ 'FOOTER.COPYRIGHT' | translate }}</p>
           </div>
         </div>
         <div class="col-md-6 text-center text-md-end">
           <div class="footer-links-secondary">
-            <a routerLink="/privacy" aria-label="Privacy Policy"
-              >Privacy Policy</a
+            <a routerLink="/privacy" [attr.aria-label]="'FOOTER.PRIVACY_POLICY' | translate"
+              ><span appTranslate="FOOTER.PRIVACY_POLICY">Privacy Policy</span></a
             >
-            <a routerLink="/terms" aria-label="Terms of Service"
-              >Terms of Service</a
+            <a routerLink="/terms" [attr.aria-label]="'FOOTER.TERMS_OF_SERVICE' | translate"
+              ><span appTranslate="FOOTER.TERMS_OF_SERVICE">Terms of Service</span></a
             >
-            <a routerLink="/cookies" aria-label="Cookie Policy"
-              >Cookie Policy</a
+            <a routerLink="/cookies" [attr.aria-label]="'FOOTER.COOKIE_POLICY' | translate"
+              ><span appTranslate="FOOTER.COOKIE_POLICY">Cookie Policy</span></a
             >
-            <a routerLink="/accessibility" aria-label="Accessibility"
-              >Accessibility</a
+            <a routerLink="/accessibility" [attr.aria-label]="'FOOTER.ACCESSIBILITY' | translate"
+              ><span appTranslate="FOOTER.ACCESSIBILITY">Accessibility</span></a
             >
           </div>
         </div>

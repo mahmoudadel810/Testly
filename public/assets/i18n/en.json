@@ -1,0 +1,71 @@
+{
+  "APP": {
+    "TITLE": "Testly",
+    "DESCRIPTION": "A modern platform for online assessments and examinations"
+  },
+  "NAV": {
+    "HOME": "Home",
+    "EXAMS": "Exams",
+    "LOGIN": "Login",
+    "REGISTER": "Register",
+    "DASHBOARD": "Dashboard",
+    "PROFILE": "Profile",
+    "LOGOUT": "Logout",
+    "ADMIN": "Admin"
+  },
+  "FOOTER": {
+    "LANGUAGE": "Language",
+    "QUICK_LINKS": "Quick Links",
+    "RESOURCES": "Resources",
+    "CONTACT_US": "Contact Us",
+    "COPYRIGHT": "All rights reserved",
+    "NEWSLETTER": "Subscribe to our newsletter",
+    "GET_UPDATES": "Get updates on new exams and features"
+  },
+  "EXAM": {
+    "TITLE": "Title",
+    "QUESTIONS": "Questions",
+    "DURATION": "Duration",
+    "PASSING_SCORE": "Passing Score",
+    "TEACHER": "Teacher",
+    "ROLE": "Role",
+    "CREATED": "Created",
+    "ACTIONS": "Actions",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "TAKE_EXAM": "Take Exam",
+    "REVIEW": "Review",
+    "NO_EXAMS": "No exams have been created yet"
+  },
+  "ADMIN": {
+    "MANAGE_EXAMS": "Manage Exams",
+    "CREATE_EXAM": "Create New Exam",
+    "LOADING": "Loading exams...",
+    "NO_EXAMS": "No exams have been created yet",
+    "CONFIRM_DELETE_EXAM": "Are you sure you want to delete this exam? This cannot be undone.",
+    "EXAM_DELETED": "Exam deleted successfully",
+    "DELETE_EXAM_ERROR": "Failed to delete exam",
+    "FAILED_TO_LOAD_EXAMS": "Failed to load exams",
+    "ERROR": "Error"
+  },
+  "ROLES": {
+    "ADMIN": "Admin",
+    "TEACHER": "Teacher",
+    "STUDENT": "Student",
+    "UNKNOWN": "Unknown"
+  },
+  "BUTTONS": {
+    "SUBMIT": "Submit",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "CREATE": "Create"
+  },
+  "COMMON": {
+    "MINUTES": "mins",
+    "LOADING": "Loading...",
+    "ERROR": "Error",
+    "SUCCESS": "Success",
+    "ACTIONS": "Actions",
+    "UNKNOWN": "Unknown"
+  }
+}

@@ -4,7 +4,7 @@
       <div class="img">
         <img
           src="image/Sign up-bro.svg"
-          alt="sign up"
+          alt="{{ 'AUTH.REGISTER.TITLE' | translate }}"
           class="img-fluid w-100"
           style="display: block"
         />
@@ -16,12 +16,12 @@
         <!-- Show success message after registration -->
         @if (registerCompleted) {
           <div class="registration-success">
-            <h2>Registration Successful!</h2>
+            <h2 appTranslate="AUTH.REGISTER.SUCCESS_TITLE">Registration Successful!</h2>
             <div class="alert alert-success">
               {{ successMessage }}
             </div>
 
-            <button class="btn-primaryCSS btn-block" routerLink="/login">
+            <button class="btn-primaryCSS btn-block" routerLink="/login" appTranslate="AUTH.REGISTER.GO_TO_LOGIN">
               Go to Login
             </button>
           </div>
@@ -29,11 +29,11 @@
 
         <!-- Registration form -->
         @if (!registerCompleted) {
-          <h2>Register as Student</h2>
+          <h2 appTranslate="AUTH.REGISTER.TITLE">Register as Student</h2>
 
           <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
             <div class="form-group">
-              <label for="username">Username</label>
+              <label for="username" appTranslate="AUTH.REGISTER.USERNAME">Username</label>
               <input
                 type="text"
                 id="username"
@@ -45,12 +45,12 @@
               registerForm.get('username')?.touched)) {
                 <div class="error-text">
                   @if (registerForm.get('username')?.errors?.['required']) {
-                    <div>Username is required</div>
+                    <div appTranslate="AUTH.REGISTER.VALIDATION.USERNAME_REQUIRED">Username is required</div>
                   } @if (registerForm.get('username')?.errors?.['minlength']) {
-                    <div>Username must be at least 3 characters</div>
+                    <div appTranslate="AUTH.REGISTER.VALIDATION.USERNAME_LENGTH">Username must be at least 3 characters</div>
                   } @if
                   (registerForm.get('username')?.errors?.['invalidUsername']) {
-                    <div>
+                    <div appTranslate="AUTH.REGISTER.VALIDATION.USERNAME_INVALID">
                       Username must contain only letters, numbers, no space at the
                       start, and underscores.
                     </div>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="form-group">
-              <label for="email">Email</label>
+              <label for="email" appTranslate="AUTH.REGISTER.EMAIL">Email</label>
               <input
                 type="email"
                 id="email"
@@ -72,16 +72,16 @@
               registerForm.get('email')?.touched)) {
                 <div class="error-text">
                   @if (registerForm.get('email')?.errors?.['required']) {
-                    <div>Email is required</div>
+                    <div appTranslate="AUTH.REGISTER.VALIDATION.EMAIL_REQUIRED">Email is required</div>
                   } @if (registerForm.get('email')?.errors?.['email']) {
-                    <div>Please enter a valid email</div>
+                    <div appTranslate="AUTH.REGISTER.VALIDATION.EMAIL_INVALID">Please enter a valid email</div>
                   }
                 </div>
               }
             </div>
 
             <div class="form-group">
-              <label for="password">Password</label>
+              <label for="password" appTranslate="AUTH.REGISTER.PASSWORD">Password</label>
               <div class="password-input-wrapper">
   <input
     [type]="showPassword ? 'text' : 'password'"
@@ -89,7 +89,7 @@
     formControlName="password"
     class="form-control"
   />
-  <span class="password-toggle-icon" role="button" tabindex="0" aria-label="Toggle password visibility" (click)="togglePasswordVisibility()" (keydown.enter)="togglePasswordVisibility()" (keydown.space)="togglePasswordVisibility()">
+  <span class="password-toggle-icon" role="button" tabindex="0" [attr.aria-label]="'AUTH.REGISTER.TOGGLE_PASSWORD' | translate" (click)="togglePasswordVisibility()" (keydown.enter)="togglePasswordVisibility()" (keydown.space)="togglePasswordVisibility()">
     <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
   </span>
 </div>
@@ -98,12 +98,12 @@
               registerForm.get('password')?.touched)) {
                 <div class="error-text">
                   @if (registerForm.get('password')?.errors?.['required']) {
-                    <div>Password is required</div>
+                    <div appTranslate="AUTH.REGISTER.VALIDATION.PASSWORD_REQUIRED">Password is required</div>
                   } @if (registerForm.get('password')?.errors?.['minlength']) {
-                    <div>Password must be at least 6 characters</div>
+                    <div appTranslate="AUTH.REGISTER.VALIDATION.PASSWORD_LENGTH">Password must be at least 6 characters</div>
                   } @if
                   (registerForm.get('password')?.errors?.['invalidPassword']) {
-                    <div>
+                    <div appTranslate="AUTH.REGISTER.VALIDATION.PASSWORD_INVALID">
                       Password must contain at least 1 uppercase letter, 1 number,
                       and a symbol (e.g., &#64;, #, $, etc.).
                     </div>
@@ -113,7 +113,7 @@
             </div>
 
             <div class="form-group">
-              <label for="confirmPassword">Confirm Password</label>
+              <label for="confirmPassword" appTranslate="AUTH.REGISTER.CONFIRM_PASSWORD">Confirm Password</label>
               <div class="password-input-wrapper">
   <input
     [type]="showConfirmPassword ? 'text' : 'password'"
@@ -121,14 +121,14 @@
     formControlName="confirmPassword"
     class="form-control"
   />
-  <span class="password-toggle-icon" role="button" tabindex="0" aria-label="Toggle confirm password visibility" (click)="toggleConfirmPasswordVisibility()" (keydown.enter)="toggleConfirmPasswordVisibility()" (keydown.space)="toggleConfirmPasswordVisibility()">
+  <span class="password-toggle-icon" role="button" tabindex="0" [attr.aria-label]="'AUTH.REGISTER.TOGGLE_CONFIRM' | translate" (click)="toggleConfirmPasswordVisibility()" (keydown.enter)="toggleConfirmPasswordVisibility()" (keydown.space)="toggleConfirmPasswordVisibility()">
     <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
   </span>
 </div>
               @if
               (registerForm.get('confirmPassword')?.errors?.['passwordMismatch']
               && registerForm.get('confirmPassword')?.dirty) {
-                <div class="error-text">Passwords do not match</div>
+                <div class="error-text" appTranslate="AUTH.REGISTER.VALIDATION.PASSWORDS_MISMATCH">Passwords do not match</div>
               }
             </div>
 
@@ -137,14 +137,14 @@
               class="btn-primaryCSS btn-block"
               [disabled]="registerForm.invalid || isLoading"
             >
-              {{ isLoading ? "Registering..." : "Register" }}
+              {{ isLoading ? ('AUTH.REGISTER.LOADING' | translate) : ('AUTH.REGISTER.BUTTON' | translate) }}
             </button>
           </form>
 
           <div class="auth-footer">
             <p>
-              Already have an account?
-              <a routerLink="/login">Login</a>
+              <span appTranslate="AUTH.REGISTER.HAVE_ACCOUNT">Already have an account?</span>
+              <a routerLink="/login" appTranslate="AUTH.REGISTER.LOGIN_LINK">Login</a>
             </p>
           </div>
         }

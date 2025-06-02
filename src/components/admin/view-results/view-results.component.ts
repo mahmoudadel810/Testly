@@ -3,6 +3,9 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { TranslatePipe } from "../../../pipes/translate.pipe";
+import { TranslateDirective } from "../../../directives/translate.directive";
+import { TranslationService } from "../../../services/translation.service";
 import { ExamService } from "../../../services/exam.service";
 import { AuthService } from "../../../services/auth.service";
 import { ExamAttempt, Exam } from "../../../models/exam.model";
@@ -13,7 +16,7 @@ import { catchError, finalize, map } from "rxjs/operators";
 @Component({
   selector: "app-view-results",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, TranslateDirective],
   templateUrl: "./view-results.component.html",
   styleUrls: ["./view-results.component.css"]
 })
@@ -397,13 +400,13 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
     );
 
     if (this.filteredAttempts.length === 0) {
-      return "No entries to display";
+      return "ADMIN.RESULTS.NO_ENTRIES";
     }
 
     if (this.filteredAttempts.length === this.attempts.length) {
-      return `Showing ${start} to ${end} of ${this.filteredAttempts.length} entries`;
+      return `ADMIN.RESULTS.SHOWING_ENTRIES:${start}:${end}:${this.filteredAttempts.length}`;
     } else {
-      return `Showing ${start} to ${end} of ${this.filteredAttempts.length} filtered entries (from ${this.attempts.length} total)`;
+      return `ADMIN.RESULTS.SHOWING_FILTERED:${start}:${end}:${this.filteredAttempts.length}:${this.attempts.length}`;
     }
   }
 

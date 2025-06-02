@@ -3,13 +3,16 @@
 import { Component } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../../services/auth.service";
+import { TranslationService } from "../../../services/translation.service";
+import { TranslatePipe } from "../../../pipes/translate.pipe";
+import { TranslateDirective } from "../../../directives/translate.directive";
 
 @Component({
   selector: "app-forgot-password",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, TranslateDirective, RouterLink],
   templateUrl: "./forgot-password.component.html",
   styleUrls: ["./forgot-password.component.css"]
 })
@@ -19,7 +22,11 @@ export class ForgotPasswordComponent {
   message = "";
   error = "";
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private translationService: TranslationService
+  ) {}
 
   onSubmit() {
     this.isLoading = true;
@@ -28,7 +35,7 @@ export class ForgotPasswordComponent {
     this.authService.resetPassword(this.email).subscribe({
       next: (res) => {
         this.isLoading = false;
-        this.message = "A reset code has been sent to your email.";
+        this.message = this.translationService.translate('AUTH.FORGOT_PASSWORD.SUCCESS');
         // Optionally, navigate to reset-password page
         this.router.navigate(["/reset-password"], {
           queryParams: { email: this.email }
@@ -36,7 +43,7 @@ export class ForgotPasswordComponent {
       },
       error: (err) => {
         this.isLoading = false;
-        this.error = err.error?.message || "Failed to send reset code.";
+        this.error = err.error?.message || this.translationService.translate('AUTH.FORGOT_PASSWORD.ERROR');
       }
     });
   }

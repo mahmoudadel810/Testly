@@ -3,6 +3,9 @@
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
+import { TranslateDirective } from '../../../directives/translate.directive';
+import { TranslationService } from '../../../services/translation.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExamService } from '../../../services/exam.service';
 import {
@@ -17,7 +20,7 @@ import { of, Subscription } from 'rxjs';
 @Component({
   selector: 'app-take-exam',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe, TranslateDirective],
   templateUrl: './take-exam.component.html',
   styleUrls: ['./take-exam.component.css'],
 })

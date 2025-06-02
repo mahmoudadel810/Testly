@@ -6,7 +6,8 @@ import {
   provideZoneChangeDetection,
   PLATFORM_ID,
   inject,
-  isDevMode
+  isDevMode,
+  APP_INITIALIZER
 } from "@angular/core";
 import { isPlatformBrowser } from "@angular/common";
 import { provideRouter } from "@angular/router";
@@ -30,6 +31,7 @@ import { routes } from "./app.routes";
 import { reducers } from "../store";
 import { AuthEffects } from "../store/auth/effects/auth.effects";
 import { environment } from "../environments/environment";
+import { TranslationService } from '../services/translation.service';
 
 // Create an auth interceptor function
 const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
@@ -58,6 +60,15 @@ const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
   return next(req);
 };
 
+// Function to initialize the translation service
+const initializeTranslation = (translationService: TranslationService) => {
+  return () => {
+    // Get saved language or use default
+    const savedLang = localStorage.getItem('language') || 'en';
+    return translationService.setLanguage(savedLang);
+  };
+};
+
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }),
@@ -75,6 +86,13 @@ export const appConfig: ApplicationConfig = {
         closeButton: true
       })
     ),
+    // Translation service provider
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeTranslation,
+      deps: [TranslationService],
+      multi: true
+    },
     // NgRx providers
     provideStore(reducers),
     provideEffects([AuthEffects]),

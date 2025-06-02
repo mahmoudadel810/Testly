@@ -4,7 +4,7 @@
       <div class="img">
         <img
           src="image/Sign up-bro.svg"
-          alt="teacher registration"
+          alt="{{ 'AUTH.TEACHER_REGISTER.ALT_TEXT' | translate }}"
           class="img-fluid w-100"
           style="display: block"
         />
@@ -13,27 +13,27 @@
     <div class="col-12 col-md-8 col-lg-6">
       <div class="card shadow">
         <div class="card-header bg-primary text-white text-center py-3">
-          <h2 class="h4 mb-0">Teacher Registration</h2>
+          <h2 class="h4 mb-0" appTranslate="AUTH.TEACHER_REGISTER.TITLE">Teacher Registration</h2>
         </div>
         <div class="card-body p-4">
           <!-- Success Message -->
           @if (successMessage) {
             <div class="alert alert-success">
-              {{ successMessage }}
+              {{ successMessage | translate }}
             </div>
           }
 
           <!-- Error Message -->
           @if (errorMessage) {
             <div class="alert alert-danger">
-              {{ errorMessage }}
+              {{ errorMessage | translate }}
             </div>
           }
 
           <form [formGroup]="teacherForm" (ngSubmit)="onSubmit()">
             <!-- Name -->
             <div class="mb-3">
-              <label for="name" class="form-label">Full Name</label>
+              <label for="name" class="form-label" appTranslate="AUTH.TEACHER_REGISTER.FORM.NAME.LABEL">Full Name</label>
               <input
                 type="text"
                 id="name"
@@ -47,10 +47,10 @@
               @if (teacherForm.get('name')?.invalid && teacherForm.get('name')?.touched) {
                 <div class="invalid-feedback">
                   @if (teacherForm.get('name')?.errors?.['required']) {
-                    <div>Name is required</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.NAME.REQUIRED">Name is required</div>
                   }
                   @if (teacherForm.get('name')?.errors?.['minlength']) {
-                    <div>Name must be at least 3 characters</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.NAME.MIN_LENGTH">Name must be at least 3 characters</div>
                   }
                 </div>
               }
@@ -58,7 +58,7 @@
 
             <!-- Email -->
             <div class="mb-3">
-              <label for="email" class="form-label">Email</label>
+              <label for="email" class="form-label" appTranslate="AUTH.TEACHER_REGISTER.FORM.EMAIL.LABEL">Email</label>
               <input
                 type="email"
                 id="email"
@@ -72,10 +72,10 @@
               @if (teacherForm.get('email')?.invalid && teacherForm.get('email')?.touched) {
                 <div class="invalid-feedback">
                   @if (teacherForm.get('email')?.errors?.['required']) {
-                    <div>Email is required</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.EMAIL.REQUIRED">Email is required</div>
                   }
                   @if (teacherForm.get('email')?.errors?.['email']) {
-                    <div>Please enter a valid email</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.EMAIL.INVALID">Please enter a valid email</div>
                   }
                 </div>
               }
@@ -83,7 +83,7 @@
 
             <!-- Phone -->
             <div class="mb-3">
-              <label for="phone" class="form-label">Phone Number</label>
+              <label for="phone" class="form-label" appTranslate="AUTH.TEACHER_REGISTER.FORM.PHONE.LABEL">Phone Number</label>
               <input
                 type="tel"
                 id="phone"
@@ -93,15 +93,15 @@
                   teacherForm.get('phone')?.invalid &&
                   teacherForm.get('phone')?.touched
                 "
-                placeholder="11 digits"
+                placeholder="{{ 'AUTH.TEACHER_REGISTER.FORM.PHONE.PLACEHOLDER' | translate }}"
               />
               @if (teacherForm.get('phone')?.invalid && teacherForm.get('phone')?.touched) {
                 <div class="invalid-feedback">
                   @if (teacherForm.get('phone')?.errors?.['required']) {
-                    <div>Phone number is required</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.PHONE.REQUIRED">Phone number is required</div>
                   }
                   @if (teacherForm.get('phone')?.errors?.['pattern']) {
-                    <div>Phone must be 11 digits</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.PHONE.PATTERN">Phone must be 11 digits</div>
                   }
                 </div>
               }
@@ -109,7 +109,7 @@
 
             <!-- National ID -->
             <div class="mb-3">
-              <label for="nationalId" class="form-label">National ID</label>
+              <label for="nationalId" class="form-label" appTranslate="AUTH.TEACHER_REGISTER.FORM.NATIONAL_ID.LABEL">National ID</label>
               <input
                 type="text"
                 id="nationalId"
@@ -119,15 +119,15 @@
                   teacherForm.get('nationalId')?.invalid &&
                   teacherForm.get('nationalId')?.touched
                 "
-                placeholder="14 digits"
+                placeholder="{{ 'AUTH.TEACHER_REGISTER.FORM.NATIONAL_ID.PLACEHOLDER' | translate }}"
               />
               @if (teacherForm.get('nationalId')?.invalid && teacherForm.get('nationalId')?.touched) {
                 <div class="invalid-feedback">
                   @if (teacherForm.get('nationalId')?.errors?.['required']) {
-                    <div>National ID is required</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.NATIONAL_ID.REQUIRED">National ID is required</div>
                   }
                   @if (teacherForm.get('nationalId')?.errors?.['pattern']) {
-                    <div>National ID must be 14 digits</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.NATIONAL_ID.PATTERN">National ID must be 14 digits</div>
                   }
                 </div>
               }
@@ -135,7 +135,7 @@
 
             <!-- Address -->
             <div class="mb-3">
-              <label for="address" class="form-label">Address</label>
+              <label for="address" class="form-label" appTranslate="AUTH.TEACHER_REGISTER.FORM.ADDRESS.LABEL">Address</label>
               <textarea
                 id="address"
                 formControlName="address"
@@ -145,14 +145,15 @@
                   teacherForm.get('address')?.touched
                 "
                 rows="2"
+                placeholder="{{ 'AUTH.TEACHER_REGISTER.FORM.ADDRESS.PLACEHOLDER' | translate }}"
               ></textarea>
               @if (teacherForm.get('address')?.invalid && teacherForm.get('address')?.touched) {
                 <div class="invalid-feedback">
                   @if (teacherForm.get('address')?.errors?.['required']) {
-                    <div>Address is required</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.ADDRESS.REQUIRED">Address is required</div>
                   }
                   @if (teacherForm.get('address')?.errors?.['minlength']) {
-                    <div>Address must be at least 5 characters</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.ADDRESS.MIN_LENGTH">Address must be at least 5 characters</div>
                   }
                 </div>
               }
@@ -160,7 +161,7 @@
 
             <!-- Password -->
             <div class="mb-3">
-              <label for="password" class="form-label">Password</label>
+              <label for="password" class="form-label" appTranslate="AUTH.TEACHER_REGISTER.FORM.PASSWORD.LABEL">Password</label>
               <div class="password-input-wrapper">
                 <input
                   [type]="showPassword ? 'text' : 'password'"
@@ -173,7 +174,7 @@
                   class="password-toggle-icon"
                   role="button"
                   tabindex="0"
-                  aria-label="Toggle password visibility"
+                  [attr.aria-label]="'AUTH.TEACHER_REGISTER.FORM.PASSWORD.TOGGLE_VISIBILITY' | translate"
                   (click)="togglePasswordVisibility()"
                   (keydown.enter)="togglePasswordVisibility()"
                   (keydown.space)="togglePasswordVisibility()"
@@ -184,10 +185,10 @@
               @if (teacherForm.get('password')?.invalid && teacherForm.get('password')?.touched) {
                 <div class="invalid-feedback">
                   @if (teacherForm.get('password')?.errors?.['required']) {
-                    <div>Password is required</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.PASSWORD.REQUIRED">Password is required</div>
                   }
                   @if (teacherForm.get('password')?.errors?.['minlength']) {
-                    <div>Password must be at least 6 characters</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.PASSWORD.MIN_LENGTH">Password must be at least 6 characters</div>
                   }
                 </div>
               }
@@ -195,7 +196,7 @@
 
             <!-- Confirm Password -->
             <div class="mb-3">
-              <label for="confirmPassword" class="form-label"
+              <label for="confirmPassword" class="form-label" appTranslate="AUTH.TEACHER_REGISTER.FORM.CONFIRM_PASSWORD.LABEL"
                 >Confirm Password</label
               >
               <div class="password-input-wrapper">
@@ -210,7 +211,7 @@
                   class="password-toggle-icon"
                   role="button"
                   tabindex="0"
-                  aria-label="Toggle confirm password visibility"
+                  [attr.aria-label]="'AUTH.TEACHER_REGISTER.FORM.CONFIRM_PASSWORD.TOGGLE_VISIBILITY' | translate"
                   (click)="toggleConfirmPasswordVisibility()"
                   (keydown.enter)="toggleConfirmPasswordVisibility()"
                   (keydown.space)="toggleConfirmPasswordVisibility()"
@@ -221,10 +222,10 @@
               @if (teacherForm.get('confirmPassword')?.invalid && teacherForm.get('confirmPassword')?.touched) {
                 <div class="invalid-feedback">
                   @if (teacherForm.get('confirmPassword')?.errors?.['required']) {
-                    <div>Confirm password is required</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.CONFIRM_PASSWORD.REQUIRED">Confirm password is required</div>
                   }
                   @if (teacherForm.get('confirmPassword')?.errors?.['mismatch']) {
-                    <div>Passwords do not match</div>
+                    <div appTranslate="AUTH.TEACHER_REGISTER.FORM.CONFIRM_PASSWORD.MISMATCH">Passwords do not match</div>
                   }
                 </div>
               }
@@ -243,9 +244,9 @@
                     role="status"
                     aria-hidden="true"
                   ></span>
-                  Registering...
+                  {{ 'AUTH.TEACHER_REGISTER.FORM.BUTTON.SUBMITTING' | translate }}
                 } @else {
-                  Register as Teacher
+                  {{ 'AUTH.TEACHER_REGISTER.FORM.BUTTON.SUBMIT' | translate }}
                 }  
               </button>
             </div>
@@ -253,12 +254,15 @@
             <!-- Login Link -->
             <div class="text-center">
               <p class="mb-0">
-                Already have an account? <a routerLink="/login">Login</a>
+                <span appTranslate="AUTH.TEACHER_REGISTER.LOGIN_LINK.TEXT">Already have an account?</span> <a routerLink="/login">{{ 'AUTH.TEACHER_REGISTER.LOGIN_LINK.LINK' | translate }}</a>
               </p>
             </div>
           </form>
         </div>
       </div>
     </div>
+  </div>
+  <div class="text-center text-secondary py-2 small">
+    {{ 'AUTH.TEACHER_REGISTER.COPYRIGHT' | translate }}
   </div>
 </div>

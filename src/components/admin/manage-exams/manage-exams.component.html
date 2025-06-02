@@ -3,19 +3,20 @@
 <div class="manage-exams-container">
   <div class="header-row">
     <div class="header-title-group">
-      <h1>Manage Exams</h1>
+      <h1>{{ 'ADMIN.MANAGE_EXAMS' | translate }}</h1>
       <div class="header-divider"></div>
     </div>
     <button
       class="create-btn"
       aria-label="Create New Exam"
-      routerLink="/admin/exams/create">
-      <i class="fas fa-plus"></i> <span>Create New Exam</span>
+      routerLink="/admin/exams/create"
+      [attr.aria-label]="'ADMIN.CREATE_EXAM' | translate">
+      <i class="fas fa-plus"></i> <span appTranslate="ADMIN.CREATE_EXAM"></span>
     </button>
   </div>
 
   @if (loading) {
-  <div class="loading"><span class="spinner"></span> Loading exams...</div>
+  <div class="loading"><span class="spinner"></span> {{ 'ADMIN.LOADING' | translate }}</div>
   }
 
   <div class="exam-table-responsive">
@@ -23,14 +24,14 @@
     <table class="exams-table">
       <thead>
         <tr>
-          <th><i class="fas fa-file-alt"></i> Title</th>
-          <th><i class="fas fa-list-ol"></i> Questions</th>
-          <th><i class="fas fa-clock"></i> Duration</th>
-          <th><i class="fas fa-percentage"></i> Passing Score</th>
-          <th><i class="fas fa-chalkboard-teacher"></i> Teacher</th>
-          <th><i class="fas fa-user-tag"></i> Role</th>
-          <th><i class="fas fa-calendar-alt"></i> Created</th>
-          <th>Actions</th>
+          <th><i class="fas fa-file-alt"></i> {{ 'EXAM.TITLE' | translate }}</th>
+          <th><i class="fas fa-list-ol"></i> {{ 'EXAM.QUESTIONS' | translate }}</th>
+          <th><i class="fas fa-clock"></i> {{ 'EXAM.DURATION' | translate }}</th>
+          <th><i class="fas fa-percentage"></i> {{ 'EXAM.PASSING_SCORE' | translate }}</th>
+          <th><i class="fas fa-chalkboard-teacher"></i> {{ 'EXAM.TEACHER' | translate }}</th>
+          <th><i class="fas fa-user-tag"></i> {{ 'EXAM.ROLE' | translate }}</th>
+          <th><i class="fas fa-calendar-alt"></i> {{ 'EXAM.CREATED' | translate }}</th>
+          <th>{{ 'COMMON.ACTIONS' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -38,7 +39,7 @@
         <tr>
           <td>{{ exam.title }}</td>
           <td>{{ exam.questions.length }}</td>
-          <td>{{ exam.duration }} mins</td>
+          <td>{{ exam.duration }} {{ 'EXAM.MINUTES' | translate }}</td>
           <td>{{ exam.passingScore }}%</td>
           <td>
             {{ getTeacherName(exam) }}
@@ -55,19 +56,11 @@
           </td>
           <td>{{ exam.createdAt | date }}</td>
           <td class="actions">
-            <button
-              class="action-btn icon-btn edit"
-              aria-label="Edit Exam"
-              title="Edit"
-              [routerLink]="['/admin/exams/edit', exam._id]">
-              <i class="fas fa-pen"></i>
+            <button class="action-btn edit" aria-label="Edit Exam">
+              <i class="fas fa-edit"></i> <span>{{ 'EXAM.EDIT' | translate }}</span>
             </button>
-            <button
-              class="action-btn icon-btn delete"
-              aria-label="Delete Exam"
-              title="Delete"
-              (click)="deleteExam(exam._id!)">
-              <i class="fas fa-trash"></i>
+            <button class="action-btn delete" aria-label="Delete Exam">
+              <i class="fas fa-trash-alt"></i> <span>{{ 'EXAM.DELETE' | translate }}</span>
             </button>
           </td>
         </tr>
@@ -77,7 +70,7 @@
     } @if (!loading && exams.length === 0) {
     <div class="no-exams">
       <i class="fas fa-folder-open fa-3x"></i>
-      <p>No exams have been created yet.</p>
+      <p>{{ 'ADMIN.NO_EXAMS' | translate }}</p>
     </div>
     }
   </div>

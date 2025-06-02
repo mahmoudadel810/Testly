@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  OnDestroy,
   HostListener,
   ViewChild,
   Inject,
@@ -13,6 +14,8 @@ import { HeaderComponent } from '../components/shared/header/header.component';
 import { NotificationComponent } from '../components/shared/notification/notification.component';
 import { filter } from 'rxjs/operators';
 import { LoggingService } from '../services/logging.service';
+import { TranslationService } from '../services/translation.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -27,21 +30,28 @@ import { LoggingService } from '../services/logging.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'Testly';
+  private destroy$ = new Subject<void>();
   showBackToTop = false;
   isBrowser: boolean;
 
   constructor(
     private router: Router,
     private logger: LoggingService,
+    private translationService: TranslationService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     // Check if we're in the browser
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // Set up language direction based on current language
+    this.translationService.getTextDirection()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+    
     // Listen for route changes
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -52,8 +62,6 @@ export class AppComponent implements OnInit {
         }
       });
   }
-
-
 
   /**
    * Shows back-to-top button when scrolled down
@@ -67,14 +75,19 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Scrolls the window back to the top
+   * Smooth scroll to top
    */
-  scrollToTop() {
+  scrollToTop(): void {
     if (this.isBrowser) {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }
+
+  /**
+   * Cleanup subscriptions on component destroy
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

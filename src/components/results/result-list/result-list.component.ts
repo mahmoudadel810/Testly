@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '../../../pipes/translate.pipe';
+import { TranslateDirective } from '../../../directives/translate.directive';
+import { TranslationService } from '../../../services/translation.service';
 import { ExamService } from '../../../services/exam.service';
 import { ExamAttempt, Exam } from '../../../models/exam.model';
 
 @Component({
   selector: 'app-result-list',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, TranslatePipe, TranslateDirective],
   templateUrl: './result-list.component.html',
   styleUrls: ['./result-list.component.css'],
 })
