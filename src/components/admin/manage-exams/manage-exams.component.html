@@ -43,9 +43,7 @@
           <td>
             {{ getTeacherName(exam) }}
             @if (getTeacherEmail(exam)) {
-            <small class="d-block text-muted">{{
-              getTeacherEmail(exam)
-            }}</small>
+            <small class="d-block text-muted">{{ getTeacherEmail(exam) }}</small>
             }
           </td>
           <td>
@@ -81,4 +79,14 @@
     </div>
     }
   </div>
+
+  @if (showDeleteConfirmation) {
+    <app-confirmation-popup
+      title="Delete Exam"
+      message="Are you sure you want to delete this exam? You won't be able to revert this!"
+      actionType="delete"
+      (confirm)="onDeleteConfirmed()"
+      (cancel)="onDeleteCancelled()">
+    </app-confirmation-popup>
+  }
 </div>
