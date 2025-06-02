@@ -8,6 +8,7 @@ export type ConfirmationAction = "delete" | "edit" | "remove" | "save" | "custom
   templateUrl: "./confirmation-popup.component.html",
   styleUrls: ["./confirmation-popup.component.css"]
 })
+// popup
 export class ConfirmationPopupComponent implements OnInit {
   @Input() title = "Confirmation";
   @Input() message = "Are you sure you want to perform this action?";
