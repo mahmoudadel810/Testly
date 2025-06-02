@@ -676,7 +676,7 @@ export class ExamService {
       Authorization: `${environment.bearerTokenPrefix}${token}`
     };
 
-    // this.logger.debug('Authorization header:', headers.Authorization);
+    this.logger.debug('Authorization header for admin attempts:', headers.Authorization);
 
     // Define an interface for the API response format
     interface ApiResponse {
@@ -685,8 +685,12 @@ export class ExamService {
       message: string;
     }
 
+    // Try directly using full URL path to admin attempts to ensure correct endpoint
+    const url = `${API_ENDPOINTS.BASE_URL}/exam/admin/attempts`;
+    this.logger.debug(`Using full admin attempts URL: ${url}`);
+    
     return this.http
-      .get<any>(`${API_ENDPOINTS.ADMIN}/attempts`, { headers })
+      .get<any>(url, { headers })
       .pipe(
         tap((response) => {
           // Log the raw response to debug what's coming back
