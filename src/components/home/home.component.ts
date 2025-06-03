@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit, AfterViewInit, OnDestroy {
   isAdmin = false;
   isTeacher = false;
   statsVisible = false;
+  currentLang = 'en';
   private subscription = new Subscription();
   
   // Statistics counters
