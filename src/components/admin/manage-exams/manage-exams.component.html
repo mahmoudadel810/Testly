@@ -15,7 +15,10 @@
   </div>
 
   @if (loading) {
-  <div class="loading"><span class="spinner"></span> Loading exams...</div>
+  <div class="loading">
+    <span class="spinner"></span> 
+    <span appTranslate="ADMIN.EXAMS.LOADING"></span>
+  </div>
   }
 
   <div class="exam-table-responsive">
@@ -27,7 +30,7 @@
           <th><i class="fas fa-list-ol"></i> Questions</th>
           <th><i class="fas fa-clock"></i> Duration</th>
           <th><i class="fas fa-percentage"></i> Passing Score</th>
-          <th><i class="fas fa-chalkboard-teacher"></i> Teacher</th>
+          <th><i class="fas fa-chalkboard-teacher"></i> Name</th>
           <th><i class="fas fa-user-tag"></i> Role</th>
           <th><i class="fas fa-calendar-alt"></i> Created</th>
           <th>Actions</th>
