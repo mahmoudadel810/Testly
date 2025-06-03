@@ -1,4 +1,4 @@
-/* create-exam.component.css */
+/* exam-form.component.css */
 .create-exam {
   max-width: 900px;
   margin: 0 auto;
@@ -311,15 +311,23 @@ button:disabled {
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 
-/* Responsive adjustments */
+@keyframes slideIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @media (max-width: 768px) {
   .create-exam {
     padding: var(--space-3);

@@ -52,20 +52,6 @@
             <i class="fas fa-chevron-down" [class.rotate]="dropdownOpen"></i>
           </a>
           <div class="dropdown-menu" [class.show]="dropdownOpen">
-            <a
-              routerLink="/profile"
-              routerLinkActive="active"
-              (click)="closeDropdown()"
-            >
-              <i class="fas fa-id-card"></i> Profile
-            </a>
-            <a
-              routerLink="/settings"
-              routerLinkActive="active"
-              (click)="closeDropdown()"
-            >
-              <i class="fas fa-cog"></i> Settings
-            </a>
             <div class="dropdown-divider"></div>
             <a (click)="logout(); closeDropdown()" class="logout">
               <i class="fas fa-sign-out-alt"></i> Logout
@@ -159,16 +145,6 @@
       </li>
       }
 
-      <li>
-        <a routerLink="/profile" (click)="closeMobileMenu()">
-          <i class="fas fa-id-card"></i> Profile
-        </a>
-      </li>
-      <li>
-        <a routerLink="/settings" (click)="closeMobileMenu()">
-          <i class="fas fa-cog"></i> Settings
-        </a>
-      </li>
       <li class="mobile-logout">
         <a (click)="logoutAndClose()">
           <i class="fas fa-sign-out-alt"></i> Logout
