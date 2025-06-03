@@ -57,18 +57,27 @@
   width: 100%;
   overflow-x: auto;
   background: transparent;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 14px ; 
+  margin-bottom: 20px;
 }
 
 .exams-table {
-  width: 100%;
+ width: 100%;
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   background: #fff;
   border-radius: 14px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
   animation: fadeInTable 0.5s;
+  table-layout: auto;
 }
-
+.exams-table th , .exams-table td {
+  padding: 18px 20px;
+  text-align: left;
+  white-space: nowrap;
+}
 @keyframes fadeInTable {
   from {
     opacity: 0;
@@ -80,10 +89,58 @@
   }
 }
 
-.exams-table th,
-.exams-table td {
-  padding: 18px 20px;
+
+
+.exams-table td:first-child {
+  white-space: normal;
+  word-break: break-word;
+  max-width: 250px;
+  vertical-align: top;
+  padding-top: 18px;
+  line-height: 1.4;
+}
+
+.exam-table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 14px;
+  margin-bottom: 20px;
+}
+
+.exams-table {
+  min-width: 1000px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .exam-table-responsive {
+    border-radius: 0;
+    margin-left: -16px;
+    margin-right: -16px;
+    width: calc(100% + 32px);
+  }
+
+  .exams-table {
+    border-radius: 0;
+    min-width: 100%;
+  }
+
+  .exams-table th,
+  .exams-table td {
+    font-size: 0.9rem;
+     padding: 18px 20px;
   text-align: left;
+  white-space: nowrap;
+  }
+
+  .exams-table td:first-child {
+white-space: normal;
+  word-break: break-word;
+  max-width: 200px;
+  vertical-align: top;
+  padding-top: 18px;
+  line-height: 1.4;  }
 }
 
 .exams-table th {
