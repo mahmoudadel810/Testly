@@ -1,23 +1,27 @@
-import { Component, OnInit } from "@angular/core";
+/** @format */
+
+import { Component, OnInit, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink, Router } from "@angular/router";
 import { ExamService } from "../../../services/exam.service";
 import { Exam } from "../../../models/exam.model";
 import { ToastrService } from "ngx-toastr";
-import { ConfirmationPopupComponent } from './../../shared/confirmation-popup/confirmation-popup.component';
+import { TranslationService } from "../../../services/translation.service";
+import { TranslateDirective } from "../../../directives/translate.directive";
+import { TranslatePipe } from "../../../pipes/translate.pipe";
+import { Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: "app-manage-exams",
   standalone: true,
-  imports: [CommonModule, RouterLink, ConfirmationPopupComponent],
+  imports: [CommonModule, RouterLink, TranslateDirective, TranslatePipe],
   templateUrl: "./manage-exams.component.html",
   styleUrls: ["./manage-exams.component.css"]
 })
 export class ManageExamsComponent implements OnInit, OnDestroy {
   exams: Exam[] = [];
   loading = true;
-  showDeleteConfirmation = false;
-  examToDelete: string | null = null;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private examService: ExamService,
@@ -43,6 +47,26 @@ export class ManageExamsComponent implements OnInit, OnDestroy {
       next: (exams) => {
         this.exams = exams;
         this.loading = false;
+        this.toastr.success("Exams loaded successfully", "Success");
+
+        // Debug: Log the structure of the first exam to understand the data
+        if (exams.length > 0) {
+          // console.log('Exam data structure:', exams[0]);
+          // console.log('Creator details:', exams[0].createdBy);
+          // console.log('Teacher details:', exams[0].teacherId);
+
+          // Check what role information is available
+          const creator = exams[0].createdBy;
+          if (creator) {
+            // console.log('Creator type:', typeof creator);
+            if (typeof creator === "object") {
+              // console.log('Creator properties:', Object.keys(creator));
+              // Don't try to access role directly as it doesn't exist in the model
+              // console.log('Teacher ID info:', exams[0].teacherId);
+            }
+          }
+        }
+
         this.toastr.success("Exams loaded successfully", "Success");
       },
       error: (error) => {
@@ -85,66 +109,80 @@ export class ManageExamsComponent implements OnInit, OnDestroy {
   }
 
   getCreatorRole(exam: Exam): string {
+    // If the exam has a teacherId property that's the same as the createdBy ID,
+    // or if teacherId is an object that contains information, it's a teacher
     if (exam.teacherId) {
-      if (typeof exam.teacherId === 'object' && '_id' in exam.teacherId) {
+      if (typeof exam.teacherId === "object" && "_id" in exam.teacherId) {
+        // If we have a populated teacherId object
         const teacherIdObj = exam.teacherId;
-        
-        if (exam.createdBy && typeof exam.createdBy === 'object' && '_id' in exam.createdBy) {
+
+        // Check if createdBy is an object with the same ID as teacherId
+        if (
+          exam.createdBy &&
+          typeof exam.createdBy === "object" &&
+          "_id" in exam.createdBy
+        ) {
           const creatorId = exam.createdBy._id;
           if (creatorId === teacherIdObj._id) {
             return "Teacher";
           }
         }
-        
-        return 'Teacher';
-      } else if (typeof exam.teacherId === 'string') {
-        if (exam.createdBy && typeof exam.createdBy === 'object' && '_id' in exam.createdBy) {
+
+        // If we have a teacherId with details, this was created by a teacher
+        return "Teacher";
+      } else if (typeof exam.teacherId === "string") {
+        // If teacherId is a string, check if it matches createdBy
+        if (
+          exam.createdBy &&
+          typeof exam.createdBy === "object" &&
+          "_id" in exam.createdBy
+        ) {
           if (exam.teacherId === exam.createdBy._id) {
             return "Teacher";
           }
         } else if (exam.createdBy === exam.teacherId) {
           return "Teacher";
         }
-        
-        return 'Teacher';
+
+        // If we have a teacherId string, this was likely created by a teacher
+        return "Teacher";
       }
     }
-    
+
+    // If we have a createdBy but no matching teacherId, or teacherId is different
+    // from createdBy, it's likely an admin
     if (exam.createdBy) {
       return "Admin";
     }
-    
-    return 'Unknown';
+
+    // Default fallback
+    return "Unknown";
   }
 
   deleteExam(id: string): void {
-    this.examToDelete = id;
-    this.showDeleteConfirmation = true;
-  }
-
-  onDeleteConfirmed(): void {
-    if (this.examToDelete) {
-      this.examService.deleteExam(this.examToDelete).subscribe({
+    const confirmMsg = this.translationService.translate('ADMIN.CONFIRM_DELETE_EXAM');
+    const successMsg = this.translationService.translate('ADMIN.EXAM_DELETED');
+    const errorMsg = this.translationService.translate('ADMIN.DELETE_EXAM_ERROR');
+    
+    if (confirm(confirmMsg)) {
+      this.examService.deleteExam(id).subscribe({
         next: () => {
-          this.exams = this.exams.filter((e) => e._id !== this.examToDelete);
-          this.toastr.success("Exam has been deleted.", "Deleted!");
-          this.showDeleteConfirmation = false;
-          this.examToDelete = null;
+          this.toastr.success(successMsg);
+          this.loadExams(); // Refresh the list
         },
         error: (error) => {
-          this.toastr.error(
-            error.error?.message || "Failed to delete exam",
-            "Error!"
-          );
-          this.showDeleteConfirmation = false;
-          this.examToDelete = null;
-        }
+          this.toastr.error(errorMsg);
+          console.error('Error deleting exam:', error);
+        },
       });
     }
   }
 
-  onDeleteCancelled(): void {
-    this.showDeleteConfirmation = false;
-    this.examToDelete = null;
+  /**
+   * Clean up subscriptions when component is destroyed
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
