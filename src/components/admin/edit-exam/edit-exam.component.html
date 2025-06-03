@@ -40,7 +40,7 @@
       @if (error) {
       <div class="alert alert-danger alert-dismissible fade show">
         {{ error }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="error = ''"></button>
       </div>
       }
 
@@ -112,44 +112,56 @@
             </div>
           </div>
           <div class="card-body">
-            @for (question of exam.questions; track $index) {
+            @if (exam.questions.length === 0) {
+              <div class="alert alert-warning">
+                <i class="fas fa-exclamation-triangle me-2"></i> Exam must have at least one question.
+              </div>
+            }
+            @for (question of exam.questions; track $index; let i = $index) {
             <div class="card mb-3">
               <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Question {{ $index + 1 }}</h4>
-                <button type="button" class="btn btn-danger" (click)="removeQuestion($index)">
+                <h4 class="mb-0">Question {{ i + 1 }}</h4>
+                <button type="button" class="btn btn-danger" (click)="removeQuestion(i)" [disabled]="exam.questions.length <= 1">
                   <i class="fas fa-trash me-1"></i> Remove
                 </button>
               </div>
               <div class="card-body">
                 <div class="mb-3">
-                  <label [for]="'question' + $index" class="form-label">Question Text</label>
-                  <input type="text" [id]="'question' + $index" class="form-control" 
-                         [(ngModel)]="question.text" [name]="'question' + $index" required>
+                  <label [for]="'question' + i" class="form-label">Question Text</label>
+                  <input type="text" [id]="'question' + i" class="form-control" 
+                         [(ngModel)]="question.text" [name]="'question' + i" required>
                 </div>
-
                 <div class="mb-3">
                   <label class="form-label">Options</label>
-                  @for (option of question.options; track $index) {
+                  @for (option of question.options; track $index; let j = $index) {
                   <div class="input-group mb-2">
                     <input type="text" class="form-control" 
-                           [(ngModel)]="question.options[$index]" 
-                           [name]="'question' + $index + 'option' + $index" required>
+                           [(ngModel)]="question.options[j]" 
+                           [name]="'question' + i + 'option' + j" 
+                           required
+                           placeholder="Enter option text">
                     <button type="button" class="btn btn-outline-danger" 
-                            (click)="removeOption(question, $index)" [disabled]="question.options.length <= 2">
+                            (click)="removeOption(question, j, i)" [disabled]="question.options.length <= 2">
                       <i class="fas fa-times"></i>
                     </button>
                   </div>
                   }
-                  <button type="button" class="btn btn-outline-primary" (click)="addOption(question)">
-                    <i class="fas fa-plus me-1"></i> Add Option
-                  </button>
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-primary" (click)="addOption(question, i)">
+                      <i class="fas fa-plus me-1"></i> Add Option
+                    </button>
+                    @if (previousOptions[i] && previousOptions[i].length !== question.options.length) {
+                    <button type="button" class="btn btn-outline-secondary" (click)="restoreOptions(i)">
+                      <i class="fas fa-undo me-1"></i> Restore Options
+                    </button>
+                    }
+                  </div>
                 </div>
-
                 <div class="row g-3">
                   <div class="col-md-6">
-                    <label [for]="'correct' + $index" class="form-label">Correct Answer</label>
-                    <select [id]="'correct' + $index" class="form-select" 
-                            [(ngModel)]="question.correctAnswer" [name]="'correct' + $index" required>
+                    <label [for]="'correct' + i" class="form-label">Correct Answer</label>
+                    <select [id]="'correct' + i" class="form-select" 
+                            [(ngModel)]="question.correctAnswer" [name]="'correct' + i" required>
                       @for (option of question.options; track $index) {
                       <option [value]="$index">
                         Option {{ $index + 1 }}
@@ -159,9 +171,9 @@
                   </div>
 
                   <div class="col-md-6">
-                    <label [for]="'points' + $index" class="form-label">Points</label>
-                    <input type="number" [id]="'points' + $index" class="form-control" 
-                           [(ngModel)]="question.points" [name]="'points' + $index" required min="1">
+                    <label [for]="'points' + i" class="form-label">Points</label>
+                    <input type="number" [id]="'points' + i" class="form-control" 
+                           [(ngModel)]="question.points" [name]="'points' + i" required min="1">
                   </div>
                 </div>
               </div>
@@ -175,7 +187,7 @@
           <button type="button" class="btn btn-outline-secondary" (click)="cancel()">
             <i class="fas fa-times me-1"></i> Cancel
           </button>
-          <button type="submit" class="btn btn-primary" [disabled]="!examForm.valid || saving">
+          <button type="submit" class="btn btn-primary" [disabled]="!examForm.valid || saving || exam.questions.length === 0">
             @if (saving) {
             <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
             Saving...
