@@ -1,85 +1,102 @@
-.edit-exam {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 1.5rem;
+/* Custom styles that enhance Bootstrap */
+.container {
+  max-width: 900px;
 }
 
-.form-section {
-  background: white;
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.card {
+  border-radius: 0.8rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.form-row {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  border-radius: 0.8rem 0.8rem 0 0 !important;
+  padding: 1.2rem 1.5rem;
+}
+
+.card-body {
+  padding: 1.5rem;
 }
 
 .question-card {
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.6rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.question-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+.question-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--primary-400);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.option-row {
-  display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+.question-card:hover {
+  border-color: var(--primary-300);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.option-row .form-control {
-  flex: 1;
+.question-card:hover::before {
+  opacity: 1;
 }
 
-.form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 1.5rem;
+.input-group-text {
+  transition: all 0.2s;
 }
 
-.loading {
-  text-align: center;
-  padding: 1.5rem;
-  color: #6c757d;
+/* Animation for adding/removing questions */
+:host {
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.error-text {
-  color: #dc3545;
-  font-size: 0.85rem;
-  margin-top: 0.25rem;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-/* Bootstrap responsive additions */
+/* Responsive adjustments */
 @media (max-width: 768px) {
-  .form-row {
-    grid-template-columns: 1fr;
+  .card-header h3 {
+    font-size: 1.3rem;
   }
   
-  .question-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+  .card-header h4 {
+    font-size: 1.1rem;
   }
   
-  .form-actions {
-    flex-direction: column;
-    gap: 0.5rem;
+  .form-label {
+    font-size: 0.9rem;
   }
   
-  .option-row {
-    flex-direction: column;
-    gap: 0.5rem;
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .input-group .btn {
+    padding: 0.5rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
   }
 }

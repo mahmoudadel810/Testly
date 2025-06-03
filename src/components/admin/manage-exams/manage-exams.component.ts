@@ -1,21 +1,23 @@
- 
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink, Router } from "@angular/router";
 import { ExamService } from "../../../services/exam.service";
 import { Exam } from "../../../models/exam.model";
 import { ToastrService } from "ngx-toastr";
+import { ConfirmationPopupComponent } from "../../shared/confirmation-popup/confirmation-popup.component";
 
 @Component({
   selector: "app-manage-exams",
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ConfirmationPopupComponent],
   templateUrl: "./manage-exams.component.html",
   styleUrls: ["./manage-exams.component.css"]
 })
 export class ManageExamsComponent implements OnInit {
   exams: Exam[] = [];
   loading = true;
+  showDeletePopup = false;
+  examIdToDelete: string | null = null;
 
   constructor(
     private examService: ExamService,
@@ -32,26 +34,6 @@ export class ManageExamsComponent implements OnInit {
       next: (exams) => {
         this.exams = exams;
         this.loading = false;
-        this.toastr.success("Exams loaded successfully", "Success");
-
-        // Debug: Log the structure of the first exam to understand the data
-        if (exams.length > 0) {
-          // console.log('Exam data structure:', exams[0]);
-          // console.log('Creator details:', exams[0].createdBy);
-          // console.log('Teacher details:', exams[0].teacherId);
-
-          // Check what role information is available
-          const creator = exams[0].createdBy;
-          if (creator) {
-            // console.log('Creator type:', typeof creator);
-            if (typeof creator === "object") {
-              // console.log('Creator properties:', Object.keys(creator));
-              // Don't try to access role directly as it doesn't exist in the model
-              // console.log('Teacher ID info:', exams[0].teacherId);
-            }
-          }
-        }
-
         this.toastr.success("Exams loaded successfully", "Success");
       },
       error: (error) => {
@@ -148,27 +130,33 @@ export class ManageExamsComponent implements OnInit {
   }
 
   deleteExam(id: string): void {
-    if (
-      confirm(
-        "Are you sure you want to delete this exam? You won't be able to revert this!"
-      )
-    ) {
-      this.confirmDelete(id);
+    this.examIdToDelete = id;
+    this.showDeletePopup = true;
+  }
+
+  onDeleteConfirm(): void {
+    if (this.examIdToDelete) {
+      this.examService.deleteExam(this.examIdToDelete).subscribe({
+        next: () => {
+          this.exams = this.exams.filter((e) => e._id !== this.examIdToDelete);
+          this.toastr.success("Exam has been deleted.", "Deleted!");
+          this.showDeletePopup = false;
+          this.examIdToDelete = null;
+        },
+        error: (error) => {
+          this.toastr.error(
+            error.error?.message || "Failed to delete exam",
+            "Error!"
+          );
+          this.showDeletePopup = false;
+          this.examIdToDelete = null;
+        }
+      });
     }
   }
 
-  private confirmDelete(id: string): void {
-    this.examService.deleteExam(id).subscribe({
-      next: () => {
-        this.exams = this.exams.filter((e) => e._id !== id);
-        this.toastr.success("Exam has been deleted.", "Deleted!");
-      },
-      error: (error) => {
-        this.toastr.error(
-          error.error?.message || "Failed to delete exam",
-          "Error!"
-        );
-      }
-    });
+  onDeleteCancel(): void {
+    this.showDeletePopup = false;
+    this.examIdToDelete = null;
   }
 }
