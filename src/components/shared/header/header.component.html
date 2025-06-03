@@ -3,7 +3,7 @@
     <div class="logo">
       <a routerLink="/">
         <i class="fas fa-graduation-cap"></i>
-        <span>{{ 'APP.TITLE' | translate }}</span>
+        <span>Testly</span>
       </a>
     </div>
 
@@ -15,32 +15,32 @@
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
           >
-            <i class="fas fa-home"></i> <span appTranslate="NAV.HOME">Home</span>
+            <i class="fas fa-home"></i> Home
           </a>
         </li>
 
         @if (currentUser) {
         <li>
           <a routerLink="/exams" routerLinkActive="active">
-            <i class="fas fa-book-open"></i> <span appTranslate="NAV.EXAMS">Exams</span>
+            <i class="fas fa-book-open"></i> Exams
           </a>
         </li>
         <li>
           <a routerLink="/results" routerLinkActive="active">
-            <i class="fas fa-chart-bar"></i> <span appTranslate="NAV.RESULTS">Results</span>
+            <i class="fas fa-chart-bar"></i> Results
           </a>
         </li>
 
         @if (isAdmin) {
         <li>
           <a routerLink="/admin" routerLinkActive="active">
-            <i class="fas fa-user-shield"></i> <span appTranslate="NAV.ADMIN">Admin</span>
+            <i class="fas fa-user-shield"></i> Admin
           </a>
         </li>
         } @if (isTeacher) {
         <li>
           <a routerLink="/teacher" routerLinkActive="active">
-            <i class="fas fa-chalkboard-teacher"></i> <span appTranslate="NAV.TEACHER">Teacher</span>
+            <i class="fas fa-chalkboard-teacher"></i> Teacher
           </a>
         </li>
         }
@@ -57,18 +57,18 @@
               routerLinkActive="active"
               (click)="closeDropdown()"
             >
-              <i class="fas fa-id-card"></i> <span appTranslate="NAV.PROFILE">Profile</span>
+              <i class="fas fa-id-card"></i> Profile
             </a>
             <a
               routerLink="/settings"
               routerLinkActive="active"
               (click)="closeDropdown()"
             >
-              <i class="fas fa-cog"></i> <span appTranslate="NAV.SETTINGS">Settings</span>
+              <i class="fas fa-cog"></i> Settings
             </a>
             <div class="dropdown-divider"></div>
             <a (click)="logout(); closeDropdown()" class="logout">
-              <i class="fas fa-sign-out-alt"></i> <span appTranslate="NAV.LOGOUT">Logout</span>
+              <i class="fas fa-sign-out-alt"></i> Logout
             </a>
           </div>
         </li>
@@ -79,7 +79,7 @@
             routerLinkActive="active"
             class="auth-btn login-btn"
           >
-            <i class="fas fa-sign-in-alt"></i> <span appTranslate="NAV.LOGIN">Login</span>
+            <i class="fas fa-sign-in-alt"></i> Login
           </a>
         </li>
         <li>
@@ -88,34 +88,18 @@
             routerLinkActive="active"
             class="auth-btn register-btn"
           >
-            <i class="fas fa-user-plus"></i> <span appTranslate="NAV.REGISTER">Register</span>
+            <i class="fas fa-user-plus"></i> Register
           </a>
         </li>
         }
       </ul>
     </nav>
 
-    <!-- Language switcher -->
-    <div class="language-switcher">
-      <button 
-        class="lang-btn" 
-        [class.active]="currentLang === 'en'"
-        (click)="translationService.setLanguage('en')"
-        [attr.aria-label]="'COMMON.ENGLISH' | translate"
-      >EN</button>
-      <button 
-        class="lang-btn" 
-        [class.active]="currentLang === 'ar'"
-        (click)="translationService.setLanguage('ar')"
-        [attr.aria-label]="'COMMON.ARABIC' | translate"
-      >ع</button>
-    </div>
-
     <button
       class="mobile-menu-btn"
       [class.open]="mobileMenuOpen"
       (click)="toggleMobileMenu()"
-      [attr.aria-label]="'COMMON.TOGGLE_MENU' | translate"
+      aria-label="Toggle menu"
     >
       <span></span>
       <span></span>
@@ -126,7 +110,7 @@
   <div class="mobile-menu" [class.open]="mobileMenuOpen">
     <div class="mobile-menu-header">
       <div class="mobile-logo">
-        <i class="fas fa-graduation-cap"></i> <span appTranslate="APP.TITLE"></span>
+        <i class="fas fa-graduation-cap"></i> Testly
       </div>
     </div>
 
@@ -145,60 +129,60 @@
     <ul class="mobile-nav-list">
       <li>
         <a routerLink="/" (click)="closeMobileMenu()">
-          <i class="fas fa-home"></i> <span appTranslate="NAV.HOME">Home</span>
+          <i class="fas fa-home"></i> Home
         </a>
       </li>
 
       @if (currentUser) {
       <li>
         <a routerLink="/exams" (click)="closeMobileMenu()">
-          <i class="fas fa-book-open"></i> <span appTranslate="NAV.EXAMS">Exams</span>
+          <i class="fas fa-book-open"></i> Exams
         </a>
       </li>
       <li>
         <a routerLink="/results" (click)="closeMobileMenu()">
-          <i class="fas fa-chart-bar"></i> <span appTranslate="NAV.RESULTS">Results</span>
+          <i class="fas fa-chart-bar"></i> Results
         </a>
       </li>
 
       @if (isAdmin) {
       <li>
         <a routerLink="/admin" (click)="closeMobileMenu()">
-          <i class="fas fa-user-shield"></i> <span appTranslate="NAV.ADMIN">Admin</span>
+          <i class="fas fa-user-shield"></i> Admin
         </a>
       </li>
       } @if (isTeacher) {
       <li>
         <a routerLink="/teacher" (click)="closeMobileMenu()">
-          <i class="fas fa-chalkboard-teacher"></i> <span appTranslate="NAV.TEACHER">Teacher</span>
+          <i class="fas fa-chalkboard-teacher"></i> Teacher
         </a>
       </li>
       }
 
       <li>
         <a routerLink="/profile" (click)="closeMobileMenu()">
-          <i class="fas fa-id-card"></i> <span appTranslate="NAV.PROFILE">Profile</span>
+          <i class="fas fa-id-card"></i> Profile
         </a>
       </li>
       <li>
         <a routerLink="/settings" (click)="closeMobileMenu()">
-          <i class="fas fa-cog"></i> <span appTranslate="NAV.SETTINGS">Settings</span>
+          <i class="fas fa-cog"></i> Settings
         </a>
       </li>
       <li class="mobile-logout">
         <a (click)="logoutAndClose()">
-          <i class="fas fa-sign-out-alt"></i> <span appTranslate="NAV.LOGOUT">Logout</span>
+          <i class="fas fa-sign-out-alt"></i> Logout
         </a>
       </li>
       } @if (!currentUser) {
       <li>
         <a routerLink="/login" (click)="closeMobileMenu()">
-          <i class="fas fa-sign-in-alt"></i> <span appTranslate="NAV.LOGIN">Login</span>
+          <i class="fas fa-sign-in-alt"></i> Login
         </a>
       </li>
       <li>
         <a routerLink="/role-selection" (click)="closeMobileMenu()">
-          <i class="fas fa-user-plus"></i> <span appTranslate="NAV.REGISTER">Register</span>
+          <i class="fas fa-user-plus"></i> Register
         </a>
       </li>
       }

@@ -1,16 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { TranslatePipe } from '../../../pipes/translate.pipe';
-import { TranslateDirective } from '../../../directives/translate.directive';
-import { TranslationService } from '../../../services/translation.service';
 import { ExamService } from '../../../services/exam.service';
 import { ExamAttempt, Exam } from '../../../models/exam.model';
 
 @Component({
   selector: 'app-result-details',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslatePipe, TranslateDirective],
+  imports: [CommonModule, RouterLink],
   templateUrl:'./result-details.component.html',
   styleUrls: ['./result-details.component.css']
 })

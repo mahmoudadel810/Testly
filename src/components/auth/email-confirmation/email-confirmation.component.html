@@ -3,7 +3,7 @@
   <div class="confirmation-card">
     <div class="header">
       <div class="logo">
-        <h1>{{ 'APP.TITLE' | translate }}</h1>
+        <h1>Testly</h1>
       </div>
     </div>
 
@@ -13,11 +13,11 @@
         @switch (status$ | async) {
           @case ('loading') {
             <div class="loading">
-              <h2><i class="fas fa-spinner fa-spin"></i> <span appTranslate="AUTH.EMAIL_CONFIRMATION.LOADING.TITLE">Confirming Your Email</span></h2>
+              <h2><i class="fas fa-spinner fa-spin"></i> Confirming Your Email</h2>
               <div class="progress-bar">
                 <div class="progress"></div>
               </div>
-              <p class="instructions" appTranslate="AUTH.EMAIL_CONFIRMATION.LOADING.INSTRUCTIONS">
+              <p class="instructions">
                 Please wait while we confirm your email address...
               </p>
             </div>
@@ -27,14 +27,14 @@
               <div class="icon-circle">
                 <i class="fas fa-check"></i>
               </div>
-              <h2 appTranslate="AUTH.EMAIL_CONFIRMATION.SUCCESS.TITLE">Email Confirmed!</h2>
+              <h2>Email Confirmed!</h2>
               <div class="message-box success">
                 {{ message$ | async }}
               </div>
-              <p class="instructions" appTranslate="AUTH.EMAIL_CONFIRMATION.SUCCESS.INSTRUCTIONS">
+              <p class="instructions">
                 You can now log in to your account and start using Testly.
               </p>
-              <button class="action-button" (click)="navigateToLogin()" appTranslate="AUTH.EMAIL_CONFIRMATION.GO_TO_LOGIN">
+              <button class="action-button" (click)="navigateToLogin()">
                 Go to Login
               </button>
             </div>
@@ -44,15 +44,15 @@
               <div class="icon-circle">
                 <i class="fas fa-times"></i>
               </div>
-              <h2 appTranslate="AUTH.EMAIL_CONFIRMATION.ERROR.TITLE">Confirmation Failed</h2>
+              <h2>Confirmation Failed</h2>
               <div class="message-box error">
                 {{ message$ | async }}
               </div>
-              <p class="instructions" appTranslate="AUTH.EMAIL_CONFIRMATION.ERROR.INSTRUCTIONS">
+              <p class="instructions">
                 There was an issue confirming your email. Please try again or contact
                 support.
               </p>
-              <button class="action-button" (click)="navigateToLogin()" appTranslate="AUTH.EMAIL_CONFIRMATION.GO_TO_LOGIN">
+              <button class="action-button" (click)="navigateToLogin()">
                 Go to Login
               </button>
             </div>
@@ -64,11 +64,11 @@
         <!-- Standard template using regular variables -->
         @if (status === 'loading') {
           <div class="loading">
-            <h2><i class="fas fa-spinner fa-spin"></i> <span appTranslate="AUTH.EMAIL_CONFIRMATION.LOADING.TITLE">Confirming Your Email</span></h2>
+            <h2><i class="fas fa-spinner fa-spin"></i> Confirming Your Email</h2>
             <div class="progress-bar">
               <div class="progress"></div>
             </div>
-            <p class="instructions" appTranslate="AUTH.EMAIL_CONFIRMATION.LOADING.INSTRUCTIONS">
+            <p class="instructions">
               Please wait while we confirm your email address...
             </p>
           </div>
@@ -77,14 +77,14 @@
             <div class="icon-circle">
               <i class="fas fa-check"></i>
             </div>
-            <h2 appTranslate="AUTH.EMAIL_CONFIRMATION.SUCCESS.TITLE">Email Confirmed!</h2>
+            <h2>Email Confirmed!</h2>
             <div class="message-box success">
               {{ message }}
             </div>
-            <p class="instructions" appTranslate="AUTH.EMAIL_CONFIRMATION.SUCCESS.INSTRUCTIONS">
+            <p class="instructions">
               You can now log in to your account and start using Testly.
             </p>
-            <button class="action-button" (click)="navigateToLogin()" appTranslate="AUTH.EMAIL_CONFIRMATION.GO_TO_LOGIN">
+            <button class="action-button" (click)="navigateToLogin()">
               Go to Login
             </button>
           </div>
@@ -93,15 +93,15 @@
             <div class="icon-circle">
               <i class="fas fa-times"></i>
             </div>
-            <h2 appTranslate="AUTH.EMAIL_CONFIRMATION.ERROR.TITLE">Confirmation Failed</h2>
+            <h2>Confirmation Failed</h2>
             <div class="message-box error">
               {{ message }}
             </div>
-            <p class="instructions" appTranslate="AUTH.EMAIL_CONFIRMATION.ERROR.INSTRUCTIONS">
+            <p class="instructions">
               There was an issue confirming your email. Please try again or contact
               support.
             </p>
-            <button class="action-button" (click)="navigateToLogin()" appTranslate="AUTH.EMAIL_CONFIRMATION.GO_TO_LOGIN">
+            <button class="action-button" (click)="navigateToLogin()">
               Go to Login
             </button>
           </div>
@@ -110,7 +110,7 @@
     </div>
 
     <div class="footer">
-      <p>© {{ currentYear }} <span appTranslate="AUTH.EMAIL_CONFIRMATION.FOOTER.COPYRIGHT">Testly. All rights reserved.</span></p>
+      <p>© 2025 Testly. All rights reserved.</p>
     </div>
   </div>
 </div>

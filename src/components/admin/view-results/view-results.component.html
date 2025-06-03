@@ -1,9 +1,9 @@
 <div class="view-results container">
   <header class="results-header">
-    <h2 class="h2 mb-0" appTranslate="ADMIN.RESULTS.OVERVIEW">Exam Results Overview</h2>
+    <h2 class="h2 mb-0">Exam Results Overview</h2>
     <button class="refresh-btn btn" (click)="loadResults()" [disabled]="loading">
       <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i>
-      <span class="ms-2" appTranslate="ADMIN.RESULTS.REFRESH">Refresh</span>
+      <span class="ms-2">Refresh</span>
     </button>
   </header>
 
@@ -24,21 +24,21 @@
     } @else {
     <div class="col-12 col-sm-6 col-md-4">
       <div class="stat-card">
-        <h4><i class="fas fa-tasks me-2"></i><span appTranslate="ADMIN.RESULTS.TOTAL_ATTEMPTS">Total Attempts</span></h4>
+        <h4><i class="fas fa-tasks me-2"></i>Total Attempts</h4>
         <div class="stat-value">{{ attempts.length }}</div>
       </div>
     </div>
 
     <div class="col-12 col-sm-6 col-md-4">
       <div class="stat-card">
-        <h4><i class="fas fa-chart-pie me-2"></i><span appTranslate="ADMIN.RESULTS.PASS_RATE">Pass Rate</span></h4>
+        <h4><i class="fas fa-chart-pie me-2"></i>Pass Rate</h4>
         <div class="stat-value">{{ calculatePassRate() }}%</div>
       </div>
     </div>
 
     <div class="col-12 col-sm-6 col-md-4">
       <div class="stat-card">
-        <h4><i class="fas fa-chart-line me-2"></i><span appTranslate="ADMIN.RESULTS.AVERAGE_SCORE">Average Score</span></h4>
+        <h4><i class="fas fa-chart-line me-2"></i>Average Score</h4>
         <div class="stat-value">{{ calculateAverageScore() }}%</div>
       </div>
     </div>
@@ -49,19 +49,19 @@
     @if (loading && !dataLoaded.attempts) {
     <div class="loading-spinner">
       <i class="fas fa-circle-notch fa-spin fa-3x"></i>
-      <p class="mt-3" appTranslate="ADMIN.RESULTS.LOADING">Loading results...</p>
+      <p class="mt-3">Loading results...</p>
     </div>
     } @else if (attempts.length === 0) {
     <div class="no-results">
       <i class="fas fa-clipboard-list fa-3x mb-3"></i>
-      <p class="lead" appTranslate="ADMIN.RESULTS.NO_ATTEMPTS">No exam attempts have been recorded yet.</p>
+      <p class="lead">No exam attempts have been recorded yet.</p>
     </div>
     } @else {
     <div class="search-and-filters">
       <div class="row g-3 align-items-center">
         <div class="col-md-6">
           <div class="search-container">
-            <input type="text" class="form-control search-input" [placeholder]="'ADMIN.RESULTS.SEARCH_PLACEHOLDER' | translate"
+            <input type="text" class="form-control search-input" placeholder="Search by student, exam or status..."
               [(ngModel)]="searchTerm" (keyup)="filterResults()" aria-label="Search">
             <i class="fas fa-search search-icon"></i>
             @if (searchTerm) {
@@ -72,7 +72,7 @@
           </div>
           @if (filteredAttempts.length === 0 && searchTerm) {
           <div class="search-no-results mt-2">
-            <span appTranslate="ADMIN.RESULTS.NO_SEARCH_RESULTS">No results found for</span> "{{ searchTerm }}"
+            No results found for "{{ searchTerm }}"
           </div>
           }
         </div>
@@ -80,14 +80,14 @@
           <div class="d-inline-block me-2">
             <select class="form-select form-select-sm" aria-label="Filter by status" [(ngModel)]="statusFilter"
               (change)="filterResults()">
-              <option value="" appTranslate="ADMIN.RESULTS.ALL_STATUSES">All Statuses</option>
-              <option value="passed" appTranslate="ADMIN.RESULTS.PASSED">Passed</option>
-              <option value="failed" appTranslate="ADMIN.RESULTS.FAILED">Failed</option>
+              <option value="">All Statuses</option>
+              <option value="passed">Passed</option>
+              <option value="failed">Failed</option>
             </select>
           </div>
           <div class="d-inline-block">
             <button class="btn btn-outline-secondary btn-sm" title="Export Results" (click)="exportResults()">
-              <i class="fas fa-download me-1"></i><span appTranslate="ADMIN.RESULTS.EXPORT">Export</span>
+              <i class="fas fa-download me-1"></i>Export
             </button>
           </div>
         </div>
@@ -105,31 +105,31 @@
           <tr>
             <th class="sortable" title="Sort by student" (click)="sortBy('student')">
               <div class="d-flex align-items-center">
-                <i class="fas fa-user me-2"></i><span appTranslate="ADMIN.RESULTS.STUDENT">Student</span>
+                <i class="fas fa-user me-2"></i>Student
                 <i class="fas" [ngClass]="getSortIcon('student')" [class.ms-auto]="true"></i>
               </div>
             </th>
             <th class="sortable" title="Sort by exam" (click)="sortBy('exam')">
               <div class="d-flex align-items-center">
-                <i class="fas fa-book me-2"></i><span appTranslate="ADMIN.RESULTS.EXAM">Exam</span>
+                <i class="fas fa-book me-2"></i>Exam
                 <i class="fas" [ngClass]="getSortIcon('exam')" [class.ms-auto]="true"></i>
               </div>
             </th>
             <th class="text-center sortable" title="Sort by score" (click)="sortBy('score')">
               <div class="d-flex align-items-center justify-content-center">
-                <i class="fas fa-star me-2"></i><span appTranslate="ADMIN.RESULTS.SCORE">Score</span>
+                <i class="fas fa-star me-2"></i>Score
                 <i class="fas" [ngClass]="getSortIcon('score')" [class.ms-auto]="true"></i>
               </div>
             </th>
             <th class="sortable" title="Sort by status" (click)="sortBy('status')">
               <div class="d-flex align-items-center">
-                <i class="fas fa-check-circle me-2"></i><span appTranslate="ADMIN.RESULTS.STATUS">Status</span>
+                <i class="fas fa-check-circle me-2"></i>Status
                 <i class="fas" [ngClass]="getSortIcon('status')" [class.ms-auto]="true"></i>
               </div>
             </th>
             <th class="sortable" title="Sort by completion time" (click)="sortBy('time')">
               <div class="d-flex align-items-center">
-                <i class="fas fa-clock me-2"></i><span appTranslate="ADMIN.RESULTS.COMPLETION_TIME">Completion Time</span>
+                <i class="fas fa-clock me-2"></i>Completion Time
                 <i class="fas" [ngClass]="getSortIcon('time')" [class.ms-auto]="true"></i>
               </div>
             </th>
@@ -178,7 +178,7 @@
             <td>
               <span class="status-badge" [class.status-passed]="attempt.passed" [class.status-failed]="!attempt.passed">
                 <i class="fas" [class.fa-check-circle]="attempt.passed" [class.fa-times-circle]="!attempt.passed"></i>
-                {{ attempt.passed ? ("ADMIN.RESULTS.PASSED" | translate) : ("ADMIN.RESULTS.FAILED" | translate) }}
+                {{ attempt.passed ? "Passed" : "Failed" }}
               </span>
             </td>
             <td>
@@ -202,7 +202,7 @@
             [class.failed-header]="!attempt.passed">
             <div class="card-status">
               <i class="fas" [class.fa-check-circle]="attempt.passed" [class.fa-times-circle]="!attempt.passed"></i>
-              {{ attempt.passed ? ("ADMIN.RESULTS.PASSED" | translate) : ("ADMIN.RESULTS.FAILED" | translate) }}
+              {{ attempt.passed ? "Passed" : "Failed" }}
             </div>
             <div class="card-score">
               {{ ((attempt.score / attempt.totalPoints) * 100).toFixed(1) }}%
@@ -212,7 +212,7 @@
           <div class="result-card-body">
             <div class="card-row">
               <div class="card-label">
-                <i class="fas fa-user-graduate"></i> <span appTranslate="ADMIN.RESULTS.STUDENT">Student</span>
+                <i class="fas fa-user-graduate"></i> Student
               </div>
               <div class="card-value">
                 {{ getUserName(attempt.userId) }}
@@ -221,7 +221,7 @@
 
             <div class="card-row">
               <div class="card-label">
-                <i class="fas fa-file-alt"></i> <span appTranslate="ADMIN.RESULTS.EXAM">Exam</span>
+                <i class="fas fa-file-alt"></i> Exam
               </div>
               <div class="card-value">
                 {{ getExamTitle(attempt.examId) }}
@@ -230,7 +230,7 @@
 
             <div class="card-row">
               <div class="card-label">
-                <i class="far fa-calendar-alt"></i> <span appTranslate="ADMIN.RESULTS.DATE">Date</span>
+                <i class="far fa-calendar-alt"></i> Date
               </div>
               <div class="card-value">
                 {{ attempt.endTime | date : "MMM d, y, h:mm a" }}
@@ -257,7 +257,7 @@
 
     <div class="table-footer d-flex justify-content-between align-items-center mt-3">
       <div class="showing-entries text-muted">
-        {{ getPaginationDisplay() | translate }}
+        {{ getPaginationDisplay() }}
       </div>
       <div class="pagination-controls">
         <button class="btn btn-outline-secondary btn-sm me-1" [disabled]="currentPage === 1" (click)="previousPage()">

@@ -1,12 +1,12 @@
 <div class="results-container">
     <header class="results-header">
-        <h2 appTranslate="RESULTS.YOUR_EXAM_RESULTS">Your Exam Results</h2>
+        <h2>Your Exam Results</h2>
     </header>
 
     @if (loading) {
     <div class="loading-container">
         <div class="spinner"></div>
-        <p appTranslate="RESULTS.LOADING_RESULTS">Loading your results...</p>
+        <p>Loading your results...</p>
     </div>
     }
 
@@ -23,13 +23,13 @@
             <div class="result-header">
                 <h3>{{ getExamTitle(attempt.examId) }}</h3>
                 <span class="badge" [class.badge-success]="attempt.passed" [class.badge-error]="!attempt.passed">
-                    {{ attempt.passed ? ('RESULTS.PASSED' | translate) : ('RESULTS.FAILED' | translate) }}
+                    {{ attempt.passed ? 'Passed' : 'Failed' }}
                 </span>
             </div>
 
             <div class="result-details">
                 <div class="score-container">
-                    <div class="score-label" appTranslate="RESULTS.SCORE">Score</div>
+                    <div class="score-label">Score</div>
                     <div class="score-value" [class.passed]="attempt.passed">
                         {{ (attempt.score / attempt.totalPoints * 100).toFixed(1) }}%
                     </div>
@@ -46,7 +46,7 @@
             </div>
 
             <a [routerLink]="['/results', attempt._id]" class="btn-primary">
-                <span appTranslate="RESULTS.VIEW_DETAILS">View Details</span>
+                <span>View Details</span>
                 <i class="icon-arrow-right"></i>
             </a>
         </div>
@@ -56,9 +56,9 @@
     @if (!loading && attempts.length === 0) {
     <div class="empty-state">
         <div class="empty-icon">📝</div>
-        <h3 appTranslate="RESULTS.NO_RESULTS_YET">No Exam Results Yet</h3>
-        <p appTranslate="RESULTS.COMPLETE_EXAM_MESSAGE">Once you complete an exam, your results will appear here.</p>
-        <a routerLink="/exams" class="btn-primary" appTranslate="RESULTS.BROWSE_EXAMS">Browse Available Exams</a>
+        <h3>No Exam Results Yet</h3>
+        <p>Once you complete an exam, your results will appear here.</p>
+        <a routerLink="/exams" class="btn-primary">Browse Available Exams</a>
     </div>
     }
 </div>

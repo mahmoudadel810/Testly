@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { ExamService } from '../../../services/exam.service';
 import { Exam } from '../../../models/exam.model';
 import { forkJoin, of } from 'rxjs';
@@ -10,20 +10,15 @@ import { NotificationService } from '../../../services/notification.service';
 import { ExamFilterService } from '../../../services/exam-filter.service';
 import { FILTER_TYPES, VIEW_MODES } from '../../../models/constants';
 import { LoggingService } from '../../../services/logging.service';
-import { TranslationService } from '../../../services/translation.service';
-import { TranslateDirective } from '../../../directives/translate.directive';
-import { TranslatePipe } from '../../../pipes/translate.pipe';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-exam-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateDirective, TranslatePipe],
+  imports: [CommonModule, RouterLink],
   templateUrl: './exam-list.component.html',
   styleUrls: ['./exam-list.component.css'],
 })
-export class ExamListComponent implements OnInit, OnDestroy {
+export class ExamListComponent implements OnInit {
   exams: Exam[] = [];
   filteredExams: Exam[] = [];
   loading = true;
@@ -41,15 +36,12 @@ export class ExamListComponent implements OnInit, OnDestroy {
   readonly FILTER_TYPES = FILTER_TYPES;
   readonly VIEW_MODES = VIEW_MODES;
 
-  private destroy$ = new Subject<void>();
-
   constructor(
     private examService: ExamService,
     private bookmarkService: BookmarkService,
     private notificationService: NotificationService,
     private examFilterService: ExamFilterService,
-    private logger: LoggingService,
-    public translationService: TranslationService
+    private logger: LoggingService
   ) {}
 
   /**
@@ -301,17 +293,9 @@ export class ExamListComponent implements OnInit, OnDestroy {
         this.logger.error('FilteredExams is not an array after filtering');
       }
     } catch (error) {
-      this.logger.error('Error in applyFilters:', error);
       this.filteredExams = [];
+      this.logger.error('Error in applyFilters:', error);
     }
-  }
-
-  /**
-   * Clean up subscriptions when component is destroyed
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
   }
 
   /**

@@ -9,14 +9,11 @@ import {
 import { Router, RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
-import { TranslationService } from '../../../services/translation.service';
-import { TranslateDirective } from '../../../directives/translate.directive';
-import { TranslatePipe } from '../../../pipes/translate.pipe';
 
 @Component({
   selector: 'app-teacher-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule, TranslateDirective, TranslatePipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, HttpClientModule],
   templateUrl: './teacher-register.component.html',
   styleUrls: ['./teacher-register.component.css'],
 })
@@ -39,8 +36,7 @@ export class TeacherRegisterComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    private translationService: TranslationService
+    private router: Router
   ) {
     this.teacherForm = this.fb.group(
       {
@@ -93,7 +89,7 @@ export class TeacherRegisterComponent implements OnInit {
         this.isSubmitting = false;
         this.successMessage =
           response.message ||
-          this.translationService.translate('AUTH.TEACHER_REGISTER.SUCCESS_MESSAGE');
+          'Registration successful. We will review your application and contact you soon.';
 
         // Redirect to pending approval page after a short delay
         setTimeout(() => {
@@ -103,7 +99,7 @@ export class TeacherRegisterComponent implements OnInit {
       error: (error) => {
         this.isSubmitting = false;
         this.errorMessage =
-          error.error.message || this.translationService.translate('AUTH.TEACHER_REGISTER.ERROR_MESSAGE');
+          error.error.message || 'Registration failed. Please try again.';
       },
     });
   }

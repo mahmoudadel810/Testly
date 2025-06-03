@@ -5,9 +5,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { TranslationService } from '../../../services/translation.service';
-import { TranslatePipe } from '../../../pipes/translate.pipe';
-import { TranslateDirective } from '../../../directives/translate.directive';
 
 import { AppState } from '../../../store';
 import * as AuthActions from '../../../store/auth/actions/auth.actions';
@@ -21,7 +18,7 @@ interface FooterLink {
 @Component({
   selector: 'app-email-confirmation',
   standalone: true,
-  imports: [CommonModule, TranslatePipe, TranslateDirective],
+  imports: [CommonModule],
   templateUrl: './email-confirmation.component.html',
   styleUrls: ['./email-confirmation.component.css'],
 })
@@ -37,16 +34,15 @@ export class EmailConfirmationComponent implements OnInit {
   currentDate: Date = new Date();
   currentYear: number = new Date().getFullYear();
   footerLinks: FooterLink[] = [
-    { url: '/help', text: this.getTranslatedText('AUTH.EMAIL_CONFIRMATION.FOOTER.HELP') },
-    { url: '/privacy', text: this.getTranslatedText('AUTH.EMAIL_CONFIRMATION.FOOTER.PRIVACY') },
-    { url: '/terms', text: this.getTranslatedText('AUTH.EMAIL_CONFIRMATION.FOOTER.TERMS') },
+    { url: '/help', text: 'Help' },
+    { url: '/privacy', text: 'Privacy' },
+    { url: '/terms', text: 'Terms' },
   ];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<AppState>,
-    private translationService: TranslationService
+    private store: Store<AppState>
   ) {
     this.status$ = this.store.select(
       AuthSelectors.selectEmailConfirmationStatus
@@ -113,11 +109,7 @@ export class EmailConfirmationComponent implements OnInit {
   }
 
   contactSupport(): void {
-    const subject = this.translationService.translate('AUTH.EMAIL_CONFIRMATION.SUPPORT_SUBJECT');
-    window.location.href = `mailto:support@testly.com?subject=${encodeURIComponent(subject)}`;
-  }
-
-  private getTranslatedText(key: string): string {
-    return this.translationService.translate(key);
+    window.location.href =
+      'mailto:support@testly.com?subject=Email Confirmation Support';
   }
 }

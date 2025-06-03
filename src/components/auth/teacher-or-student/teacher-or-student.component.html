@@ -1,8 +1,8 @@
 <div class="teacher-or-student container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8 text-center mb-4">
-            <h2 class="display-4 fw-bold" appTranslate="AUTH.ROLE_SELECTION.TITLE">Choose Your Role</h2>
-            <p class="lead text-muted" appTranslate="AUTH.ROLE_SELECTION.SUBTITLE">Select whether you're a teacher or student to personalize your experience</p>
+            <h2 class="display-4 fw-bold">Choose Your Role</h2>
+            <p class="lead text-muted">Select whether you're a teacher or student to personalize your experience</p>
         </div>
     </div>
     <div class="row justify-content-center">
@@ -14,10 +14,10 @@
                             <div class="icon-container mb-4">
                                 <i class="fas fa-chalkboard-teacher fa-4x text-primary"></i>
                             </div>
-                            <h3 class="card-title" appTranslate="AUTH.ROLE_SELECTION.TEACHER.TITLE">Teacher</h3>
-                            <p class="card-text" appTranslate="AUTH.ROLE_SELECTION.TEACHER.DESCRIPTION">Create and manage exams, track student progress, and analyze results</p>
+                            <h3 class="card-title">Teacher</h3>
+                            <p class="card-text">Create and manage exams, track student progress, and analyze results</p>
                             <a href="javascript:void(0)" class="nav-style-btn" (click)="selectRole('teacher')">
-                                {{ 'AUTH.ROLE_SELECTION.TEACHER.BUTTON' | translate }}
+                                Continue as Teacher
                             </a>
                         </div>
                     </div>
@@ -28,10 +28,10 @@
                             <div class="icon-container mb-4">
                                 <i class="fas fa-user-graduate fa-4x text-primary"></i>
                             </div>
-                            <h3 class="card-title" appTranslate="AUTH.ROLE_SELECTION.STUDENT.TITLE">Student</h3>
-                            <p class="card-text" appTranslate="AUTH.ROLE_SELECTION.STUDENT.DESCRIPTION">Take exams, view your scores, and track your academic progress</p>
+                            <h3 class="card-title">Student</h3>
+                            <p class="card-text">Take exams, view your scores, and track your academic progress</p>
                             <a href="javascript:void(0)" class="nav-style-btn" (click)="selectRole('student')">
-                                {{ 'AUTH.ROLE_SELECTION.STUDENT.BUTTON' | translate }}
+                                Continue as Student
                             </a>
                         </div>
                     </div>

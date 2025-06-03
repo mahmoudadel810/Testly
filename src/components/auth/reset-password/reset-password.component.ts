@@ -5,14 +5,11 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { Router, ActivatedRoute } from "@angular/router";
 import { AuthService } from "../../../services/auth.service";
-import { TranslationService } from "../../../services/translation.service";
-import { TranslatePipe } from "../../../pipes/translate.pipe";
-import { TranslateDirective } from "../../../directives/translate.directive";
 
 @Component({
   selector: "app-reset-password",
   standalone: true,
-  imports: [CommonModule, FormsModule, TranslatePipe, TranslateDirective],
+  imports: [CommonModule, FormsModule],
   templateUrl: "./reset-password.component.html",
   styleUrls: ["./reset-password.component.css"]
 })
@@ -41,8 +38,7 @@ export class ResetPasswordComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute,
-    private translationService: TranslationService
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +63,8 @@ export class ResetPasswordComponent implements OnInit {
       .subscribe({
         next: (res) => {
           this.isLoading = false;
-          this.message = this.translationService.translate('AUTH.RESET_PASSWORD.SUCCESS');
+          this.message =
+            "Password has been reset successfully. You can now log in.";
           setTimeout(() => this.router.navigate(["/login"]), 2000);
         },
         error: (err) => {
@@ -99,7 +96,7 @@ export class ResetPasswordComponent implements OnInit {
             } else if (msg.includes("Invalid code")) {
               this.codeError = msg;
             } else {
-              this.error = msg || this.translationService.translate('AUTH.RESET_PASSWORD.ERROR');
+              this.error = msg || "Failed to reset password.";
             }
           }
         }

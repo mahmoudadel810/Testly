@@ -1,45 +1,31 @@
 /** @format */
 
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterLink, Router } from "@angular/router";
 import { ExamService } from "../../../services/exam.service";
 import { Exam } from "../../../models/exam.model";
 import { ToastrService } from "ngx-toastr";
-import { TranslationService } from "../../../services/translation.service";
-import { TranslateDirective } from "../../../directives/translate.directive";
-import { TranslatePipe } from "../../../pipes/translate.pipe";
-import { Subject, takeUntil } from "rxjs";
 
 @Component({
   selector: "app-manage-exams",
   standalone: true,
-  imports: [CommonModule, RouterLink, TranslateDirective, TranslatePipe],
+  imports: [CommonModule, RouterLink],
   templateUrl: "./manage-exams.component.html",
   styleUrls: ["./manage-exams.component.css"]
 })
-export class ManageExamsComponent implements OnInit, OnDestroy {
+export class ManageExamsComponent implements OnInit {
   exams: Exam[] = [];
   loading = true;
-  private destroy$ = new Subject<void>();
 
   constructor(
     private examService: ExamService,
     private router: Router,
-    private toastr: ToastrService,
-    private translationService: TranslationService
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
     this.loadExams();
-    
-    // Subscribe to language changes to reload data when language changes
-    this.translationService.getCurrentLang()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        // When language changes, we don't need to reload exams
-        // But we can do other language-specific operations here if needed
-      });
   }
 
   private loadExams(): void {
@@ -70,7 +56,7 @@ export class ManageExamsComponent implements OnInit, OnDestroy {
         this.toastr.success("Exams loaded successfully", "Success");
       },
       error: (error) => {
-        this.toastr.error(this.translationService.translate('ADMIN.FAILED_TO_LOAD_EXAMS'), this.translationService.translate('ADMIN.ERROR'));
+        this.toastr.error("Failed to load exams. Please try again.", "Error");
         this.loading = false;
       }
     });
@@ -87,7 +73,10 @@ export class ManageExamsComponent implements OnInit, OnDestroy {
     if (creator && typeof creator === "object" && "username" in creator) {
       return creator.username ?? "Unknown";
     }
-    return this.translationService.translate('COMMON.UNKNOWN');
+    if (creator && typeof creator === "object" && "name" in creator) {
+      return typeof creator.name === "string" ? creator.name : "Unknown";
+    }
+    return "Unknown";
   }
 
   getTeacherEmail(exam: Exam): string {
@@ -160,29 +149,27 @@ export class ManageExamsComponent implements OnInit, OnDestroy {
   }
 
   deleteExam(id: string): void {
-    const confirmMsg = this.translationService.translate('ADMIN.CONFIRM_DELETE_EXAM');
-    const successMsg = this.translationService.translate('ADMIN.EXAM_DELETED');
-    const errorMsg = this.translationService.translate('ADMIN.DELETE_EXAM_ERROR');
-    
-    if (confirm(confirmMsg)) {
-      this.examService.deleteExam(id).subscribe({
-        next: () => {
-          this.toastr.success(successMsg);
-          this.loadExams(); // Refresh the list
-        },
-        error: (error) => {
-          this.toastr.error(errorMsg);
-          console.error('Error deleting exam:', error);
-        },
-      });
+    if (
+      confirm(
+        "Are you sure you want to delete this exam? You won't be able to revert this!"
+      )
+    ) {
+      this.confirmDelete(id);
     }
   }
 
-  /**
-   * Clean up subscriptions when component is destroyed
-   */
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+  private confirmDelete(id: string): void {
+    this.examService.deleteExam(id).subscribe({
+      next: () => {
+        this.exams = this.exams.filter((e) => e._id !== id);
+        this.toastr.success("Exam has been deleted.", "Deleted!");
+      },
+      error: (error) => {
+        this.toastr.error(
+          error.error?.message || "Failed to delete exam",
+          "Error!"
+        );
+      }
+    });
   }
 }

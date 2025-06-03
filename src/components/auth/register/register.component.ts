@@ -10,14 +10,11 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { User } from '../../../models/user.model';
 import { ToastrService } from 'ngx-toastr';
-import { TranslationService } from '../../../services/translation.service';
-import { TranslatePipe } from '../../../pipes/translate.pipe';
-import { TranslateDirective } from '../../../directives/translate.directive';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, TranslatePipe, TranslateDirective],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
@@ -41,8 +38,7 @@ export class RegisterComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private toastr: ToastrService,
-    private fb: FormBuilder,
-    private translationService: TranslationService
+    private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {

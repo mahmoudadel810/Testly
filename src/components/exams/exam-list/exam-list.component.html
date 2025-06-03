@@ -10,12 +10,12 @@
           class="difficulty-badge"
           [class]="'difficulty-' + (selectedExam.difficulty || 'medium')"
         >
-          <span [appTranslate]="selectedExam.difficulty ? '' : 'EXAM.MEDIUM'">{{ selectedExam.difficulty || 'Medium' }}</span>
+          {{ selectedExam.difficulty || "Medium" }}
         </div>
         <button
           class="close-btn"
           (click)="closeExamDetails()"
-          [attr.aria-label]="'COMMON.CLOSE' | translate"
+          aria-label="Close details"
         >
           <i class="icon-close" aria-hidden="true"></i>
         </button>
@@ -24,30 +24,32 @@
       <p class="modal-description">{{ selectedExam.description }}</p>
 
       <div class="category-tags">
-        <span class="category-tag" [appTranslate]="selectedExam.category ? '' : 'EXAM.GENERAL'">{{ selectedExam.category || 'General' }}</span>
+        <span class="category-tag">{{
+          selectedExam.category || "General"
+        }}</span>
       </div>
 
       <div class="exam-details-grid">
         <div class="detail-card">
           <i class="icon-time" aria-hidden="true"></i>
           <div class="detail-info">
-            <p class="detail-label" appTranslate="EXAM.DURATION">Duration</p>
-            <p class="detail-value">{{ selectedExam.duration }} {{ 'EXAM.MINUTES' | translate }}</p>
+            <p class="detail-label">Duration</p>
+            <p class="detail-value">{{ selectedExam.duration }} minutes</p>
           </div>
         </div>
         <div class="detail-card">
           <i class="icon-target" aria-hidden="true"></i>
           <div class="detail-info">
-            <p class="detail-label" appTranslate="EXAM.PASSING_SCORE">Passing Score</p>
+            <p class="detail-label">Passing Score</p>
             <p class="detail-value">{{ selectedExam.passingScore }}%</p>
           </div>
         </div>
         <div class="detail-card">
           <i class="icon-questions" aria-hidden="true"></i>
           <div class="detail-info">
-            <p class="detail-label" appTranslate="EXAM.QUESTIONS">Questions</p>
+            <p class="detail-label">Questions</p>
             <p class="detail-value">
-              {{ selectedExam.questions.length || "?" }} {{ 'EXAM.QUESTIONS_COUNT' | translate }}
+              {{ selectedExam.questions.length || "?" }} questions
             </p>
           </div>
         </div>
@@ -55,7 +57,7 @@
 
       <div class="modal-actions">
         <a [routerLink]="['/take-exam', selectedExam._id]" class="btn-primary">
-          <span appTranslate="EXAM.START">Start Exam</span>
+          Start Exam
           <i class="icon-arrow-right" aria-hidden="true"></i>
         </a>
         <button
@@ -65,7 +67,7 @@
         >
           <i class="icon-bookmark" aria-hidden="true"></i>
           {{
-            isBookmarked(selectedExam._id) ? ('EXAM.BOOKMARKED' | translate) : ('EXAM.ADD_BOOKMARK' | translate)
+            isBookmarked(selectedExam._id) ? "Bookmarked" : "Add to bookmarks"
           }}
         </button>
       </div>
@@ -75,14 +77,14 @@
 
   <header class="exams-header" role="banner">
     <div class="header-content">
-      <h1 class="h2" appTranslate="EXAM.TEACHER_EXAMS">Teacher Exams</h1>
+      <h1 class="h2">Teacher Exams</h1>
       <div class="view-toggle" role="group" aria-label="View options">
         <button
           class="toggle-btn"
           [class.active]="viewMode === 'grid'"
           (click)="setViewMode('grid')"
-          [attr.aria-label]="'COMMON.GRID_VIEW' | translate"
-          [title]="'COMMON.GRID_VIEW' | translate"
+          aria-label="Grid view"
+          title="Grid View"
         >
           <i class="icon-grid" aria-hidden="true"></i>
         </button>
@@ -90,8 +92,8 @@
           class="toggle-btn"
           [class.active]="viewMode === 'list'"
           (click)="setViewMode('list')"
-          [attr.aria-label]="'COMMON.LIST_VIEW' | translate"
-          [title]="'COMMON.LIST_VIEW' | translate"
+          aria-label="List view"
+          title="List View"
         >
           <i class="icon-list" aria-hidden="true"></i>
         </button>
@@ -100,18 +102,18 @@
 
     <!-- Teacher Selection Section -->
     <div class="teacher-selection-section">
-      <h2 class="h4" appTranslate="EXAM.SELECT_TEACHER">Select a Teacher to View Their Exams</h2>
+      <h2 class="h4">Select a Teacher to View Their Exams</h2>
 
       @if (loadingTeachers) {
       <div class="loading-teachers">
         <div class="spinner-border spinner-border-sm" role="status">
-          <span class="visually-hidden" appTranslate="EXAM.LOADING_TEACHERS">Loading teachers...</span>
+          <span class="visually-hidden">Loading teachers...</span>
         </div>
-        <span appTranslate="EXAM.LOADING_TEACHERS">Loading teachers...</span>
+        <span>Loading teachers...</span>
       </div>
       } @else if (teachers.length === 0) {
       <div class="no-teachers-message">
-        <p appTranslate="EXAM.NO_TEACHERS">No teachers available.</p>
+        <p>No teachers available.</p>
       </div>
       } @else {
       <div class="teacher-cards">
@@ -126,7 +128,7 @@
           </div>
           <div class="teacher-info">
             <h3 class="teacher-name">{{ teacher.name }}</h3>
-            <p class="teacher-subject">{{ teacher.email || ("EXAM.TEACHER" | translate) }}</p>
+            <p class="teacher-subject">{{ teacher.email || "Teacher" }}</p>
           </div>
         </div>
         }
@@ -141,25 +143,25 @@
             class="filter-tag"
             [class.active]="activeFilter === FILTER_TYPES.ALL"
             (click)="setFilter(FILTER_TYPES.ALL)"
-            [attr.aria-label]="'EXAM.SHOW_ALL_EXAMS' | translate"
+            aria-label="Show all exams"
           >
-            <span appTranslate="EXAM.ALL_EXAMS">All Exams</span>
+            All Exams
           </button>
           <button
             class="filter-tag"
             [class.active]="activeFilter === FILTER_TYPES.BOOKMARKED"
             (click)="setFilter(FILTER_TYPES.BOOKMARKED)"
-            [attr.aria-label]="'EXAM.SHOW_BOOKMARKED' | translate"
+            aria-label="Show bookmarked exams only"
           >
-            <span appTranslate="EXAM.BOOKMARKED">Bookmarked</span>
+            Bookmarked
           </button>
           <button
             class="filter-tag"
             [class.active]="activeFilter === FILTER_TYPES.COMPLETED"
             (click)="setFilter(FILTER_TYPES.COMPLETED)"
-            [attr.aria-label]="'EXAM.SHOW_COMPLETED' | translate"
+            aria-label="Show completed exams only"
           >
-            <span appTranslate="EXAM.COMPLETED">Completed</span>
+            Completed
           </button>
         </div>
       </div>
@@ -170,7 +172,7 @@
   <div class="loading-container" aria-live="polite" aria-busy="true">
     <div class="spinner-container">
       <div class="spinner"></div>
-      <p appTranslate="EXAM.LOADING_EXAMS">Loading exams...</p>
+      <p>Loading exams...</p>
     </div>
   </div>
   } @else if (!selectedTeacherId) {
@@ -180,8 +182,8 @@
         <i class="fas fa-chalkboard-teacher"></i>
       </div>
     </div>
-    <h3 appTranslate="EXAM.READY">Ready to Take an Exam?</h3>
-    <p appTranslate="EXAM.PICK_TEACHER">Pick your teacher above to view their available exams.</p>
+    <h3>Ready to Take an Exam?</h3>
+    <p>Pick your teacher above to view their available exams.</p>
   </div>
   } @else if (error) {
   <div class="alert alert-error" role="alert">
@@ -195,8 +197,11 @@
         <i class="fas fa-book-open"></i>
       </div>
     </div>
-    <h3 appTranslate="EXAM.NO_EXAMS_AVAILABLE">No Exams Available</h3>
-    <p appTranslate="EXAM.NO_EXAMS_TEACHER">This teacher doesn't have any exams available yet. Please select another teacher or check back later.</p>
+    <h3>No Exams Available</h3>
+    <p>
+      This teacher doesn't have any exams available yet. Please select another
+      teacher or check back later.
+    </p>
   </div>
   } @else {
   <div class="exam-grid" [class.list-view]="viewMode === 'list'" role="list">
@@ -207,7 +212,7 @@
           class="difficulty-badge"
           [class]="'difficulty-' + (exam.difficulty || 'medium')"
         >
-          <span appTranslate="{{ exam.difficulty ? '' : 'EXAM.MEDIUM' }}">{{ exam.difficulty || "Medium" }}</span>
+          {{ exam.difficulty || "Medium" }}
         </div>
         <div class="action-menu">
           <button
@@ -215,12 +220,12 @@
             [class.active]="isBookmarked(exam._id)"
             (click)="toggleBookmark(exam)"
             [attr.title]="
-              isBookmarked(exam._id) ? ('EXAM.REMOVE_BOOKMARK' | translate) : ('EXAM.SAVE_FOR_LATER' | translate)
+              isBookmarked(exam._id) ? 'Remove bookmark' : 'Save for later'
             "
             [attr.aria-label]="
               isBookmarked(exam._id)
-                ? ('EXAM.REMOVE_BOOKMARK_FOR' | translate) + ' ' + exam.title
-                : ('EXAM.SAVE_FOR_LATER_NAMED' | translate) + ' ' + exam.title
+                ? 'Remove bookmark for ' + exam.title
+                : 'Save ' + exam.title + ' for later'
             "
           >
             <i class="icon-bookmark" aria-hidden="true"></i>
@@ -232,21 +237,21 @@
       <p class="exam-description">{{ exam.description }}</p>
 
       <div class="category-tags">
-        <span class="category-tag" [appTranslate]="exam.category ? '' : 'EXAM.GENERAL'">{{ exam.category || "General" }}</span>
+        <span class="category-tag">{{ exam.category || "General" }}</span>
       </div>
 
       <div class="exam-details">
-        <div class="detail-item" [attr.title]="'EXAM.DURATION' | translate">
+        <div class="detail-item" title="Duration">
           <i class="icon-time" aria-hidden="true"></i>
-          <span>{{ exam.duration }} {{ 'EXAM.MINUTES' | translate }}</span>
+          <span>{{ exam.duration }} minutes</span>
         </div>
-        <div class="detail-item" [attr.title]="'EXAM.PASSING_SCORE' | translate">
+        <div class="detail-item" title="Passing Score">
           <i class="icon-target" aria-hidden="true"></i>
-          <span>{{ 'EXAM.PASS' | translate }}: {{ exam.passingScore }}%</span>
+          <span>Pass: {{ exam.passingScore }}%</span>
         </div>
-        <div class="detail-item" [attr.title]="'EXAM.QUESTIONS_NUMBER' | translate">
+        <div class="detail-item" title="Number of Questions">
           <i class="icon-questions" aria-hidden="true"></i>
-          <span>{{ exam.questions.length || "?" }} {{ 'EXAM.QUESTIONS_LABEL' | translate }}</span>
+          <span>{{ exam.questions.length || "?" }} questions</span>
         </div>
       </div>
 
@@ -254,15 +259,15 @@
         <a
           [routerLink]="['/take-exam', exam._id]"
           class="btn-primary"
-          [attr.aria-label]="('EXAM.START_NAMED' | translate) + ': ' + exam.title"
+          [attr.aria-label]="'Start Exam: ' + exam.title"
         >
-          <span appTranslate="EXAM.START">Start Exam</span>
+          <span>Start Exam</span>
           <i class="icon-arrow-right" aria-hidden="true"></i>
         </a>
         <button
           class="btn-secondary"
-          [attr.title]="'EXAM.VIEW_DETAILS' | translate"
-          [attr.aria-label]="('EXAM.VIEW_DETAILS_FOR' | translate) + ' ' + exam.title"
+          title="View details"
+          [attr.aria-label]="'View details for ' + exam.title"
           (click)="viewExamDetails(exam)"
         >
           <i class="icon-info" aria-hidden="true"></i>
