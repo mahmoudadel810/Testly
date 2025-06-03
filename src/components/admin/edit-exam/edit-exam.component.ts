@@ -11,7 +11,7 @@ import { ConfirmationPopupComponent } from "../../shared/confirmation-popup/conf
   standalone: true,
   imports: [CommonModule, FormsModule, ConfirmationPopupComponent],
   templateUrl: "./edit-exam.component.html",
-  styleUrls: ["./edit-exam.component.css"]
+  styleUrls: ["./edit-exam.component.css"],
 })
 export class EditExamComponent implements OnInit {
   exam: Exam | null = null;
@@ -21,7 +21,7 @@ export class EditExamComponent implements OnInit {
   showCancelConfirmation = false;
   showRemoveQuestionConfirmation = false;
   questionToRemoveIndex: number | null = null;
-  initialExamState: string = '';
+  initialExamState: string = "";
   previousOptions: { [key: number]: string[] } = {};
 
   constructor(
@@ -54,7 +54,7 @@ export class EditExamComponent implements OnInit {
       error: (error) => {
         this.error = "Failed to load exam. Please try again later.";
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -70,12 +70,12 @@ export class EditExamComponent implements OnInit {
       text: "",
       options: ["", ""],
       correctAnswer: 0,
-      points: 1
+      points: 1,
     };
 
     this.exam = {
       ...this.exam,
-      questions: [...this.exam.questions, newQuestion]
+      questions: [...this.exam.questions, newQuestion],
     };
 
     // Save the original options for the new question
@@ -92,15 +92,19 @@ export class EditExamComponent implements OnInit {
   }
 
   confirmRemoveQuestion(): void {
-    if (this.questionToRemoveIndex !== null && this.exam && this.exam.questions.length > 1) {
+    if (
+      this.questionToRemoveIndex !== null &&
+      this.exam &&
+      this.exam.questions.length > 1
+    ) {
       const updatedQuestions = [...this.exam.questions];
       updatedQuestions.splice(this.questionToRemoveIndex, 1);
-      
+
       this.exam = {
         ...this.exam,
-        questions: updatedQuestions
+        questions: updatedQuestions,
       };
-      
+
       // Update saved options
       delete this.previousOptions[this.questionToRemoveIndex];
       // Renumber saved options
@@ -114,7 +118,7 @@ export class EditExamComponent implements OnInit {
         }
       });
       this.previousOptions = newPreviousOptions;
-      
+
       this.error = "";
     }
     this.hideRemoveQuestionConfirmation();
@@ -128,19 +132,23 @@ export class EditExamComponent implements OnInit {
   addOption(question: Question, questionIndex: number): void {
     // Save current options before modification
     this.previousOptions[questionIndex] = [...question.options];
-    
+
     // Add the new option
     question.options = [...question.options, ""];
   }
 
-  removeOption(question: Question, optionIndex: number, questionIndex: number): void {
+  removeOption(
+    question: Question,
+    optionIndex: number,
+    questionIndex: number
+  ): void {
     if (question.options.length > 2) {
       // Save current options before modification
       this.previousOptions[questionIndex] = [...question.options];
-      
+
       const updatedOptions = [...question.options];
       updatedOptions.splice(optionIndex, 1);
-      
+
       question.options = updatedOptions;
       if (question.correctAnswer >= optionIndex) {
         question.correctAnswer = Math.max(0, question.correctAnswer - 1);
@@ -152,35 +160,46 @@ export class EditExamComponent implements OnInit {
 
   restoreOptions(questionIndex: number): void {
     if (this.previousOptions[questionIndex] && this.exam) {
-      this.exam.questions[questionIndex].options = [...this.previousOptions[questionIndex]];
+      this.exam.questions[questionIndex].options = [
+        ...this.previousOptions[questionIndex],
+      ];
       this.error = "";
     }
   }
 
   onSubmit(): void {
-    if (!this.exam) return;
+    if (!this.exam || !this.hasChanges()) {
+      return;
+    }
 
     if (this.exam.questions.length === 0) {
       this.error = "Exam must have at least one question.";
       return;
     }
 
-    // 
+    let isValid = true;
     for (const question of this.exam.questions) {
       if (!question.text.trim()) {
         this.error = "All questions must have text.";
-        return;
+        isValid = false;
+        break;
       }
-      
-      if (question.options.some(option => !option.trim())) {
+
+      if (question.options.some((option) => !option.trim())) {
         this.error = "All options must have text.";
-        return;
+        isValid = false;
+        break;
       }
-      
+
       if (question.points < 1) {
         this.error = "Points must be at least 1 for all questions.";
-        return;
+        isValid = false;
+        break;
       }
+    }
+
+    if (!isValid) {
+      return;
     }
 
     this.saving = true;
@@ -192,12 +211,12 @@ export class EditExamComponent implements OnInit {
         this.router.navigate(["/admin/exams"]);
       },
       error: (error) => {
-        this.error = error.error?.message || "Failed to update exam. Please try again.";
+        this.error =
+          error.error?.message || "Failed to update exam. Please try again.";
         this.saving = false;
-      }
+      },
     });
   }
-
   cancel(): void {
     if (this.hasChanges()) {
       this.showCancelConfirmation = true;
