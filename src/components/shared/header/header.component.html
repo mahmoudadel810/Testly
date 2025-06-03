@@ -10,11 +10,7 @@
     <nav class="nav">
       <ul class="nav-list">
         <li>
-          <a
-            routerLink="/"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
             <i class="fas fa-home"></i> Home
           </a>
         </li>
@@ -47,33 +43,41 @@
 
         <li class="user-dropdown">
           <a class="user-dropdown-toggle" (click)="toggleDropdown($event)">
-             <i class="fas fa-user-circle"></i>
-            <span>{{ (isTeacher || isAdmin) ? (currentUser.name || currentUser.username) : currentUser.username }}</span>
-            <i class="fas fa-chevron-down" [class.rotate]="dropdownOpen"></i>
+            <div class="user-avatar">
+              <i class="bi bi-person-circle"></i>
+            </div>
+            <span>{{ (isTeacher || isAdmin) ? (currentUser.name || currentUser.username) : currentUser.username
+              }}</span>
+            <i class="bi bi-chevron-down" [class.rotate]="dropdownOpen"></i>
           </a>
           <div class="dropdown-menu" [class.show]="dropdownOpen">
+            <div class="dropdown-header">
+              <div class="user-info">
+                <div class="user-avatar">
+                  <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="user-details">
+                  <div class="user-name">{{ (isTeacher || isAdmin) ? (currentUser.name || currentUser.username) :
+                    currentUser.username }}</div>
+                  <div class="user-email">{{ currentUser.email }}</div>
+                </div>
+              </div>
+            </div>
             <div class="dropdown-divider"></div>
-            <a (click)="logout(); closeDropdown()" class="logout">
-              <i class="fas fa-sign-out-alt"></i> Logout
+            <a (click)="logout(); closeDropdown()" class="dropdown-item logout">
+              <i class="bi bi-box-arrow-right"></i>
+              <span>Logout</span>
             </a>
           </div>
         </li>
         } @if (!currentUser) {
         <li>
-          <a
-            routerLink="/login"
-            routerLinkActive="active"
-            class="auth-btn login-btn"
-          >
+          <a routerLink="/login" routerLinkActive="active" class="auth-btn login-btn">
             <i class="fas fa-sign-in-alt"></i> Login
           </a>
         </li>
         <li>
-          <a
-            routerLink="/role-selection"
-            routerLinkActive="active"
-            class="auth-btn register-btn"
-          >
+          <a routerLink="/role-selection" routerLinkActive="active" class="auth-btn register-btn">
             <i class="fas fa-user-plus"></i> Register
           </a>
         </li>
@@ -81,12 +85,7 @@
       </ul>
     </nav>
 
-    <button
-      class="mobile-menu-btn"
-      [class.open]="mobileMenuOpen"
-      (click)="toggleMobileMenu()"
-      aria-label="Toggle menu"
-    >
+    <button class="mobile-menu-btn" [class.open]="mobileMenuOpen" (click)="toggleMobileMenu()" aria-label="Toggle menu">
       <span></span>
       <span></span>
       <span></span>
@@ -106,7 +105,8 @@
         <i class="fas fa-user-circle"></i>
       </div>
       <div class="mobile-user-details">
-        <div class="mobile-username">{{ (isTeacher || isAdmin) ? (currentUser.name || currentUser.username) : currentUser.username }}</div>
+        <div class="mobile-username">{{ (isTeacher || isAdmin) ? (currentUser.name || currentUser.username) :
+          currentUser.username }}</div>
         <div class="mobile-email">{{ currentUser.email }}</div>
       </div>
     </div>

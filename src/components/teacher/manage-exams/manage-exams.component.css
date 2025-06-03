@@ -592,7 +592,6 @@
   background: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
-
 /* Responsive Styles */
 @media (max-width: 768px) {
   .header-section {
