@@ -66,86 +66,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* Language Selector */
-.language-selector {
-  position: relative;
-  margin-bottom: 1.5rem;
-  z-index: 1;
-}
-
-.language-selector label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--neutral-300);
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.custom-select {
-  position: relative;
-}
-
-.custom-select select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 0.9rem;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.custom-select select:hover {
-  background-color: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.custom-select select:focus {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--primary-400);
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.custom-arrow {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid white;
-  pointer-events: none;
-  transition: transform 0.3s ease;
-}
-
-.custom-select select:focus + .custom-arrow {
-  transform: translateY(-50%) rotate(180deg);
-}
-
-.custom-select select option {
-  background-color: var(--neutral-800);
-  color: white;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-}
-
-.custom-select select option:hover {
-  background-color: var(--primary-500) !important;
-}
-
-.custom-select select option:checked {
-  background-color: var(--primary-600);
-  font-weight: bold;
-}
-
 /* Social links */
 .social-links {
   display: flex;
@@ -322,35 +242,6 @@
   margin-top: 0.5rem;
 }
 
-/* App Download Section */
-.app-buttons {
-  display: flex;
-  gap: 0.3rem;
-  flex-wrap: wrap;
-  height: 100px;
-}
-
-.app-buttons .app-button {
-  padding: 0;
-  margin: 0;
-  background: transparent;
-  border-radius: 6px;
-  transition: transform 0.3s ease;
-  overflow: hidden;
-}
-
-.app-buttons .app-button img {
-  width: 125px;
-  margin-bottom: 0;
-  border-radius: 6px;
-  transition: transform 0.3s ease;
-  display: block;
-}
-
-/* .app-buttons .app-button:hover img {
-  transform: scale(1.03);
-} */
-
 /* Middle section - Awards */
 .footer-middle {
   background-color: #1d2235;
@@ -446,10 +337,6 @@
   .footer-contact,
   .footer-app-download {
     margin-bottom: 1.5rem;
-  }
-
-  .app-buttons {
-    justify-content: flex-start;
   }
 
   .footer-nav,
