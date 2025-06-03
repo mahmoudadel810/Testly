@@ -6,7 +6,7 @@ import { FormsModule } from "@angular/forms";
 import { ExamService } from "../../../services/exam.service";
 import { AuthService } from "../../../services/auth.service";
 import { ExamAttempt, Exam } from "../../../models/exam.model";
-import { User } from "../../../models/user.model";
+import { User, UserResponse } from "../../../models/user.model";
 import { forkJoin, of, Subscription } from "rxjs";
 import { catchError, finalize, map } from "rxjs/operators";
 
@@ -23,7 +23,7 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
   loading = true;
   error = "";
   exams: { [key: string]: Exam } = {};
-  users: { [key: string]: User } = {};
+  users: { [key: string]: UserResponse } = {};
   dataLoaded = {
     attempts: false,
     exams: false,
@@ -155,7 +155,7 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
 
               result.users.forEach((user, index) => {
                 if (user) {
-                  this.users[userIds[index]] = user;
+                  this.users[userIds[index]] = user as UserResponse;
                 }
               });
               this.dataLoaded.users = true;
@@ -208,7 +208,7 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
         const user = this.users[userId];
 
         const examTitle = exam?.title || "";
-        const userName = user?.username || user?.email || "";
+        const userName = user?.data.username || user?.data.email || "";
         const status = attempt.passed ? "passed" : "failed";
 
         return (
@@ -267,8 +267,8 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
             typeof a.userId === "string" ? a.userId : a.userId._id;
           const userIdB =
             typeof b.userId === "string" ? b.userId : b.userId._id;
-          valueA = this.users[userIdA]?.username || "";
-          valueB = this.users[userIdB]?.username || "";
+          valueA = this.users[userIdA]?.data.username || "";
+          valueB = this.users[userIdB]?.data.username || "";
           break;
 
         case "exam":
@@ -438,8 +438,8 @@ export class ViewResultsComponent implements OnInit, OnDestroy {
     if (!this.dataLoaded.users) return "Loading...";
     const id = typeof userId === "string" ? userId : userId._id;
     const user = this.users[id];
-    if (!user) return "Unknown User";
-    return user.username || user.email || "Unknown User";
+    if (!user || !user.data) return "Unknown User";
+    return user.data.username || user.data.email || "Unknown User";
   }
 
   isValidAttempt(attempt: ExamAttempt): boolean {

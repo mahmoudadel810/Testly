@@ -1,3 +1,5 @@
+/** @format */
+
 export interface User {
   _id?: string;
   id?: string;
@@ -5,7 +7,7 @@ export interface User {
   name?: string;
   email: string;
   password?: string;
-  role: 'student' | 'admin' | 'teacher';
+  role: "student" | "admin" | "teacher";
   isTeacher?: boolean;
   createdAt?: Date;
   selectedTeachers?: string[];
@@ -22,9 +24,15 @@ export interface AuthResponse {
     username?: string;
     name?: string;
     email: string;
-    role: 'student' | 'admin' | 'teacher';
+    role: "student" | "admin" | "teacher";
     isTeacher?: boolean;
   };
   success?: boolean;
   message?: string;
+}
+
+export interface UserResponse {
+  data: User;
+  message?: string;
+  success?: boolean;
 }

@@ -12,7 +12,7 @@ import {
   timer,
   throwError
 } from "rxjs";
-import { User, AuthResponse } from "../models/user.model";
+import { User, AuthResponse, UserResponse } from "../models/user.model";
 import { isPlatformBrowser } from "@angular/common";
 import { Router } from "@angular/router";
 import { TokenService } from "./token.service";
@@ -362,11 +362,11 @@ export class AuthService {
   }
 
   /**
-   * Gets user by ID
-   * @param userId User's unique ID
+   * Get user by ID
+   * @param userId User ID
    */
-  getUserById(userId: string): Observable<User> {
-    return this.http.get<User>(`${API_ENDPOINTS.AUTH}/user/${userId}`);
+  getUserById(userId: string): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${API_ENDPOINTS.AUTH}/user/${userId}`);
   }
 
   /**
