@@ -215,20 +215,19 @@ section:nth-child(even) {
 }
 
 .stat-item {
-  text-align: center;
   flex: 1;
-  min-width: 200px;
-  padding: 1.5rem;
-  transition: transform 0.3s ease;
+  min-width: 140px;
+  text-align: center;
+  padding: 1rem;
+  transition: all 0.5s ease-in-out;
 }
 
 .stat-item:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
 }
 
 .stat-item i {
   font-size: 2.5rem;
-  margin-bottom: 1rem;
   color: var(--primary-500);
   background: var(--primary-50);
   width: 80px;

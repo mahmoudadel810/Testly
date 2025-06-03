@@ -45,25 +45,31 @@
   </section>
 
   <!-- Stats Section -->
-  <section class="stats">
+  <section class="stats" #statsSection>
+    @if (studentCount > 0) {
     <div class="stat-item">
       <i class="fas fa-users"></i>
-      <div class="stat-value">10,000+</div>
+      <div class="stat-value">{{ displayStudentCount }}<span *ngIf="studentCount > 999">+</span></div>
       <div class="stat-label">Students</div>
     </div>
+    }
+    @if (examCount > 0) {
     <div class="stat-item">
       <i class="fas fa-graduation-cap"></i>
-      <div class="stat-value">500+</div>
+      <div class="stat-value">{{ displayExamCount }}<span *ngIf="examCount > 999">+</span></div>
       <div class="stat-label">Exams</div>
     </div>
+    }
+    @if (subjectCount > 0) {
     <div class="stat-item">
       <i class="fas fa-chalkboard-teacher"></i>
-      <div class="stat-value">50+</div>
+      <div class="stat-value">{{ displaySubjectCount }}<span *ngIf="subjectCount > 999">+</span></div>
       <div class="stat-label">Subjects</div>
     </div>
+    }
     <div class="stat-item">
       <i class="fas fa-award"></i>
-      <div class="stat-value">99%</div>
+      <div class="stat-value">{{ displaySatisfactionRate }}%</div>
       <div class="stat-label">Satisfaction</div>
     </div>
   </section>
