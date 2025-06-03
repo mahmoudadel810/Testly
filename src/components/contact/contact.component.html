@@ -50,101 +50,151 @@
             {{ errorMessage }}
           </div>
           }
+
+          <!-- Name field -->
           <div class="form-group">
-            <label for="name">Your Name</label>
+            <label for="name">Your Full Name </label>
             <input
               type="text"
               id="name"
               formControlName="name"
-              [ngClass]="{ invalid: submitted && f['name'].errors }"
-              placeholder="Enter your full name"
+              [ngClass]="{
+                invalid: (f['name'].touched || submitted) && f['name'].errors
+              }"
+              placeholder="Enter your full name (no spaces at start)"
             />
-            @if (submitted && f['name'].errors) {
+            @if ((f['name'].touched || submitted) && f['name'].errors) {
             <div class="error-message">
               @if (f['name'].errors['required']) {
-              <span>Name is required</span>
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Name is
+                required</span
+              >
               } @if (f['name'].errors['minlength']) {
-              <span>Name must be at least 2 characters</span>
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Name must be at least
+                5 characters</span
+              >
+              } @if (f['name'].errors['leadingWhitespace']) {
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Name cannot start
+                with space</span
+              >
               }
             </div>
             }
           </div>
 
+          <!-- Email field -->
           <div class="form-group">
             <label for="email">Email Address</label>
             <input
               type="email"
               id="email"
               formControlName="email"
-              [ngClass]="{ invalid: submitted && f['email'].errors }"
-              placeholder="Enter your email address"
+              [ngClass]="{
+                invalid: (f['email'].touched || submitted) && f['email'].errors
+              }"
+              placeholder="Enter valid email"
             />
-            @if (submitted && f['email'].errors) {
+            @if ((f['email'].touched || submitted) && f['email'].errors) {
             <div class="error-message">
               @if (f['email'].errors['required']) {
-              <span>Email is required</span>
-              } @if (f['email'].errors['email']) {
-              <span>Please enter a valid email address</span>
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Email is
+                required</span
+              >
+              } @if (f['email'].errors['pattern']) {
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Please enter a valid email ending with &#64;gmail.com, &#64;outlook.com, or &#64;yahoo.com</span
+              >
               }
             </div>
             }
           </div>
 
+          <!-- Subject field -->
           <div class="form-group">
             <label for="subject">Subject</label>
             <input
               type="text"
               id="subject"
               formControlName="subject"
-              [ngClass]="{ invalid: submitted && f['subject'].errors }"
-              placeholder="What is your message about?"
+              [ngClass]="{
+                invalid:
+                  (f['subject'].touched || submitted) && f['subject'].errors
+              }"
+              placeholder="Enter subject (3-20 characters)"
             />
-            @if (submitted && f['subject'].errors) {
+            @if ((f['subject'].touched || submitted) && f['subject'].errors) {
             <div class="error-message">
               @if (f['subject'].errors['required']) {
-              <span>Subject is required</span>
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Subject is
+                required</span
+              >
+              } @if (f['subject'].errors['minlength']) {
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Subject must be at
+                least 3 characters</span
+              >
+              } @if (f['subject'].errors['maxlength']) {
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Subject cannot exceed
+                20 characters</span
+              >
               }
             </div>
             }
           </div>
 
+          <!-- Message field -->
           <div class="form-group">
             <label for="message">Message</label>
             <textarea
               id="message"
               formControlName="message"
               rows="5"
-              [ngClass]="{ invalid: submitted && f['message'].errors }"
-              placeholder="Please enter your message here"
+              [ngClass]="{
+                invalid:
+                  (f['message'].touched || submitted) && f['message'].errors
+              }"
+              placeholder="Enter your message (5-200 characters)"
             ></textarea>
-            @if (submitted && f['message'].errors) {
+            @if ((f['message'].touched || submitted) && f['message'].errors) {
             <div class="error-message">
               @if (f['message'].errors['required']) {
-              <span>Message is required</span>
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Message is
+                required</span
+              >
               } @if (f['message'].errors['minlength']) {
-              <span>Message must be at least 5 characters</span>
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Message must be at
+                least 5 characters</span
+              >
+              } @if (f['message'].errors['maxlength']) {
+              <span
+                ><i class="fas fa-exclamation-circle"></i> Message cannot exceed
+                200 characters</span
+              >
               }
             </div>
             }
           </div>
 
-          <button type="submit" class="btn primary-btn submit-btn">
+          <!-- Submit button -->
+          <button
+            type="submit"
+            class="btn primary-btn submit-btn"
+            [disabled]="contactForm.invalid"
+          >
             @if (submitted) {
             <span class="spinner"></span>
             Sending... } @else { Send Message }
           </button>
         </form>
         }
-      </div>
-    </div>
-  </section>
-
-  <section class="map-section">
-    <h2>Find Us</h2>
-    <div class="map-container">
-      <!-- Replace with actual map implementation (Google Maps, etc.) -->
-      <div class="map-placeholder">
-        <p>Interactive Map Will Be Displayed Here</p>
       </div>
     </div>
   </section>
