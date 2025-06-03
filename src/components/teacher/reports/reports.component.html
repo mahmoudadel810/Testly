@@ -1,0 +1,257 @@
+<!-- Reports Component Template -->
+<div class="reports-container">
+    <div class="reports-header">
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-chart-line"></i>
+                Detailed Reports
+            </h1>
+            <a routerLink="/teacher" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    @if (error) {
+    <div class="alert-box error">
+        <i class="fas fa-exclamation-circle"></i>
+        {{ error }}
+    </div>
+    }
+
+    <!-- Loading Spinner -->
+    @if (loading) {
+    <div class="loading-container">
+        <div class="spinner"></div>
+        <p>Loading report data...</p>
+    </div>
+    }
+
+    <!-- Content -->
+    @if (!loading && !error) {
+    <div class="reports-content">
+        <!-- Report Selection -->
+        <div class="report-controls">
+            <div class="control-group">
+                <label for="reportType">Report Type</label>
+                <select id="reportType" [(ngModel)]="selectedReportType" (change)="changeReportType()">
+                    <option value="summary">Summary Report</option>
+                    <option value="exams">Exams Performance</option>
+                    <option value="students">Student Performance</option>
+                </select>
+            </div>
+
+            @if (isReportTypeExams()) {
+            <div class="control-group">
+                <label for="examFilter">Select Exam</label>
+                <select id="examFilter" [(ngModel)]="selectedExamId" (change)="filterByExam()">
+                    <option value="">All Exams</option>
+                    @for (exam of exams; track exam._id) {
+                    <option [value]="exam._id">{{ exam.title }}</option>
+                    }
+                </select>
+            </div>
+            }
+        </div>
+
+        <!-- Summary Report -->
+        @if (isReportTypeSummary()) {
+        <div class="summary-report">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Unique Students</h3>
+                        <p class="stat-value">{{ uniqueStudentCount }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Total Exams</h3>
+                        <p class="stat-value">{{ exams.length }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Total Attempts</h3>
+                        <p class="stat-value">{{ attempts.length }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Average Score</h3>
+                        <p class="stat-value">{{ averageScore }}%</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="recent-activity">
+                <h2>Recent Activity</h2>
+                <div class="activity-list">
+                    @if (recentAttempts.length === 0) {
+                    <div class="empty-state">
+                        <i class="fas fa-info-circle"></i>
+                        <p>No recent exam attempts to display.</p>
+                    </div>
+                    }
+                    @for (attempt of recentAttempts; track trackAttempt(0, attempt)) {
+                    <div class="activity-item" [class.passed]="attempt.passed">
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <i [class]="attempt.passed ? 'fas fa-check-circle' : 'fas fa-times-circle'"></i>
+                                <h4>{{ getStudentName(attempt.userId) }}</h4>
+                                <span class="activity-exam">{{ getExamTitle(attempt.examId) }}</span>
+                            </div>
+                            <div class="activity-details">
+                                <span class="score">
+                                    Score: {{ attempt.score }} / {{ attempt.totalPoints }}
+                                    ({{ (attempt.score / attempt.totalPoints) * 100 | number: '1.0-0' }}%)
+                                </span>
+                                <span class="timestamp">{{ formatDate(attempt.endTime || attempt.startTime) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- Exams Performance Report -->
+        @if (isReportTypeExams()) {
+        @if (selectedExamId === '') {
+        <div class="alert-box info">
+            <i class="fas fa-info-circle"></i>
+            Please select an exam from the dropdown to view detailed performance data.
+        </div>
+        } @else {
+        <div class="exam-performance">
+            <h2>{{ selectedExamTitle }} - Performance Report</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Total Attempts</h3>
+                        <p class="stat-value">{{ selectedExamStats?.attemptCount || 0 }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Unique Students</h3>
+                        <p class="stat-value">{{ selectedExamStats?.studentCount || 0 }}</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Pass Rate</h3>
+                        <p class="stat-value">{{ selectedExamStats?.passRate || 0 }}%</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3>Passed/Failed</h3>
+                        <p class="stat-value">
+                            <span class="text-success">{{ selectedExamStats?.passCount || 0 }}</span>
+                            /
+                            <span class="text-danger">{{ (selectedExamStats?.attemptCount || 0) -
+                                (selectedExamStats?.passCount || 0) }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a [routerLink]="['/teacher/exams', selectedExamId, 'attempts']" class="view-attempts-btn">
+                    <i class="fas fa-eye"></i>
+                    View All Attempts
+                </a>
+            </div>
+        </div>
+        }
+        }
+
+        <!-- Student Performance Report -->
+        @if (isReportTypeStudents()) {
+        <div class="student-performance">
+            <div class="alert-box info">
+                <i class="fas fa-info-circle"></i>
+                Student performance reports show all students who have attempted your exams.
+            </div>
+
+            <div class="table-container">
+                <table class="performance-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Exams Taken</th>
+                            <th>Total Attempts</th>
+                            <th>Average Score</th>
+                            <th>Pass Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (studentStats.length === 0) {
+                        <tr>
+                            <td colspan="5" class="empty-state">
+                                <i class="fas fa-info-circle"></i>
+                                No student data available yet.
+                            </td>
+                        </tr>
+                        }
+                        @for (stat of studentStats; track trackStudentStat(0, stat)) {
+                        <tr>
+                            <td>{{ stat.studentName }}</td>
+                            <td class="text-center">{{ stat.examCount }}</td>
+                            <td class="text-center">{{ stat.attemptCount }}</td>
+                            <td class="text-center">{{ stat.averageScore }}%</td>
+                            <td>
+                                <div class="progress-container">
+                                    <div class="progress-bar" [style.width.%]="stat.passRate"
+                                        [class.low]="stat.passRate < 50"
+                                        [class.medium]="stat.passRate >= 50 && stat.passRate < 70"
+                                        [class.high]="stat.passRate >= 70">
+                                    </div>
+                                    <span class="progress-text">{{ stat.passRate }}%</span>
+                                </div>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        }
+    </div>
+    }
+</div>
