@@ -39,7 +39,7 @@
       <tbody>
         @for (exam of exams; track exam._id) {
         <tr>
-          <td>{{ exam.title }}</td>
+          <td class="exam-title">{{ exam.title }}</td>
           <td>{{ exam.questions.length }}</td>
           <td>{{ exam.duration }} mins</td>
           <td>{{ exam.passingScore }}%</td>

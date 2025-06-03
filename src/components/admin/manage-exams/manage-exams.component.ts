@@ -159,4 +159,5 @@ export class ManageExamsComponent implements OnInit {
     this.showDeletePopup = false;
     this.examIdToDelete = null;
   }
+  
 }
