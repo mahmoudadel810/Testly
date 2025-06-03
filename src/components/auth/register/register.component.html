@@ -137,7 +137,11 @@
               class="btn-primaryCSS btn-block"
               [disabled]="registerForm.invalid || isLoading"
             >
-              {{ isLoading ? "Registering..." : "Register" }}
+              @if (isLoading) {
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              } @else {
+                Register
+              }
             </button>
           </form>
 
