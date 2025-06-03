@@ -1,5 +1,4 @@
-/** @format */
-
+ 
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, catchError, map, of, tap, throwError } from "rxjs";

@@ -1,5 +1,4 @@
-/** @format */
-import { createAction, props } from '@ngrx/store';
+ import { createAction, props } from '@ngrx/store';
 import { User } from '../../../models/user.model';
 
 // Email Confirmation Actions

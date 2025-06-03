@@ -1,5 +1,4 @@
-/** @format */
-
+ 
 import {
   ApplicationConfig,
   importProvidersFrom,

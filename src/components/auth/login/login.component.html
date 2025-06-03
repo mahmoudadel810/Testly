@@ -45,12 +45,16 @@
           </div>
 
           <button type="submit" class="btn-primaryCSS btn-block" [disabled]="loginForm.invalid || isLoading">
-            {{ isLoading ? "Logging in..." : "Login" }}
+            @if (isLoading) {
+              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            } @else {
+              Login
+            }
           </button>
         </form>
 
         <div class="auth-footer mt-3">
-          <p>Don't have an account? <a routerLink="/register">Register</a></p>
+          <p>Don't have an account? <a routerLink="/role-selection">Register</a></p>
           <p><a routerLink="/forgot-password">Forgot Password?</a></p>
         </div>
       </div>

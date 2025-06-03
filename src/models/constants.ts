@@ -1,5 +1,4 @@
-/** @format */
-
+ 
 export const STORAGE_KEYS = {
   TOKEN: "auth_token",
   USER_INFO: "user_info",

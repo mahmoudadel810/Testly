@@ -1,5 +1,4 @@
-/** @format */
-import { createReducer, on } from '@ngrx/store';
+ import { createReducer, on } from '@ngrx/store';
 import { User } from '../../../models/user.model';
 import * as AuthActions from '../actions/auth.actions';
 

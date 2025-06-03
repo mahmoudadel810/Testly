@@ -1,5 +1,4 @@
-/** @format */
-import { ActionReducerMap } from '@ngrx/store';
+ import { ActionReducerMap } from '@ngrx/store';
 import * as fromAuth from './auth/reducers/auth.reducer';
 
 export interface AppState {

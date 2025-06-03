@@ -1,5 +1,4 @@
-/** @format */
-import { Injectable, inject } from '@angular/core';
+ import { Injectable, inject } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { AuthService } from '../../../services/auth.service';
 import { of } from 'rxjs';

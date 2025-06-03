@@ -1,5 +1,4 @@
-/** @format */
-
+ 
 export interface User {
   _id?: string;
   id?: string;
