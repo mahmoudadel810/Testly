@@ -17,36 +17,37 @@ export class TokenService {
   }
 
   /**
-   * Stores authentication token and its expiry in local storage
+   * Stores authentication token and its expiry in session storage
+   * for automatic logout when browser is closed
    * @param token The JWT token string
    * @param expiresIn Time until token expiry (in seconds)
    */
   setToken(token: string, expiresIn: number): void {
     if (!this.isBrowser) return;
 
-    // Store token
-    localStorage.setItem(STORAGE_KEYS.TOKEN, token);
+    // Store token in sessionStorage for auto-logout on browser close
+    sessionStorage.setItem(STORAGE_KEYS.TOKEN, token);
 
     // Calculate and store expiry date
     const expirationDate = new Date(
       new Date().getTime() + expiresIn * 1000
     ).toISOString();
-    localStorage.setItem(STORAGE_KEYS.TOKEN_EXPIRY, expirationDate);
+    sessionStorage.setItem(STORAGE_KEYS.TOKEN_EXPIRY, expirationDate);
 
-    this.logger.debug('Token stored with expiry:', expirationDate);
+    this.logger.debug('Token stored with expiry in session storage:', expirationDate);
   }
 
   /**
-   * Retrieves the authentication token from storage
+   * Retrieves the authentication token from session storage
    * @returns The stored token or null if not found
    */
   getToken(): string | null {
     if (!this.isBrowser) return null;
-    return localStorage.getItem(STORAGE_KEYS.TOKEN);
+    return sessionStorage.getItem(STORAGE_KEYS.TOKEN);
   }
 
   /**
-   * Checks if the token has expired based on local expiry time
+   * Checks if the token has expired based on session storage expiry time
    * @returns True if token has expired or doesn't exist, false otherwise
    */
   isTokenExpired(): boolean {
@@ -55,7 +56,7 @@ export class TokenService {
     const token = this.getToken();
     if (!token) return true;
 
-    const expiryStr = localStorage.getItem(STORAGE_KEYS.TOKEN_EXPIRY);
+    const expiryStr = sessionStorage.getItem(STORAGE_KEYS.TOKEN_EXPIRY);
     if (!expiryStr) return true;
 
     const expiry = new Date(expiryStr);
@@ -71,7 +72,7 @@ export class TokenService {
   getTimeUntilExpiry(): number {
     if (!this.isBrowser) return 0;
 
-    const expiryStr = localStorage.getItem(STORAGE_KEYS.TOKEN_EXPIRY);
+    const expiryStr = sessionStorage.getItem(STORAGE_KEYS.TOKEN_EXPIRY);
     if (!expiryStr) return 0;
 
     const expiry = new Date(expiryStr);
@@ -82,13 +83,13 @@ export class TokenService {
   }
 
   /**
-   * Removes token and token expiry from storage
+   * Removes token and token expiry from session storage
    */
   clearToken(): void {
     if (!this.isBrowser) return;
 
-    localStorage.removeItem(STORAGE_KEYS.TOKEN);
-    localStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRY);
-    this.logger.debug('Token cleared from storage');
+    sessionStorage.removeItem(STORAGE_KEYS.TOKEN);
+    sessionStorage.removeItem(STORAGE_KEYS.TOKEN_EXPIRY);
+    this.logger.debug('Token cleared from session storage');
   }
 }
