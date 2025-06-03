@@ -72,6 +72,12 @@
   color: var(--primary-700);
   font-weight: 600;
   background-color: var(--primary-50);
+  border: 1px solid transparent;
+}
+
+.nav-list a.active:hover {
+  background-color: var(--primary-100) !important;
+  border-color: var(--primary-300);
 }
 
 .nav-list a i {
@@ -177,14 +183,21 @@
 .logout {
   color: var(--error-600) !important;
   cursor: pointer;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .logout:hover {
-  background-color: var(--error-50) !important;
+  background-color: var(--error-100) !important;
+  border-color: var(--error-100);
 }
 
 .logout i {
-  color: var(--error-600) !important;
+  color: var(--error-500) !important;
 }
 
 /* Mobile menu button */
@@ -318,6 +331,18 @@
   color: var(--primary-600);
 }
 
+.mobile-nav-list a.active {
+  color: var(--primary-700);
+  font-weight: 600;
+  background-color: var(--primary-50);
+  border: 1px solid transparent;
+}
+
+.mobile-nav-list a.active:hover {
+  background-color: var(--primary-100) !important;
+  border-color: var(--primary-300);
+}
+
 .mobile-nav-list a i {
   color: var(--primary-500);
   font-size: 1.2rem;
@@ -327,14 +352,22 @@
 
 .mobile-logout a {
   color: var(--error-600);
+  cursor: pointer;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .mobile-logout a i {
-  color: var(--error-600);
+  color: var(--error-500);
 }
 
 .mobile-logout a:hover {
-  background-color: var(--error-50);
+  background-color: var(--error-100);
+  border: 1px solid var(--error-100);
 }
 
 @media (max-width: 992px) {
