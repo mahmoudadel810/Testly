@@ -248,48 +248,49 @@ export class EditExamComponent implements OnInit {
     }
   }
 
-  onSubmit(): void {
-    if (this.examForm.invalid) {
-      this.markFormGroupTouched(this.examForm);
-      this.toastr.error('Please fill all required fields correctly');
-      return;
-    }
-
-    if (!this.hasChanges()) {
-      this.toastr.info('No changes detected to save');
-      return;
-    }
-
-    this.isSubmitting.set(true);
-    this.error.set('');
-    this.successMessage.set('');
-
-    this.examService
-      .updateTeacherExam(this.examId, this.examForm.value)
-      .pipe(take(1))
-      .subscribe({
-        next: () => {
-          this.isSubmitting.set(false);
-          this.successMessage.set('Exam updated successfully!');
-          this.toastr.success('Exam updated successfully!');
-          this.initialFormValue = JSON.stringify(this.examForm.value);
-
-          setTimeout(() => {
-            this.router.navigate(['/teacher/exams']);
-          }, 1500);
-        },
-        error: (err) => {
-          this.isSubmitting.set(false);
-          this.error.set(
-            err.error?.message || 'Failed to update exam. Please try again.'
-          );
-          this.toastr.error(
-            err.error?.message || 'Failed to update exam. Please try again.'
-          );
-          console.error('Error updating exam:', err);
-        },
-      });
+// edit-exam.component.ts
+onSubmit(): void {
+  if (this.examForm.invalid) {
+    this.markFormGroupTouched(this.examForm);
+    this.toastr.error('Please fill all required fields correctly');
+    return;
   }
+
+  if (!this.hasChanges()) {
+    this.toastr.info('No changes detected to save');
+    return;
+  }
+
+  this.isSubmitting.set(true);
+  this.error.set('');
+  this.successMessage.set('');
+
+  this.examService
+    .updateTeacherExam(this.examId, this.examForm.value)
+    .pipe(take(1))
+    .subscribe({
+      next: () => {
+        this.isSubmitting.set(false);
+        this.successMessage.set('Exam updated successfully!');
+        this.toastr.success('Exam updated successfully!');
+        this.initialFormValue = JSON.stringify(this.examForm.value);
+
+        setTimeout(() => {
+          this.router.navigate(['/teacher/exams']);
+        }, 1500);
+      },
+      error: (err) => {
+        this.isSubmitting.set(false);
+        this.error.set(
+          err.error?.message || 'Failed to update exam. Please try again.'
+        );
+        this.toastr.error(
+          err.error?.message || 'Failed to update exam. Please try again.'
+        );
+        console.error('Error updating exam:', err);
+      },
+    });
+}
 
   private markFormGroupTouched(formGroup: FormGroup | FormArray): void {
     Object.values(formGroup.controls).forEach((control) => {

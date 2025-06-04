@@ -175,3 +175,27 @@
 .btn span {
   display: inline-block;
 }
+.btn .fas, 
+.btn .spinner-border {
+  margin-right: 0.5rem;
+}
+
+.btn span:last-child {
+  margin-left: 0;
+}
+
+
+.btn-primary {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.btn-primary .spinner-border {
+  position: relative;
+  top: -1px;
+}
+
+.btn-primary span:not(.spinner-border) {
+  display: inline-block;
+  vertical-align: middle;
+}
