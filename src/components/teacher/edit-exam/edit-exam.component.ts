@@ -1,3 +1,4 @@
+// edit-exam.component.ts
 import {
   Component,
   OnInit,
@@ -19,11 +20,18 @@ import { ExamService } from '../../../services/exam.service';
 import { Exam } from '../../../models/exam.model';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
+import { ConfirmationPopupComponent } from '../../shared/confirmation-popup/confirmation-popup.component';
 
 @Component({
   selector: 'app-edit-exam',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ConfirmationPopupComponent,
+  ],
   templateUrl: './edit-exam.component.html',
   styleUrls: ['./edit-exam.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +43,14 @@ export class EditExamComponent implements OnInit {
   isSubmitting = signal(false);
   error = signal('');
   successMessage = signal('');
+  initialFormValue: any;
+
+  // Confirmation popup signals
+  showConfirmPopup = signal(false);
+  showCancelConfirmPopup = signal(false);
+  confirmAction = signal<'deleteQuestion' | 'deleteOption' | 'cancel' | null>(null);
+  currentQuestionIndex = signal<number | null>(null);
+  currentOptionIndex = signal<number | null>(null);
 
   constructor(
     private fb: FormBuilder,
@@ -77,6 +93,7 @@ export class EditExamComponent implements OnInit {
       .subscribe({
         next: (exam) => {
           this.populateForm(exam);
+          this.initialFormValue = JSON.stringify(this.examForm.value);
           this.isLoading.set(false);
         },
         error: (err) => {
@@ -128,7 +145,7 @@ export class EditExamComponent implements OnInit {
     return this.examForm.get('questions') as FormArray;
   }
 
-  async addQuestion(): Promise<void> {
+  addQuestion(): void {
     const questionForm = this.fb.group({
       text: ['', [Validators.required, Validators.minLength(3)]],
       options: this.fb.array([
@@ -149,10 +166,9 @@ export class EditExamComponent implements OnInit {
       return;
     }
 
-    if (confirm('Are you sure you want to delete this question?')) {
-      this.questions.removeAt(index);
-      this.toastr.success('Question deleted successfully');
-    }
+    this.currentQuestionIndex.set(index);
+    this.confirmAction.set('deleteQuestion');
+    this.showConfirmPopup.set(true);
   }
 
   getOptions(questionIndex: number): FormArray {
@@ -165,10 +181,7 @@ export class EditExamComponent implements OnInit {
     this.toastr.success('Option added successfully');
   }
 
-  removeOption(
-    questionIndex: number,
-    optionIndex: number
-  ): void {
+  removeOption(questionIndex: number, optionIndex: number): void {
     const options = this.getOptions(questionIndex);
 
     if (options.length <= 2) {
@@ -176,18 +189,62 @@ export class EditExamComponent implements OnInit {
       return;
     }
 
-    if (confirm('Are you sure you want to delete this option?')) {
-      options.removeAt(optionIndex);
+    this.currentQuestionIndex.set(questionIndex);
+    this.currentOptionIndex.set(optionIndex);
+    this.confirmAction.set('deleteOption');
+    this.showConfirmPopup.set(true);
+  }
 
-      const questionControl = this.questions.at(questionIndex);
+  handleConfirm(): void {
+    if (this.confirmAction() === 'deleteQuestion' && this.currentQuestionIndex() !== null) {
+      this.questions.removeAt(this.currentQuestionIndex()!);
+      this.toastr.success('Question deleted successfully');
+    } 
+    else if (this.confirmAction() === 'deleteOption' && 
+             this.currentQuestionIndex() !== null && 
+             this.currentOptionIndex() !== null) {
+      const options = this.getOptions(this.currentQuestionIndex()!);
+      options.removeAt(this.currentOptionIndex()!);
+
+      const questionControl = this.questions.at(this.currentQuestionIndex()!);
       const correctAnswerControl = questionControl.get('correctAnswer');
       const currentCorrectAnswer = correctAnswerControl?.value;
 
-      if (currentCorrectAnswer >= optionIndex && currentCorrectAnswer > 0) {
+      if (currentCorrectAnswer >= this.currentOptionIndex()! && currentCorrectAnswer > 0) {
         correctAnswerControl?.setValue(currentCorrectAnswer - 1);
       }
 
       this.toastr.success('Option deleted successfully');
+    }
+    else if (this.confirmAction() === 'cancel') {
+      this.router.navigate(['/teacher/exams']);
+    }
+
+    this.resetConfirmation();
+  }
+
+  handleCancel(): void {
+    this.resetConfirmation();
+  }
+
+  private resetConfirmation(): void {
+    this.showConfirmPopup.set(false);
+    this.showCancelConfirmPopup.set(false);
+    this.confirmAction.set(null);
+    this.currentQuestionIndex.set(null);
+    this.currentOptionIndex.set(null);
+  }
+
+  hasChanges(): boolean {
+    return this.initialFormValue !== JSON.stringify(this.examForm.value);
+  }
+
+  onCancel(): void {
+    if (this.hasChanges()) {
+      this.confirmAction.set('cancel');
+      this.showCancelConfirmPopup.set(true);
+    } else {
+      this.router.navigate(['/teacher/exams']);
     }
   }
 
@@ -195,6 +252,11 @@ export class EditExamComponent implements OnInit {
     if (this.examForm.invalid) {
       this.markFormGroupTouched(this.examForm);
       this.toastr.error('Please fill all required fields correctly');
+      return;
+    }
+
+    if (!this.hasChanges()) {
+      this.toastr.info('No changes detected to save');
       return;
     }
 
@@ -210,6 +272,7 @@ export class EditExamComponent implements OnInit {
           this.isSubmitting.set(false);
           this.successMessage.set('Exam updated successfully!');
           this.toastr.success('Exam updated successfully!');
+          this.initialFormValue = JSON.stringify(this.examForm.value);
 
           setTimeout(() => {
             this.router.navigate(['/teacher/exams']);

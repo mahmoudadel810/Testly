@@ -1,362 +1,408 @@
+<!-- edit-exam.component.html -->
 <div class="container py-4">
-  <div class="card shadow border-0">
-    <div
-      class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
-    >
-      <h2 class="h4 mb-0"><i class="fas fa-edit me-2"></i>Edit Exam</h2>
-      <button routerLink="/teacher/exams" class="btn btn-light btn-sm">
-        <i class="fas fa-arrow-left me-1"></i> Back to Exams
-      </button>
-    </div>
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mb-4 text-center text-primary">Edit Exam</h2>
 
-    <div class="card-body">
       <!-- Loading Spinner -->
       @if (isLoading()) {
-      <div class="text-center py-5">
+      <div class="d-flex justify-content-center align-items-center py-5">
         <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Loading exam...</span>
+          <span class="visually-hidden">Loading...</span>
         </div>
-        <p class="mt-2 text-muted">Loading exam details...</p>
+        <span class="ms-3">Loading exam...</span>
       </div>
       }
 
       <!-- Success Message -->
       @if (successMessage()) {
-      <div class="alert alert-success">
+      <div class="alert alert-success alert-dismissible fade show">
         <i class="fas fa-check-circle me-2"></i>{{ successMessage() }}
+        <button
+          type="button"
+          class="btn-close"
+          (click)="successMessage.set('')"
+        ></button>
       </div>
       }
 
       <!-- Error Message -->
       @if (error()) {
-      <div class="alert alert-danger">
+      <div class="alert alert-danger alert-dismissible fade show">
         <i class="fas fa-exclamation-circle me-2"></i>{{ error() }}
+        <button
+          type="button"
+          class="btn-close"
+          (click)="error.set('')"
+        ></button>
       </div>
       }
 
       <!-- Exam Form -->
       @if (!isLoading()) {
       <form [formGroup]="examForm" (ngSubmit)="onSubmit()">
-        <!-- Exam Details -->
-        <div class="mb-3">
-          <label for="title" class="form-label">
-            <i class="fas fa-heading me-1"></i>Exam Title
-          </label>
-          <input
-            type="text"
-            id="title"
-            formControlName="title"
-            class="form-control"
-            [class.is-invalid]="
-              examForm.get('title')?.invalid && examForm.get('title')?.touched
-            "
-          />
-          @if (examForm.get('title')?.invalid && examForm.get('title')?.touched)
-          {
-          <div class="invalid-feedback">
-            @if (examForm.get('title')?.hasError('required')) {
-            <span
-              ><i class="fas fa-exclamation-circle me-1"></i>Title is
-              required</span
-            >
-            } @if (examForm.get('title')?.hasError('minlength')) {
-            <span
-              ><i class="fas fa-exclamation-circle me-1"></i>Title must be at
-              least 5 characters</span
-            >
-            }
-          </div>
-          }
-        </div>
-
-        <div class="mb-3">
-          <label for="description" class="form-label">
-            <i class="fas fa-align-left me-1"></i>Description
-          </label>
-          <textarea
-            id="description"
-            formControlName="description"
-            class="form-control"
-            rows="3"
-            [class.is-invalid]="
-              examForm.get('description')?.invalid &&
-              examForm.get('description')?.touched
-            "
-          ></textarea>
-          @if (examForm.get('description')?.invalid &&
-          examForm.get('description')?.touched) {
-          <div class="invalid-feedback">
-            @if (examForm.get('description')?.hasError('required')) {
-            <span
-              ><i class="fas fa-exclamation-circle me-1"></i>Description is
-              required</span
-            >
-            } @if (examForm.get('description')?.hasError('minlength')) {
-            <span
-              ><i class="fas fa-exclamation-circle me-1"></i>Description must be
-              at least 10 characters</span
-            >
-            }
-          </div>
-          }
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label for="duration" class="form-label">
-              <i class="fas fa-clock me-1"></i>Duration (minutes)
-            </label>
-            <input
-              type="number"
-              id="duration"
-              formControlName="duration"
-              class="form-control"
-              [class.is-invalid]="
-                examForm.get('duration')?.invalid &&
-                examForm.get('duration')?.touched
-              "
-            />
-            @if (examForm.get('duration')?.invalid &&
-            examForm.get('duration')?.touched) {
-            <div class="invalid-feedback">
-              @if (examForm.get('duration')?.hasError('required')) {
-              <span
-                ><i class="fas fa-exclamation-circle me-1"></i>Duration is
-                required</span
-              >
-              } @if (examForm.get('duration')?.hasError('min')) {
-              <span
-                ><i class="fas fa-exclamation-circle me-1"></i>Duration must be
-                at least 5 minutes</span
-              >
-              } @if (examForm.get('duration')?.hasError('max')) {
-              <span
-                ><i class="fas fa-exclamation-circle me-1"></i>Duration cannot
-                exceed 180 minutes</span
-              >
-              }
-            </div>
-            }
-          </div>
-
-          <div class="col-md-6">
-            <label for="passingScore" class="form-label">
-              <i class="fas fa-check-circle me-1"></i>Passing Score (%)
-            </label>
-            <input
-              type="number"
-              id="passingScore"
-              formControlName="passingScore"
-              class="form-control"
-              [class.is-invalid]="
-                examForm.get('passingScore')?.invalid &&
-                examForm.get('passingScore')?.touched
-              "
-            />
-            @if (examForm.get('passingScore')?.invalid &&
-            examForm.get('passingScore')?.touched) {
-            <div class="invalid-feedback">
-              @if (examForm.get('passingScore')?.hasError('required')) {
-              <span
-                ><i class="fas fa-exclamation-circle me-1"></i>Passing score is
-                required</span
-              >
-              } @if (examForm.get('passingScore')?.hasError('min')) {
-              <span
-                ><i class="fas fa-exclamation-circle me-1"></i>Passing score
-                must be at least 0%</span
-              >
-              } @if (examForm.get('passingScore')?.hasError('max')) {
-              <span
-                ><i class="fas fa-exclamation-circle me-1"></i>Passing score
-                cannot exceed 100%</span
-              >
-              }
-            </div>
-            }
-          </div>
-        </div>
-
-        <!-- Questions Section -->
-        <div class="mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="h5 mb-0">
-              <i class="fas fa-question-circle me-2"></i>Questions
+        <!-- Exam Details Card -->
+        <div class="card mb-4 shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h3 class="mb-0">
+              <i class="fas fa-info-circle me-2"></i> Exam Details
             </h3>
-            <button
-              type="button"
-              class="btn btn-primary btn-sm"
-              (click)="addQuestion()"
-            >
-              <i class="fas fa-plus-circle me-1"></i> Add Question
-            </button>
           </div>
-
-          <div formArrayName="questions">
-            @for (question of questions.controls; track $index; let i = $index)
-            {
-            <div class="card mb-3">
-              <div
-                class="card-header bg-light d-flex justify-content-between align-items-center"
-              >
-                <h4 class="h6 mb-0">
-                  <i class="fas fa-question me-1"></i>Question {{ i + 1 }}
-                </h4>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger btn-sm"
-                  (click)="removeQuestion(i)"
-                  title="Remove Question"
-                >
-                  <i class="fas fa-trash-alt me-1"></i> Remove
-                </button>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="title" class="form-label">Title</label>
+              <input
+                type="text"
+                id="title"
+                formControlName="title"
+                class="form-control"
+                [class.is-invalid]="
+                  examForm.get('title')?.invalid &&
+                  (examForm.get('title')?.dirty ||
+                    examForm.get('title')?.touched)
+                "
+              />
+              @if (examForm.get('title')?.invalid &&
+              (examForm.get('title')?.dirty || examForm.get('title')?.touched))
+              {
+              <div class="invalid-feedback d-block">
+                <i class="fas fa-exclamation-circle me-1"></i>
+                @if (examForm.get('title')?.hasError('required')) {
+                <span>Title is required</span>
+                } @if (examForm.get('title')?.hasError('minlength')) {
+                <span>Title must be at least 5 characters</span>
+                }
               </div>
+              }
+            </div>
 
-              <div class="card-body" [formGroupName]="i">
-                <div class="mb-3">
-                  <label [for]="'questionText' + i" class="form-label">
-                    <i class="fas fa-pen me-1"></i>Question Text
-                  </label>
-                  <textarea
-                    [id]="'questionText' + i"
-                    formControlName="text"
-                    class="form-control"
-                    rows="2"
-                    [class.is-invalid]="
-                      questions.at(i).get('text')?.invalid &&
-                      questions.at(i).get('text')?.touched
-                    "
-                  ></textarea>
-                  @if (questions.at(i).get('text')?.invalid &&
-                  questions.at(i).get('text')?.touched) {
-                  <div class="invalid-feedback">
-                    @if (questions.at(i).get('text')?.hasError('required')) {
-                    <span
-                      ><i class="fas fa-exclamation-circle me-1"></i>Question
-                      text is required</span
-                    >
-                    } @if (questions.at(i).get('text')?.hasError('minlength')) {
-                    <span
-                      ><i class="fas fa-exclamation-circle me-1"></i>Question
-                      must be at least 3 characters</span
-                    >
-                    }
-                  </div>
+            <div class="mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea
+                id="description"
+                formControlName="description"
+                class="form-control"
+                rows="3"
+                [class.is-invalid]="
+                  examForm.get('description')?.invalid &&
+                  (examForm.get('description')?.dirty ||
+                    examForm.get('description')?.touched)
+                "
+              ></textarea>
+              @if (examForm.get('description')?.invalid &&
+              (examForm.get('description')?.dirty ||
+              examForm.get('description')?.touched)) {
+              <div class="invalid-feedback d-block">
+                <i class="fas fa-exclamation-circle me-1"></i>
+                @if (examForm.get('description')?.hasError('required')) {
+                <span>Description is required</span>
+                } @if (examForm.get('description')?.hasError('minlength')) {
+                <span>Description must be at least 10 characters</span>
+                }
+              </div>
+              }
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="duration" class="form-label"
+                  ><i class="fas fa-clock me-1"></i> Duration (minutes)</label
+                >
+                <input
+                  type="number"
+                  id="duration"
+                  formControlName="duration"
+                  class="form-control"
+                  [class.is-invalid]="
+                    examForm.get('duration')?.invalid &&
+                    (examForm.get('duration')?.dirty ||
+                      examForm.get('duration')?.touched)
+                  "
+                />
+                @if (examForm.get('duration')?.invalid &&
+                (examForm.get('duration')?.dirty ||
+                examForm.get('duration')?.touched)) {
+                <div class="invalid-feedback d-block">
+                  <i class="fas fa-exclamation-circle me-1"></i>
+                  @if (examForm.get('duration')?.hasError('required')) {
+                  <span>Duration is required</span>
+                  } @if (examForm.get('duration')?.hasError('min')) {
+                  <span>Duration must be at least 5 minutes</span>
+                  } @if (examForm.get('duration')?.hasError('max')) {
+                  <span>Duration cannot exceed 180 minutes</span>
                   }
                 </div>
+                }
+              </div>
 
-                <!-- Options -->
-                <div class="mb-3">
-                  <label class="form-label">
-                    <i class="fas fa-list-ul me-1"></i>Options
-                  </label>
-                  <div formArrayName="options">
-                    @for (option of getOptions(i).controls; track $index; let j
-                    = $index) {
-                    <div class="input-group mb-2">
-                      <div class="input-group-text">
-                        <input
-                          type="radio"
-                          [value]="j"
-                          [checked]="
-                            j === questions.at(i).get('correctAnswer')?.value
-                          "
-                          (change)="
-                            questions.at(i).get('correctAnswer')?.setValue(j)
-                          "
-                        />
-                      </div>
-                      <input
-                        type="text"
-                        [formControlName]="j"
-                        class="form-control"
-                        [class.is-invalid]="
-                          getOptions(i).at(j).invalid &&
-                          getOptions(i).at(j).touched
-                        "
-                      />
-                      @if (getOptions(i).length > 2) {
-                      <button
-                        type="button"
-                        class="btn btn-outline-danger"
-                        (click)="removeOption(i, j)"
-                        title="Remove Option"
-                      >
-                        <i class="fas fa-minus-circle"></i>
-                      </button>
-                      } @if (getOptions(i).at(j).invalid &&
-                      getOptions(i).at(j).touched) {
-                      <div class="invalid-feedback">
-                        <i class="fas fa-exclamation-circle me-1"></i>Option
-                        text is required
-                      </div>
+              <div class="col-md-6">
+                <label for="passingScore" class="form-label"
+                  ><i class="fas fa-percentage me-1"></i> Passing Score
+                  (%)</label
+                >
+                <input
+                  type="number"
+                  id="passingScore"
+                  formControlName="passingScore"
+                  class="form-control"
+                  [class.is-invalid]="
+                    examForm.get('passingScore')?.invalid &&
+                    (examForm.get('passingScore')?.dirty ||
+                      examForm.get('passingScore')?.touched)
+                  "
+                />
+                @if (examForm.get('passingScore')?.invalid &&
+                (examForm.get('passingScore')?.dirty ||
+                examForm.get('passingScore')?.touched)) {
+                <div class="invalid-feedback d-block">
+                  <i class="fas fa-exclamation-circle me-1"></i>
+                  @if (examForm.get('passingScore')?.hasError('required')) {
+                  <span>Passing score is required</span>
+                  } @if (examForm.get('passingScore')?.hasError('min')) {
+                  <span>Passing score must be at least 0%</span>
+                  } @if (examForm.get('passingScore')?.hasError('max')) {
+                  <span>Passing score cannot exceed 100%</span>
+                  }
+                </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Questions Card -->
+        <div class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+              <h3 class="mb-0">
+                <i class="fas fa-question-circle me-2"></i> Questions
+              </h3>
+              <button
+                type="button"
+                class="btn btn-success"
+                (click)="addQuestion()"
+              >
+                <i class="fas fa-plus me-1"></i> Add Question
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            @if (questions.length === 0) {
+            <div class="alert alert-warning">
+              <i class="fas fa-exclamation-triangle me-2"></i> Exam must have at
+              least one question.
+            </div>
+            }
+
+            <div formArrayName="questions">
+              @for (question of questions.controls; track $index; let i =
+              $index) {
+              <div class="card mb-3 question-card">
+                <div
+                  class="card-header bg-light d-flex justify-content-between align-items-center"
+                >
+                  <h4 class="mb-0">Question {{ i + 1 }}</h4>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    (click)="removeQuestion(i)"
+                    [disabled]="questions.length <= 1"
+                  >
+                    <i class="fas fa-trash me-1"></i> Remove
+                  </button>
+                </div>
+                <div class="card-body" [formGroupName]="i">
+                  <div class="mb-3">
+                    <label [for]="'questionText' + i" class="form-label"
+                      >Question Text</label
+                    >
+                    <textarea
+                      [id]="'questionText' + i"
+                      formControlName="text"
+                      class="form-control"
+                      rows="2"
+                      [class.is-invalid]="
+                        question.get('text')?.invalid &&
+                        (question.get('text')?.dirty ||
+                          question.get('text')?.touched)
+                      "
+                    ></textarea>
+                    @if (question.get('text')?.invalid &&
+                    (question.get('text')?.dirty ||
+                    question.get('text')?.touched)) {
+                    <div class="invalid-feedback d-block">
+                      <i class="fas fa-exclamation-circle me-1"></i>
+                      @if (question.get('text')?.hasError('required')) {
+                      <span>Question text is required</span>
+                      } @if (question.get('text')?.hasError('minlength')) {
+                      <span>Question must be at least 3 characters</span>
                       }
                     </div>
                     }
                   </div>
-                </div>
 
-                <!-- Points -->
-                <div class="mb-3">
-                  <label [for]="'points' + i" class="form-label">
-                    <i class="fas fa-star me-1"></i>Points
-                  </label>
-                  <input
-                    type="number"
-                    [id]="'points' + i"
-                    formControlName="points"
-                    class="form-control"
-                    [class.is-invalid]="
-                      questions.at(i).get('points')?.invalid &&
-                      questions.at(i).get('points')?.touched
-                    "
-                  />
-                  @if (questions.at(i).get('points')?.invalid &&
-                  questions.at(i).get('points')?.touched) {
-                  <div class="invalid-feedback">
-                    @if (questions.at(i).get('points')?.hasError('required')) {
-                    <span
-                      ><i class="fas fa-exclamation-circle me-1"></i>Points are
-                      required</span
-                    >
-                    } @if (questions.at(i).get('points')?.hasError('min')) {
-                    <span
-                      ><i class="fas fa-exclamation-circle me-1"></i>Points must
-                      be at least 1</span
-                    >
-                    }
+                  <!-- Options -->
+                  <div class="mb-3">
+                    <label class="form-label">Options</label>
+                    <div formArrayName="options">
+                      @for (option of getOptions(i).controls; track $index; let
+                      j = $index) {
+                      <div class="input-group mb-2">
+                        <input
+                          type="text"
+                          [formControlName]="j"
+                          class="form-control"
+                          placeholder="Enter option text"
+                          [class.is-invalid]="
+                            getOptions(i).at(j).invalid &&
+                            (getOptions(i).at(j).dirty ||
+                              getOptions(i).at(j).touched)
+                          "
+                        />
+                        <button
+                          type="button"
+                          class="btn btn-outline-danger"
+                          (click)="removeOption(i, j)"
+                          [disabled]="getOptions(i).length <= 2"
+                        >
+                          <i class="fas fa-times"></i>
+                        </button>
+                        @if (getOptions(i).at(j).invalid &&
+                        (getOptions(i).at(j).dirty ||
+                        getOptions(i).at(j).touched)) {
+                        <div class="invalid-feedback d-block">
+                          <i class="fas fa-exclamation-circle me-1"></i>Option
+                          text is required
+                        </div>
+                        }
+                      </div>
+                      }
+                    </div>
+                    <div class="d-flex gap-2 mt-2">
+                      <button
+                        type="button"
+                        class="btn btn-outline-primary"
+                        (click)="addOption(i)"
+                      >
+                        <i class="fas fa-plus me-1"></i> Add Option
+                      </button>
+                    </div>
                   </div>
-                  }
+
+                  <!-- Correct Answer and Points -->
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label [for]="'correct' + i" class="form-label"
+                        >Correct Answer</label
+                      >
+                      <select
+                        [id]="'correct' + i"
+                        class="form-select"
+                        formControlName="correctAnswer"
+                      >
+                        @for (option of getOptions(i).value; track $index) {
+                        <option [value]="$index">
+                          Option {{ $index + 1 }}
+                        </option>
+                        }
+                      </select>
+                    </div>
+
+                    <div class="col-md-6">
+                      <label [for]="'points' + i" class="form-label"
+                        >Points</label
+                      >
+                      <input
+                        type="number"
+                        [id]="'points' + i"
+                        class="form-control"
+                        formControlName="points"
+                        [class.is-invalid]="
+                          question.get('points')?.invalid &&
+                          (question.get('points')?.dirty ||
+                            question.get('points')?.touched)
+                        "
+                      />
+                      @if (question.get('points')?.invalid &&
+                      (question.get('points')?.dirty ||
+                      question.get('points')?.touched)) {
+                      <div class="invalid-feedback d-block">
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                        @if (question.get('points')?.hasError('required')) {
+                        <span>Points are required</span>
+                        } @if (question.get('points')?.hasError('min')) {
+                        <span>Points must be at least 1</span>
+                        }
+                      </div>
+                      }
+                    </div>
+                  </div>
                 </div>
               </div>
+              }
             </div>
-            }
           </div>
         </div>
 
-        <!-- Submit Buttons -->
-        <div class="d-flex justify-content-end">
+        <!-- Form Actions -->
+        <div class="d-flex justify-content-end gap-3 mt-4">
           <button
             type="button"
-            routerLink="/teacher/exams"
-            class="btn btn-secondary me-2"
+            class="btn btn-outline-secondary"
+            (click)="onCancel()"
           >
             <i class="fas fa-times me-1"></i> Cancel
           </button>
           <button
             type="submit"
             class="btn btn-primary"
-            [disabled]="isSubmitting()"
+            [disabled]="
+              !examForm.valid ||
+              isSubmitting() ||
+              questions.length === 0 ||
+              !hasChanges()
+            "
           >
             @if (isSubmitting()) {
-            <span
-              class="spinner-border spinner-border-sm me-1"
-              role="status"
-            ></span>
-            Saving... } @else { Save Changes }
+            <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+            <span>Saving...</span>
+            } @else {
+            <i class="fas fa-save me-1"></i>
+            <span>Save Changes</span>
+            }
           </button>
         </div>
       </form>
+      }
+
+      <!-- Confirmation Popup for delete actions -->
+      @if (showConfirmPopup()) {
+      <app-confirmation-popup
+        [title]="
+          confirmAction() === 'deleteQuestion'
+            ? 'Remove Question'
+            : 'Remove Option'
+        "
+        [message]="
+          confirmAction() === 'deleteQuestion'
+            ? 'Are you sure you want to remove this question?'
+            : 'Are you sure you want to remove this option?'
+        "
+        actionType="delete"
+        (confirm)="handleConfirm()"
+        (cancel)="handleCancel()"
+      ></app-confirmation-popup>
+      }
+
+      <!-- Confirmation Popup for cancel action -->
+      @if (showCancelConfirmPopup()) {
+      <app-confirmation-popup
+        title="Discard Changes"
+        message="You have unsaved changes. Are you sure you want to leave?"
+        actionType="delete"
+        (confirm)="handleConfirm()"
+        (cancel)="handleCancel()"
+      ></app-confirmation-popup>
       }
     </div>
   </div>

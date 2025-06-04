@@ -1,18 +1,113 @@
-:host {
-  --primary-color: #0d6efd;
-  --danger-color: #dc3545;
-  --success-color: #28a745;
-  --warning-color: #ffc107;
-  --border-radius: 0.5rem;
+/* edit-exam.component.css */
+.container {
+  max-width: 900px;
 }
 
 .card {
-  border-radius: var(--border-radius);
+  border-radius: 0.8rem;
+  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
-.form-label {
-  font-weight: 500;
-  color: #495057;
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  border-radius: 0.8rem 0.8rem 0 0 !important;
+  padding: 1.2rem 1.5rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+.question-card {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 0.6rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.question-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--primary-400);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.question-card:hover {
+  border-color: var(--primary-300);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.question-card:hover::before {
+  opacity: 1;
+}
+
+.input-group-text {
+  transition: all 0.2s;
+}
+
+/* Animation for adding/removing questions */
+:host {
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card-header h3 {
+    font-size: 1.3rem;
+  }
+  
+  .card-header h4 {
+    font-size: 1.1rem;
+  }
+  
+  .form-label {
+    font-size: 0.9rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .input-group .btn {
+    padding: 0.5rem;
+  }
+  
+  .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Additional styles */
+:host {
+  --primary-400: #0d6efd;
+  --primary-300: #86b7fe;
+  --danger-color: #dc3545;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
 }
 
 .input-group-text {
@@ -22,7 +117,7 @@
 
 .form-control:focus {
   box-shadow: none;
-  border-color: #86b7fe;
+  border-color: var(--primary-300);
 }
 
 .btn {
@@ -35,7 +130,7 @@
 }
 
 .btn-outline-primary:hover {
-  background-color: var(--primary-color);
+  background-color: var(--primary-400);
   color: white;
 }
 
@@ -46,6 +141,11 @@
 .invalid-feedback {
   color: var(--danger-color);
   font-size: 0.875rem;
+}
+
+.form-label {
+  font-weight: 500;
+  color: #495057;
 }
 
 /* Toastr Custom Styles */
@@ -62,20 +162,16 @@
   color: #212529 !important;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .card-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
+.btn i.fas {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
 
-  .d-md-flex {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
+.btn .spinner-border {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
 
-  .justify-content-md-end {
-    justify-content: flex-start !important;
-  }
+.btn span {
+  display: inline-block;
 }
