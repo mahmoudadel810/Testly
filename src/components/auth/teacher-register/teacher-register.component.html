@@ -100,9 +100,9 @@
                   @if (teacherForm.get('phone')?.errors?.['required']) {
                     <div>Phone number is required</div>
                   }
-                  @if (teacherForm.get('phone')?.errors?.['pattern']) {
-                    <div>Phone must be 11 digits</div>
-                  }
+             @if (teacherForm.get('phone')?.errors?.['pattern']) {
+  <div>Phone must start with 01 followed by 9 digits (11 digits total)</div>
+}
                 </div>
               }
             </div>

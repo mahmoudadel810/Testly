@@ -44,7 +44,7 @@ export class TeacherRegisterComponent implements OnInit {
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
-        phone: ['', [Validators.required, Validators.pattern(/^[0-9]{11}$/)]],
+phone: ['', [Validators.required, Validators.pattern(/^01[0-9]{9}$/)]],
         address: ['', [Validators.required, Validators.minLength(3)]],
         nationalId: ['', [Validators.required, Validators.pattern(/^\d{14}$/)]],
       },
