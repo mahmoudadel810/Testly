@@ -1,4 +1,5 @@
- 
+/** @format */
+
 import { Injectable, PLATFORM_ID, Inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import {
@@ -365,7 +366,10 @@ export class AuthService {
    * @param userId User ID
    */
   getUserById(userId: string): Observable<UserResponse> {
-    return this.http.get<UserResponse>(`${API_ENDPOINTS.AUTH}/user/${userId}`);
+    const token = this.tokenService.getToken();
+    return this.http.get<UserResponse>(`${API_ENDPOINTS.AUTH}/user/${userId}`, {
+      headers: { Authorization: environment.bearerTokenPrefix + token }
+    });
   }
 
   /**
