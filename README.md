@@ -122,4 +122,3 @@ Feel free to fork the repository and contribute!
 
 This project is licensed under the ISC License.
 
-[Add your name/contact info here]
