@@ -58,6 +58,12 @@ export class ResetPasswordComponent implements OnInit {
       this.passwordError = "Password must be at least 6 characters";
       return;
     }
+    // Same rule the server enforces on the new password
+    if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).*$/.test(this.newPassword)) {
+      this.isLoading = false;
+      this.passwordError = "Password must contain at least 1 uppercase letter, 1 number, and a symbol";
+      return;
+    }
     this.authService
       .verifyReset({
         code: this.code,
