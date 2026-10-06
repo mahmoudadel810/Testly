@@ -93,7 +93,13 @@ export class TakeExamComponent implements OnInit, OnDestroy {
       .startExam(examId)
       .pipe(
         catchError((error) => {
-          this.error = 'Failed to start exam. Please try again later.';
+          if (this.isTimeLimitError(error)) {
+            this.handleTimeLimitExpired(error);
+          } else {
+            this.error =
+              error?.error?.message ||
+              'Failed to start exam. Please try again later.';
+          }
           this.loading = false;
           return of(null as unknown as ExamAttempt);
         })
@@ -101,7 +107,9 @@ export class TakeExamComponent implements OnInit, OnDestroy {
       .subscribe((examAttempt) => {
         if (examAttempt) {
           this.attemptId = examAttempt._id || undefined;
-          this.startTimer();
+          // Resumed attempts keep their original startTime; the server
+          // enforces the deadline from it, so the countdown must too.
+          this.startTimer(examAttempt.startTime);
           this.loading = false;
         }
       });
@@ -122,9 +130,21 @@ export class TakeExamComponent implements OnInit, OnDestroy {
     }
   }
 
-  private startTimer(): void {
+  private startTimer(startTime?: Date | string): void {
     if (this.exam) {
-      this.timeRemaining = this.exam.duration * 60;
+      const totalSeconds = this.exam.duration * 60;
+      const startedAt = startTime ? new Date(startTime).getTime() : NaN;
+      const elapsedSeconds = isNaN(startedAt)
+        ? 0
+        : Math.max(0, Math.floor((Date.now() - startedAt) / 1000));
+      this.timeRemaining = Math.max(0, totalSeconds - elapsedSeconds);
+
+      if (this.timeRemaining <= 0) {
+        // Time already ran out while the student was away: submit now
+        this.submitExam();
+        return;
+      }
+
       this.timerInterval = setInterval(() => {
         this.timeRemaining--;
         if (this.timeRemaining <= 0) {
@@ -166,8 +186,13 @@ export class TakeExamComponent implements OnInit, OnDestroy {
         .submitExam(this.attemptId!, this.answers)
         .pipe(
           catchError((error) => {
-            this.error = 'Failed to submit exam. Please try again.';
-            this.submitted = false;
+            if (this.isTimeLimitError(error)) {
+              // Server closed the attempt; don't leave the student stuck here
+              this.handleTimeLimitExpired(error);
+            } else {
+              this.error = 'Failed to submit exam. Please try again.';
+              this.submitted = false;
+            }
             return of(null as unknown as ExamAttempt);
           })
         )
@@ -179,6 +204,21 @@ export class TakeExamComponent implements OnInit, OnDestroy {
 
       this.subscriptions.add(sub);
     }, 100);
+  }
+
+  private isTimeLimitError(error: any): boolean {
+    return (
+      error?.status === 400 &&
+      /time limit/i.test(error?.error?.message || '')
+    );
+  }
+
+  private handleTimeLimitExpired(error: any): void {
+    clearInterval(this.timerInterval);
+    this.timeRemaining = 0;
+    this.error =
+      error?.error?.message || 'The time limit for this exam has passed.';
+    setTimeout(() => this.router.navigate(['/results']), 3000);
   }
 
   updateAnswer(questionIndex: number, optionIndex: number): void {
