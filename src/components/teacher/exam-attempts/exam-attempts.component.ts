@@ -110,17 +110,25 @@ export class ExamAttemptsComponent implements OnInit {
 
     if (confirm('Are you sure you want to delete this attempt?')) {
       this.examService
-        .getExamAttempts(attemptId)
+        .deleteExamAttempt(attemptId)
         .pipe(take(1))
         .subscribe({
-          next: () => {
+          next: (res) => {
+            if (!res?.success) {
+              this.toastr.error(
+                res?.message || 'Failed to delete attempt. Please try again.'
+              );
+              return;
+            }
             this.attempts.update((attempts) =>
               attempts.filter((attempt) => attempt._id !== attemptId)
             );
             this.toastr.success('Attempt deleted successfully');
           },
           error: (err: any) => {
-            this.toastr.error('Failed to delete attempt. Please try again.');
+            this.toastr.error(
+              err?.error?.message || 'Failed to delete attempt. Please try again.'
+            );
             console.error('Error deleting attempt:', err);
           },
         });

@@ -197,6 +197,14 @@ export const routes: Routes = [
     canActivate: [authGuard, teacherGuard],
   },
   {
+    path: "teacher/students",
+    loadComponent: () =>
+      import("../components/teacher/students/students.component").then(
+        (m) => m.StudentsComponent
+      ),
+    canActivate: [authGuard, teacherGuard],
+  },
+  {
     path: "teacher/pass-rates",
     loadComponent: () =>
       import("../components/teacher/pass-rates/pass-rates.component").then(

@@ -89,8 +89,15 @@ export class AuthEffects {
     () => {
       return this.actions$.pipe(
         ofType(AuthActions.loginSuccess),
-        tap(() => {
-          this.router.navigate(['/dashboard']);
+        tap(({ user }) => {
+          // Role home routes from app.routes.ts (students land on the home page)
+          const home =
+            user?.role === 'admin'
+              ? '/admin'
+              : user?.role === 'teacher'
+              ? '/teacher'
+              : '/';
+          this.router.navigate([home]);
         })
       );
     },

@@ -77,7 +77,9 @@ export class ManageExamsComponent implements OnInit {
         },
         error: (err) => {
           console.error('Error deleting exam:', err);
-          this.toastr.error('Failed to delete exam. Please try again later.');
+          this.toastr.error(
+            err.error?.message || 'Failed to delete exam. Please try again later.'
+          );
           this.showDeleteConfirmation.set(false);
           this.examToDelete.set(null);
         },

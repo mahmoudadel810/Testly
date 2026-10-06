@@ -52,7 +52,8 @@
                 There was an issue confirming your email. Please try again or contact
                 support.
               </p>
-              <button class="action-button" (click)="navigateToLogin()">
+              <ng-container *ngTemplateOutlet="resendForm"></ng-container>
+              <button class="action-button secondary" (click)="navigateToLogin()">
                 Go to Login
               </button>
             </div>
@@ -101,13 +102,53 @@
               There was an issue confirming your email. Please try again or contact
               support.
             </p>
-            <button class="action-button" (click)="navigateToLogin()">
+            <ng-container *ngTemplateOutlet="resendForm"></ng-container>
+            <button class="action-button secondary" (click)="navigateToLogin()">
               Go to Login
             </button>
           </div>
         }
       }
     </div>
+
+    <!-- Resend form, shown in the error state (expired/invalid link) -->
+    <ng-template #resendForm>
+      <form class="resend-form" (ngSubmit)="resendConfirmation()" novalidate>
+        <label for="resendEmail" class="form-label">
+          Need a new link? Enter your email address:
+        </label>
+        <input
+          id="resendEmail"
+          type="email"
+          class="form-control"
+          [class.is-invalid]="resendEmail.invalid && resendEmail.touched"
+          [formControl]="resendEmail"
+          placeholder="you@example.com"
+          autocomplete="email"
+        />
+        @if (resendEmail.touched && resendEmail.hasError('required')) {
+          <div class="invalid-feedback d-block">Email is required</div>
+        } @else if (resendEmail.touched && resendEmail.hasError('email')) {
+          <div class="invalid-feedback d-block">Please enter a valid email address</div>
+        }
+        @if (resendMessage) {
+          <div class="message-box" [class.success]="resendSucceeded" [class.error]="!resendSucceeded" role="alert">
+            {{ resendMessage }}
+          </div>
+        }
+        <button
+          type="submit"
+          class="action-button"
+          [disabled]="isResending || resendEmail.invalid"
+        >
+          @if (isResending) {
+            <i class="fas fa-spinner fa-spin"></i> Sending...
+          } @else {
+            Resend confirmation email
+          }
+        </button>
+      </form>
+    </ng-template>
 
     <div class="footer">
       <p>© 2025 Testly. All rights reserved To ITT </p>

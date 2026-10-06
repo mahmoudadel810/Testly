@@ -53,6 +53,11 @@ export class ResetPasswordComponent implements OnInit {
     this.passwordError = "";
     this.confirmPasswordError = "";
     this.codeError = "";
+    if (this.newPassword.length < 6) {
+      this.isLoading = false;
+      this.passwordError = "Password must be at least 6 characters";
+      return;
+    }
     this.authService
       .verifyReset({
         code: this.code,

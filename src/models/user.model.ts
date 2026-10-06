@@ -35,3 +35,14 @@ export interface UserResponse {
   message?: string;
   success?: boolean;
 }
+
+export interface ConfirmedTeacher {
+  _id: string;
+  name: string;
+}
+
+export interface ConfirmedTeachersResponse {
+  success: boolean;
+  data: ConfirmedTeacher[];
+  message: string;
+}

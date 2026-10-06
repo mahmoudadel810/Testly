@@ -1,9 +1,12 @@
  
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../../services/auth.service';
 
 import { AppState } from '../../../store';
 import * as AuthActions from '../../../store/auth/actions/auth.actions';
@@ -17,7 +20,7 @@ interface FooterLink {
 @Component({
   selector: 'app-email-confirmation',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './email-confirmation.component.html',
   styleUrls: ['./email-confirmation.component.css'],
 })
@@ -30,6 +33,14 @@ export class EmailConfirmationComponent implements OnInit {
   status: 'loading' | 'success' | 'error' = 'loading';
   message: string = '';
   email: string | null = null;
+  // Resend form shown when confirmation fails (expired/invalid link)
+  resendEmail = new FormControl('', {
+    nonNullable: true,
+    validators: [Validators.required, Validators.email],
+  });
+  isResending = false;
+  resendMessage = '';
+  resendSucceeded = false;
   currentDate: Date = new Date();
   currentYear: number = new Date().getFullYear();
   footerLinks: FooterLink[] = [
@@ -41,7 +52,9 @@ export class EmailConfirmationComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private authService: AuthService,
+    private toastr: ToastrService
   ) {
     this.status$ = this.store.select(
       AuthSelectors.selectEmailConfirmationStatus
@@ -93,18 +106,39 @@ export class EmailConfirmationComponent implements OnInit {
   }
 
   resendConfirmation(): void {
-    if (this.email) {
-      this.store.dispatch(
-        AuthActions.resendConfirmationEmail({ email: this.email })
-      );
-    } else {
-      this.store.dispatch(
-        AuthActions.resendConfirmationEmailFailure({
-          error: 'No email available',
-          message: 'Email address is not available. Please contact support.',
-        })
-      );
+    if (this.resendEmail.invalid || this.isResending) {
+      this.resendEmail.markAsTouched();
+      return;
     }
+
+    // Called directly (not via the store) so the page keeps showing the
+    // failed-confirmation state instead of switching to "Email Confirmed!"
+    this.isResending = true;
+    this.resendMessage = '';
+    this.resendEmail.disable();
+
+    this.authService
+      .resendConfirmationEmail(this.resendEmail.value.trim())
+      .subscribe({
+        next: (response) => {
+          this.isResending = false;
+          this.resendEmail.enable();
+          this.resendSucceeded = true;
+          this.resendMessage =
+            response?.message ||
+            'A new confirmation email has been sent. Please check your inbox.';
+          this.toastr.success(this.resendMessage);
+        },
+        error: (error) => {
+          this.isResending = false;
+          this.resendEmail.enable();
+          this.resendSucceeded = false;
+          this.resendMessage =
+            error?.error?.message ||
+            'Failed to resend confirmation email. Please try again.';
+          this.toastr.error(this.resendMessage);
+        },
+      });
   }
 
   contactSupport(): void {

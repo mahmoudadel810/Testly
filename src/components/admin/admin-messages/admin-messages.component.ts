@@ -75,6 +75,12 @@ export class AdminMessagesComponent implements OnInit {
 
     this.contactService.updateMessageStatus(message._id, newStatus).subscribe({
       next: (response: any) => {
+        // ContactService maps HTTP errors to { success: false }
+        if (response?.success === false) {
+          this.toastr.error(response.message || 'Failed to update status', 'Error');
+          return;
+        }
+
         // Update in messages array
         const index = this.messages.findIndex(m => m._id === message._id);
         if (index !== -1) {
@@ -110,7 +116,14 @@ export class AdminMessagesComponent implements OnInit {
 
     const messageId = this.messageToDelete._id;
     this.contactService.deleteMessage(messageId).subscribe({
-      next: () => {
+      next: (response: any) => {
+        // ContactService maps HTTP errors to { success: false }
+        if (response?.success === false) {
+          this.showDeleteModal = false;
+          this.messageToDelete = null;
+          this.toastr.error(response.message || 'Failed to delete message', 'Error');
+          return;
+        }
         this.messages = this.messages.filter((m) => m._id !== messageId);
         this.filteredMessages = this.filteredMessages.filter(
           (m) => m._id !== messageId

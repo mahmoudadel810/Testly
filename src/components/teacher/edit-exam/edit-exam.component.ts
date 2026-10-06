@@ -120,6 +120,9 @@ export class EditExamComponent implements OnInit {
     if (exam.questions?.length) {
       exam.questions.forEach((question) => {
         const questionGroup = this.fb.group({
+          // Keep the existing question id so the server can preserve it
+          // (in-progress attempts reference questions by _id)
+          _id: [question._id],
           text: [question.text, [Validators.required, Validators.minLength(3)]],
           correctAnswer: [
             question.correctAnswer,

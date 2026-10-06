@@ -160,7 +160,7 @@ export class RegisterComponent implements OnInit {
         'Timeout Error',
         'API request timed out. Please check server connection.'
       );
-    }, 10000);
+    }, 30000);
 
     this.authService.register(userData).subscribe({
       next: (response) => {

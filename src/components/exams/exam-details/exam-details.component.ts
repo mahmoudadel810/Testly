@@ -62,8 +62,9 @@ export class ExamDetailsComponent implements OnInit {
     if (!this.exam) return;
     
     this.examService.startExam(this.exam._id as string).subscribe({
-      next: (attempt) => {
-        this.router.navigate(['/take-exam', attempt._id]);
+      next: () => {
+        // take-exam/:id expects the exam id (it starts/resumes the attempt itself)
+        this.router.navigate(['/take-exam', this.exam?._id]);
       },
       error: (error) => {
         this.error = 'Failed to start exam. Please try again later.';

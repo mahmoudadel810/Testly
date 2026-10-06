@@ -32,14 +32,14 @@ import { environment } from "../environments/environment";
 
 // Create an auth interceptor function
 const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
-  // Check if running in browser before accessing localStorage
+  // Check if running in browser before accessing sessionStorage
   const platformId = inject(PLATFORM_ID);
   const isBrowser = isPlatformBrowser(platformId);
 
   let token = null;
-  // Only access localStorage in browser environment
+  // Only access storage in browser environment (TokenService keeps the token in sessionStorage)
   if (isBrowser) {
-    token = localStorage.getItem("auth_token");
+    token = sessionStorage.getItem("auth_token");
   }
 
   // If token exists, add it to the request headers

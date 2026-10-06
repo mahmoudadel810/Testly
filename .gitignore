@@ -6,3 +6,5 @@ create-exam.sh
 package-lock.json
 ..angular/cache/
 .angular/cache/
+.vercel
+.env*

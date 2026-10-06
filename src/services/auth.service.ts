@@ -12,7 +12,12 @@ import {
   timer,
   throwError
 } from "rxjs";
-import { User, AuthResponse, UserResponse } from "../models/user.model";
+import {
+  User,
+  AuthResponse,
+  UserResponse,
+  ConfirmedTeachersResponse
+} from "../models/user.model";
 import { isPlatformBrowser } from "@angular/common";
 import { Router } from "@angular/router";
 import { TokenService } from "./token.service";
@@ -25,8 +30,8 @@ import { environment } from "../environments/environment";
   providedIn: "root"
 })
 export class AuthService {
-  getToken() {
-    throw new Error("Method not implemented.");
+  getToken(): string | null {
+    return this.tokenService.getToken();
   }
   private userSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
@@ -43,9 +48,10 @@ export class AuthService {
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
 
-    // Initialize user from storage
+    // Initialize user from storage (only when this tab still holds a valid token;
+    // the user lives in localStorage but the token in per-tab sessionStorage)
     this.userSubject = new BehaviorSubject<User | null>(
-      this.userStorage.getUser()
+      this.tokenService.isTokenExpired() ? null : this.userStorage.getUser()
     );
     this.currentUser$ = this.userSubject.asObservable();
 
@@ -114,18 +120,21 @@ export class AuthService {
   /**
    * Get confirmed teachers for student selection
    */
-  getConfirmedTeachers(): Observable<any[]> {
+  getConfirmedTeachers(): Observable<ConfirmedTeachersResponse> {
     this.logger.info("Fetching confirmed teachers");
 
     return this.http
-      .get<any[]>(`${API_ENDPOINTS.AUTH}/teachers/confirmed`)
+      .get<ConfirmedTeachersResponse>(`${API_ENDPOINTS.AUTH}/teachers/confirmed`)
       .pipe(
-        tap((teachers) => {
-          this.logger.debug("Fetched teachers count:", teachers.length);
+        tap((response) => {
+          this.logger.debug(
+            "Fetched teachers count:",
+            response?.data?.length ?? 0
+          );
         }),
         catchError((error) => {
           this.logger.error("Error fetching teachers:", error);
-          return of([]);
+          return of({ success: false, data: [], message: "" });
         })
       );
   }
@@ -402,6 +411,7 @@ export class AuthService {
    */
   private clearAuthState(): void {
     this.userStorage.clearAllAuthData();
+    this.tokenService.clearToken();
     this.userSubject.next(null);
     this.stopTokenRefresh();
     this.logger.debug("Auth state cleared");

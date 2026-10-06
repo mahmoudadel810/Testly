@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { Observable, catchError, map, of, tap, throwError } from "rxjs";
 import { Exam, ExamAttempt } from "../models/exam.model";
+import { ConfirmedTeachersResponse } from "../models/user.model";
 import { TokenService } from "./token.service";
 import { LoggingService } from "./logging.service";
 import { API_ENDPOINTS } from "../models/constants";
@@ -12,9 +13,6 @@ import { environment } from "../environments/environment";
   providedIn: "root"
 })
 export class ExamService {
-  deleteExamAttempt(attemptId: string) {
-    throw new Error("Method not implemented.");
-  }
   constructor(
     private http: HttpClient,
     private tokenService: TokenService,
@@ -74,16 +72,19 @@ export class ExamService {
   }
 
   // Get all confirmed teachers for the teacher selection UI
-  getConfirmedTeachers(): Observable<any[]> {
+  getConfirmedTeachers(): Observable<ConfirmedTeachersResponse> {
     return this.http
-      .get<any[]>(`${API_ENDPOINTS.AUTH}/teachers/confirmed`)
+      .get<ConfirmedTeachersResponse>(`${API_ENDPOINTS.AUTH}/teachers/confirmed`)
       .pipe(
-        tap((teachers) =>
-          this.logger.debug("Confirmed teachers loaded:", teachers.length)
+        tap((response) =>
+          this.logger.debug(
+            "Confirmed teachers loaded:",
+            response?.data?.length ?? 0
+          )
         ),
         catchError((error) => {
           this.logger.error("Error fetching confirmed teachers:", error);
-          return of([]);
+          return of({ success: false, data: [], message: "" });
         })
       );
   }
@@ -615,6 +616,28 @@ export class ExamService {
         tap((result) => this.logger.debug("Teacher exam deleted successfully")),
         catchError((error) => {
           this.logger.error("Error deleting teacher exam:", error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  deleteExamAttempt(
+    attemptId: string
+  ): Observable<{ success: boolean; message: string }> {
+    const headers = {
+      Authorization:
+        environment.bearerTokenPrefix + this.tokenService.getToken()
+    };
+
+    return this.http
+      .delete<{ success: boolean; message: string }>(
+        `${API_ENDPOINTS.EXAM}/teacher/attempts/${attemptId}`,
+        { headers }
+      )
+      .pipe(
+        tap(() => this.logger.debug("Exam attempt deleted successfully")),
+        catchError((error) => {
+          this.logger.error("Error deleting exam attempt:", error);
           return throwError(() => error);
         })
       );
